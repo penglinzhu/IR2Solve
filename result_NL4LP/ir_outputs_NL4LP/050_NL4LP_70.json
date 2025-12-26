@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_70",
+    "source": null,
+    "description": "Optimize the number of hand sanitizer machines to minimize total machines while meeting delivery and energy constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MACHINE_TYPES",
+      "elements": [
+        "motion_activated",
+        "manual"
+      ],
+      "description": "Types of hand sanitizer machines."
+    }
+  ],
+  "params": [
+    {
+      "name": "delivery_rate",
+      "indices": [
+        "MACHINE_TYPES"
+      ],
+      "values": {
+        "motion_activated": 50,
+        "manual": 75
+      },
+      "description": "Delivery rate in drops per minute for each machine type."
+    },
+    {
+      "name": "energy_consumption",
+      "indices": [
+        "MACHINE_TYPES"
+      ],
+      "values": {
+        "motion_activated": 30,
+        "manual": 20
+      },
+      "description": "Energy consumption in kWh per minute for each machine type."
+    },
+    {
+      "name": "max_manual_fraction",
+      "indices": [],
+      "values": 0.4,
+      "description": "Maximum fraction of machines that can be manual."
+    },
+    {
+      "name": "min_motion_activated",
+      "indices": [],
+      "values": 3,
+      "description": "Minimum number of motion activated machines required."
+    },
+    {
+      "name": "min_drops_per_minute",
+      "indices": [],
+      "values": 1000,
+      "description": "Minimum total drops per minute required."
+    },
+    {
+      "name": "max_energy_per_minute",
+      "indices": [],
+      "values": 500,
+      "description": "Maximum energy consumption per minute allowed."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_machines",
+      "indices": [
+        "MACHINE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of machines of each type to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_machines",
+    "sense": "min",
+    "expr": "num_machines['motion_activated'] + num_machines['manual']",
+    "description": "Minimize the total number of machines."
+  },
+  "constraints": [
+    {
+      "name": "delivery_requirement",
+      "expr_lhs": "50 * num_machines['motion_activated'] + 75 * num_machines['manual']",
+      "sense": ">=",
+      "expr_rhs": "1000",
+      "description": "Ensure at least 1000 drops per minute are delivered."
+    },
+    {
+      "name": "energy_constraint",
+      "expr_lhs": "30 * num_machines['motion_activated'] + 20 * num_machines['manual']",
+      "sense": "<=",
+      "expr_rhs": "500",
+      "description": "Ensure energy consumption does not exceed 500 kWh per minute."
+    },
+    {
+      "name": "manual_fraction_constraint",
+      "expr_lhs": "num_machines['manual']",
+      "sense": "<=",
+      "expr_rhs": "0.4 * (num_machines['motion_activated'] + num_machines['manual'])",
+      "description": "At most 40% of the machines can be manual."
+    },
+    {
+      "name": "min_motion_activated_constraint",
+      "expr_lhs": "num_machines['motion_activated']",
+      "sense": ">=",
+      "expr_rhs": "3",
+      "description": "At least 3 machines must be motion activated."
+    }
+  ],
+  "graph": null
+}

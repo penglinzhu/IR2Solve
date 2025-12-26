@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_154",
+    "source": null,
+    "description": "Optimize the number of electric bikes and scooters to maximize meal deliveries given charge and vehicle constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VEHICLES",
+      "elements": [
+        "bike",
+        "scooter"
+      ],
+      "description": "Types of electric vehicles used for meal delivery."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "bike": 8,
+        "scooter": 5
+      },
+      "description": "Number of meals each vehicle type can hold."
+    },
+    {
+      "name": "charge",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "bike": 3,
+        "scooter": 2
+      },
+      "description": "Units of charge required for each vehicle type."
+    },
+    {
+      "name": "total_charge",
+      "indices": [],
+      "values": 200,
+      "description": "Total available units of charge."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "VEHICLES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of vehicle to use."
+    }
+  ],
+  "objective": {
+    "name": "max_meals_delivered",
+    "sense": "max",
+    "expr": "x['bike'] * capacity['bike'] + x['scooter'] * capacity['scooter']",
+    "description": "Maximize the total number of meals delivered."
+  },
+  "constraints": [
+    {
+      "name": "charge_limit",
+      "expr_lhs": "x['bike'] * charge['bike'] + x['scooter'] * charge['scooter']",
+      "sense": "<=",
+      "expr_rhs": "total_charge",
+      "description": "Total charge used by vehicles must not exceed available charge."
+    },
+    {
+      "name": "bike_limit",
+      "expr_lhs": "x['bike']",
+      "sense": "<=",
+      "expr_rhs": "0.3 * (x['bike'] + x['scooter'])",
+      "description": "At most 30% of the vehicles can be bikes."
+    },
+    {
+      "name": "scooter_minimum",
+      "expr_lhs": "x['scooter']",
+      "sense": ">=",
+      "expr_rhs": "20",
+      "description": "At least 20 scooters must be used."
+    }
+  ],
+  "graph": null
+}

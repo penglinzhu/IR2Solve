@@ -19,7 +19,9 @@ from gm4opt_ir import (
     ModelIR,
 )
 
-# ========= Prompts =========
+# =============================================================================
+# 1) Prompt Constants
+# =============================================================================
 
 BASE_SYSTEM_PROMPT = """
 You are an expert in mathematical modeling and optimization.
@@ -34,6 +36,7 @@ You MUST:
   (NO free index variables, NO implicit "for all" quantifiers).
 """.strip()
 
+# Backward compatibility
 SYSTEM_PROMPT = BASE_SYSTEM_PROMPT
 
 SCHEMA_AND_INSTRUCTIONS = r"""
@@ -151,7 +154,9 @@ CRITICAL RULES FOR CONSTRAINTS:
 (3) If a conceptual constraint holds "for each element", you MUST UNROLL it into one constraint per element.
 """
 
-# ========= Dynamic prompt templating (heuristic) =========
+# =============================================================================
+# 2) Heuristic Feature Extractors
+# =============================================================================
 
 def _simple_text_features(question_text: str) -> Dict[str, Any]:
     txt = (question_text or "")
@@ -186,17 +191,21 @@ def _simple_text_features(question_text: str) -> Dict[str, Any]:
         "rate", "volume", "amount of"
     ])
 
-    is_diet_food = any(kw in lower for kw in ["dietitian", "meal plan", "serving", "servings", "portion", "food item", "nutritional"])
+    is_diet_food = any(kw in lower for kw in [
+        "dietitian", "meal plan", "serving", "servings", "portion", "food item", "nutritional"
+    ])
 
     # rebalancing / inventory redistribution signals (key for >= vs ==)
     has_initial_stock = any(kw in lower for kw in [
         "initial stock", "starts with", "starting stock", "initial amount", "initial supply", "initial inventory"
     ])
     has_required_need = any(kw in lower for kw in [
-        "needs", "need", "required", "requirement", "must have", "at least", "fulfill", "meet the needs", "meet the requirement"
+        "needs", "need", "required", "requirement", "must have", "at least",
+        "fulfill", "meet the needs", "meet the requirement"
     ])
     has_redistribution = any(kw in lower for kw in [
-        "redistribute", "reallocate", "transfer", "move", "ship", "transport", "send from", "from clinic", "to clinic"
+        "redistribute", "reallocate", "transfer", "move", "ship", "transport",
+        "send from", "from clinic", "to clinic"
     ])
 
     n_tokens = len(txt.split())
@@ -221,132 +230,108 @@ def _simple_text_features(question_text: str) -> Dict[str, Any]:
         "size": size,
     }
 
+# =============================================================================
+# 3) Problem Type Classification
+# =============================================================================
 
 def classify_problem_type(problem_text: str) -> str:
     """
-    题型分类：将网络流（max-flow / min-cost flow）从 transport_flow 拆出来，
-    以便在 prompt 拼接时加入强约束护栏。
+    Rule-based type classifier (parallel rules).
+    Each type is detected by a predicate; rules are applied in priority order.
     """
     txt = (problem_text or "").lower()
 
-    # network max-flow / min-cost flow
-    is_network = any(w in txt for w in [
-        "network", "node", "arc", "edge", "capacity", "capacities", "point", "station"
-    ]) or any(w in txt for w in [
-        "gb/s", "gigabytes per second", "data rate", "data center", "hub"
-    ])
+    def has_any(words: List[str]) -> bool:
+        return any(w in txt for w in words)
 
-    asks_max = any(w in txt for w in [
-        "maximum flow", "max flow", "maximum amount", "maximum data",
-        "max amount", "max data", "maximize the amount", "how much can be sent",
-        "what is the maximum amount", "maximum can be transferred",
-        "find out the maximum", "the objective is to find out the maximum"
-    ]) or ("maximize" in txt and "capacity" in txt)
-
-    has_source_sink = any(w in txt for w in [
+    is_network = (
+        has_any(["network", "node", "arc", "edge", "capacity", "capacities", "point", "station"])
+        or has_any(["gb/s", "gigabytes per second", "data rate", "data center", "hub"])
+    )
+    asks_max = (
+        has_any([
+            "maximum flow", "max flow", "maximum amount", "maximum data",
+            "max amount", "max data", "maximize the amount", "how much can be sent",
+            "what is the maximum amount", "maximum can be transferred",
+            "find out the maximum", "the objective is to find out the maximum"
+        ])
+        or ("maximize" in txt and "capacity" in txt)
+    )
+    has_source_sink = has_any([
         "source", "sink", "from point", "to point", "from node", "to node",
         "from station", "to station", "from 0", "to 5"
     ])
 
-    if is_network and asks_max and has_source_sink:
-        return "network_max_flow"
+    is_redistribution = has_any(["redistribute", "reallocate", "transfer", "ship", "transport", "move"])
+    has_costs = has_any(["cost", "costs", "transportation cost"])
+    has_initial_required = has_any(["initial stock", "starts with", "starting stock", "required", "needs", "requirement"])
 
-    is_redistribution = any(w in txt for w in [
-        "redistribute", "reallocate", "transfer", "ship", "transport", "move"
-    ])
-    has_costs = ("cost" in txt) or ("costs" in txt) or ("transportation cost" in txt)
-    has_initial_required = any(w in txt for w in [
-        "initial stock", "starts with", "starting stock", "required", "needs", "requirement"
-    ])
+    is_knapsack = has_any(["knapsack", "select", "choose"]) and has_any(["at most", "budget", "capacity", "limit"])
+    is_assignment = ("assignment" in txt) or (("worker" in txt or "machine" in txt) and "task" in txt)
+    is_transport_flow = has_any(["transport", "shipping", "shipment", "supply", "demand", "warehouse", "flow", "network", "transfer", "redistribute"])
+    is_routing = has_any(["vehicle routing", "vrp", "route", "depot"]) and has_any(["customer", "visit"])
+    is_production = has_any(["factory", "produce", "production", "manufacture"]) and has_any(["profit", "revenue", "cost", "capacity"])
 
-    if is_network and has_costs and is_redistribution and has_initial_required and not asks_max:
-        return "network_min_cost_flow"
+    rules = [
+        ("network_max_flow", lambda: is_network and asks_max and has_source_sink),
+        ("network_min_cost_flow", lambda: is_network and has_costs and is_redistribution and has_initial_required and (not asks_max)),
+        ("selection_knapsack", lambda: is_knapsack),
+        ("assignment", lambda: is_assignment),
+        ("routing_vrp", lambda: is_routing),
+        ("production_mix", lambda: is_production),
+        ("transport_flow", lambda: is_transport_flow),
+    ]
 
-    # selection / knapsack-like
-    if any(w in txt for w in ["knapsack", "select", "choose"]) and any(w in txt for w in ["at most", "budget", "capacity", "limit"]):
-        return "selection_knapsack"
-
-    # assignment
-    if ("assignment" in txt) or (("worker" in txt or "machine" in txt) and "task" in txt):
-        return "assignment"
-
-    # transportation / flow
-    if any(w in txt for w in ["transport", "shipping", "shipment", "supply", "demand", "warehouse", "flow", "network", "transfer", "redistribute"]):
-        return "transport_flow"
-
-    # routing
-    if any(w in txt for w in ["vehicle routing", "vrp", "route", "depot"]) and ("customer" in txt or "visit" in txt):
-        return "routing_vrp"
-
-    # production mix
-    if any(w in txt for w in ["factory", "produce", "production", "manufacture"]) and any(w in txt for w in ["profit", "revenue", "cost", "capacity"]):
-        return "production_mix"
+    for ptype, pred in rules:
+        if pred():
+            return ptype
 
     return "generic_lp_mip"
 
+# =============================================================================
+# 4) Sub-prompt Library (Rule Blocks)
+# =============================================================================
 
-def _problem_guidance_compact(problem_type: str) -> List[str]:
+def _subprompt_output_contract() -> List[str]:
     """
-    为 system prompt 追加 guidance 块
+    Global contract: output discipline + scalar/unrolled constraints.
+    (Kept as a sub-prompt to make the dynamic prompt assembly more modular.)
     """
-    pt = (problem_type or "").lower()
-
-    if pt == "network_max_flow":
-        return [
-            "Type hint: MAX-FLOW in a directed capacitated network.",
-            "- Use the standard max-flow template with a scalar total-flow variable F.",
-            "- Objective MUST be maximize F (NEVER maximize a single arc flow[s][t]).",
-            "- Flow conservation holds ONLY for intermediate nodes; source/sink use net flow == F.",
-            "- Capacity constraints per arc: 0 <= flow[i][j] <= capacity[i][j] (only for existing arcs).",
-            "- Missing arcs: either do not create variables for them OR enforce flow[i][j] == 0.",
-            "- UNROLL constraints into explicit scalar constraints.",
-        ]
-
-    if pt == "network_min_cost_flow":
-        return [
-            "Type hint: MIN-COST redistribution / transshipment (min-cost flow).",
-            "- Decision variable: shipped amount flow[i][j] (usually CONTINUOUS) on existing arcs.",
-            "- Node balance: final[i] = initial[i] + inflow[i] - outflow[i].",
-            "- If wording is 'needs/required/at least', enforce final[i] >= required[i] (NOT '==') unless totals match exactly.",
-            "- Objective: minimize sum(cost[i][j]*flow[i][j]).",
-            "- UNROLL constraints into explicit scalar constraints.",
-        ]
-
-    if pt == "selection_knapsack":
-        return [
-            "Type hint: selection/knapsack-like.",
-            "- Use binary vars for select/not-select.",
-            "- Encode 'must take' as x[item]=1, conflicts as x[a]+x[b]<=1, implications as x[a]<=x[b].",
-        ]
-    if pt == "assignment":
-        return [
-            "Type hint: assignment/matching.",
-            "- Use binary vars x[w][t].",
-            "- If constraints are 'for each task/worker', UNROLL them into explicit scalar constraints.",
-        ]
-    if pt == "transport_flow":
-        return [
-            "Type hint: transportation/flow.",
-            "- Flow/shipment amounts are usually CONTINUOUS unless explicitly stated as integer units.",
-            "- Balance constraints should be explicit per node (scalar, unrolled).",
-        ]
-    if pt == "routing_vrp":
-        return [
-            "Type hint: routing (VRP/VRPTW).",
-            "- Vehicle count / visit decisions are typically INTEGER/BINARY.",
-            "- If you cannot fully unroll a huge VRP, output a simplified but valid scalar-constraint model.",
-        ]
-    if pt == "production_mix":
-        return [
-            "Type hint: production mix.",
-            "- Production quantity is INTEGER if it represents indivisible units; CONTINUOUS only if fraction is explicitly allowed.",
-            "- Resource constraints: sum(usage*qty) <= capacity (but UNROLL per resource).",
-        ]
-
     return [
-        "Type hint: generic LP/MIP.",
-        "- Identify sets/params/vars clearly and keep everything linear.",
+        "INTERNAL GUIDANCE (do NOT include this text in the JSON output):",
+        "- Output JSON ONLY. No markdown, no explanation text.",
+        "- Constraints MUST be fully specified SCALAR constraints.",
+        "- In constraints, NEVER use generator expressions or comprehensions.",
+        "- If the statement says 'for each/for all', you MUST UNROLL into one constraint per element.",
+        "- Use string indices like x['I']['A'] (not x[I][A], not x[1]).",
     ]
+
+
+def _subprompt_feature_hints(feats: Dict[str, Any]) -> List[str]:
+    """
+    Feature-triggered hints (heuristic triggers).
+    This is a refactor of the inline if-statements into a dedicated module.
+    """
+    lines: List[str] = []
+
+    if feats.get("has_table"):
+        lines.append("- The statement likely contains a table: convert rows/cols into SET elements and PARAM values explicitly.")
+    if feats.get("has_for_each"):
+        lines.append("- The statement has quantifiers ('for each/for all'): UNROLL them into explicit scalar constraints.")
+    if feats.get("has_capacity"):
+        lines.append("- Capacity/limit constraints: write explicit per-resource/per-period scalar constraints.")
+    if feats.get("has_implication"):
+        lines.append("- Logical rules (if/then/must/cannot): encode using linear inequalities (x<=y, x+y<=1, etc.).")
+    if feats.get("has_assignment"):
+        lines.append("- Assignment-like structure: binary vars with unrolled one-to-one constraints.")
+    if feats.get("has_flow"):
+        lines.append("- Flow-like structure: balance constraints should be unrolled per node.")
+    if feats.get("has_routing"):
+        lines.append("- Routing is complex: prefer a smaller valid model rather than implicit quantifiers.")
+    if feats.get("has_production"):
+        lines.append("- Production mix: check units, capacities, and profit definition carefully.")
+
+    return lines
 
 
 def _vartype_guidance(feats: Dict[str, Any], problem_type: str) -> List[str]:
@@ -402,26 +387,90 @@ def _constraint_sense_guidance(feats: Dict[str, Any], problem_type: str) -> List
     return lines
 
 
-def _maxflow_guidance_by_ptype(problem_type: str) -> List[str]:
+def _type_specific_guidance(problem_type: str) -> List[str]:
     """
-    MAX-FLOW 专用
+    Type-specific templates + guardrails (merged in ONE layer).
+    This replaces the previous pattern of (type_guidance + extra_guardrails),
+    while keeping the *content* intact (only add, not remove).
     """
-    if (problem_type or "").lower() != "network_max_flow":
-        return []
+    pt = (problem_type or "").lower()
+
+    if pt == "network_max_flow":
+        return [
+            "Type hint: MAX-FLOW in a directed capacitated network.",
+            "- Use the standard max-flow template with a scalar total-flow variable F.",
+            "- Objective MUST be maximize F (NEVER maximize a single arc flow[s][t]).",
+            "- Flow conservation holds ONLY for intermediate nodes; source/sink use net flow == F.",
+            "- Capacity constraints per arc: 0 <= flow[i][j] <= capacity[i][j] (only for existing arcs).",
+            "- Missing arcs: either do not create variables for them OR enforce flow[i][j] == 0.",
+            "- UNROLL constraints into explicit scalar constraints.",
+            "",
+            "MAX-FLOW NETWORK MODELING GUARDRAIL (CRITICAL):",
+            "- Model is MAX-FLOW, NOT a circulation.",
+            "- DO NOT enforce inflow==outflow at SOURCE or SINK.",
+            "- Introduce a scalar variable F >= 0 for total flow from source to sink.",
+            "- Objective MUST be maximize F (NEVER maximize a single arc flow[source][sink]).",
+            "- Source constraint:  sum_out(flow[source][*]) - sum_in(flow[*][source]) == F.",
+            "- Sink constraint:    sum_in(flow[*][sink]) - sum_out(flow[sink][*]) == F.",
+            "- For intermediate node k:  sum_in(flow[*][k]) == sum_out(flow[k][*]).",
+            "- Capacity per arc: 0 <= flow[i][j] <= capacity[i][j] for existing arcs.",
+            "- Missing arcs: either do NOT create variables for them OR enforce flow[i][j] == 0.",
+            "- UNROLL into explicit scalar constraints (no comprehensions in constraints).",
+        ]
+
+    if pt == "network_min_cost_flow":
+        return [
+            "Type hint: MIN-COST redistribution / transshipment (min-cost flow).",
+            "- Decision variable: shipped amount flow[i][j] (usually CONTINUOUS) on existing arcs.",
+            "- Node balance: final[i] = initial[i] + inflow[i] - outflow[i].",
+            "- If wording is 'needs/required/at least', enforce final[i] >= required[i] (NOT '==') unless totals match exactly.",
+            "- Objective: minimize sum(cost[i][j]*flow[i][j]).",
+            "- UNROLL constraints into explicit scalar constraints.",
+        ]
+
+    if pt == "selection_knapsack":
+        return [
+            "Type hint: selection/knapsack-like.",
+            "- Use binary vars for select/not-select.",
+            "- Encode 'must take' as x[item]=1, conflicts as x[a]+x[b]<=1, implications as x[a]<=x[b].",
+        ]
+
+    if pt == "assignment":
+        return [
+            "Type hint: assignment/matching.",
+            "- Use binary vars x[w][t].",
+            "- If constraints are 'for each task/worker', UNROLL them into explicit scalar constraints.",
+        ]
+
+    if pt == "transport_flow":
+        return [
+            "Type hint: transportation/flow.",
+            "- Flow/shipment amounts are usually CONTINUOUS unless explicitly stated as integer units.",
+            "- Balance constraints should be explicit per node (scalar, unrolled).",
+        ]
+
+    if pt == "routing_vrp":
+        return [
+            "Type hint: routing (VRP/VRPTW).",
+            "- Vehicle count / visit decisions are typically INTEGER/BINARY.",
+            "- If you cannot fully unroll a huge VRP, output a simplified but valid scalar-constraint model.",
+        ]
+
+    if pt == "production_mix":
+        return [
+            "Type hint: production mix.",
+            "- Production quantity is INTEGER if it represents indivisible units; CONTINUOUS only if fraction is explicitly allowed.",
+            "- Resource constraints: sum(usage*qty) <= capacity (but UNROLL per resource).",
+        ]
+
     return [
-        "MAX-FLOW NETWORK MODELING GUARDRAIL (CRITICAL):",
-        "- Model is MAX-FLOW, NOT a circulation.",
-        "- DO NOT enforce inflow==outflow at SOURCE or SINK.",
-        "- Introduce a scalar variable F >= 0 for total flow from source to sink.",
-        "- Objective MUST be maximize F (NEVER maximize a single arc flow[source][sink]).",
-        "- Source constraint:  sum_out(flow[source][*]) - sum_in(flow[*][source]) == F.",
-        "- Sink constraint:    sum_in(flow[*][sink]) - sum_out(flow[sink][*]) == F.",
-        "- For intermediate node k:  sum_in(flow[*][k]) == sum_out(flow[k][*]).",
-        "- Capacity per arc: 0 <= flow[i][j] <= capacity[i][j] for existing arcs.",
-        "- Missing arcs: either do NOT create variables for them OR enforce flow[i][j] == 0.",
-        "- UNROLL into explicit scalar constraints (no comprehensions in constraints).",
+        "Type hint: generic LP/MIP.",
+        "- Identify sets/params/vars clearly and keep everything linear.",
     ]
 
+# =============================================================================
+# 5) Prompt Assembly
+# =============================================================================
 
 def build_system_prompt(
     question_text: str,
@@ -429,9 +478,13 @@ def build_system_prompt(
     difficulty_hint: Optional[str] = None,
 ) -> str:
     """
-    Dynamic system prompt templating:
-    - 保留 BASE_SYSTEM_PROMPT
-    - 根据题面特征与题型追加 guidance 块
+    Heuristic dynamic system prompt templating:
+      BASE_SYSTEM_PROMPT
+        + global output contract
+        + feature-triggered hints
+        + global semantic rules (vartype + sense)
+        + type-specific template/guardrails (single layer)
+        + optional difficulty hint
     """
     if not enable_dynamic:
         return BASE_SYSTEM_PROMPT
@@ -439,57 +492,44 @@ def build_system_prompt(
     feats = _simple_text_features(question_text)
     ptype = classify_problem_type(question_text)
 
-    type_guidance = _problem_guidance_compact(ptype)
-    vartype_guidance = _vartype_guidance(feats, ptype)
-    sense_guidance = _constraint_sense_guidance(feats, ptype)
-    maxflow_guidance = _maxflow_guidance_by_ptype(ptype)
+    # sub-prompts
+    output_contract = _subprompt_output_contract()
+    feature_hints = _subprompt_feature_hints(feats)
+    vartype_rules = _vartype_guidance(feats, ptype)
+    sense_rules = _constraint_sense_guidance(feats, ptype)
+    type_specific = _type_specific_guidance(ptype)
 
     lines: List[str] = [BASE_SYSTEM_PROMPT, ""]
 
-    lines.append("INTERNAL GUIDANCE (do NOT include this text in the JSON output):")
-    lines.append("- Output JSON ONLY. No markdown, no explanation text.")
-    lines.append("- Constraints MUST be fully specified SCALAR constraints.")
-    lines.append("- In constraints, NEVER use generator expressions or comprehensions.")
-    lines.append("- If the statement says 'for each/for all', you MUST UNROLL into one constraint per element.")
-    lines.append("- Use string indices like x['I']['A'] (not x[I][A], not x[1]).")
+    # 1) Global contract
+    lines.extend(output_contract)
 
-    # Feature-triggered hints
-    if feats.get("has_table"):
-        lines.append("- The statement likely contains a table: convert rows/cols into SET elements and PARAM values explicitly.")
-    if feats.get("has_for_each"):
-        lines.append("- The statement has quantifiers ('for each/for all'): UNROLL them into explicit scalar constraints.")
-    if feats.get("has_capacity"):
-        lines.append("- Capacity/limit constraints: write explicit per-resource/per-period scalar constraints.")
-    if feats.get("has_implication"):
-        lines.append("- Logical rules (if/then/must/cannot): encode using linear inequalities (x<=y, x+y<=1, etc.).")
-    if feats.get("has_assignment"):
-        lines.append("- Assignment-like structure: binary vars with unrolled one-to-one constraints.")
-    if feats.get("has_flow"):
-        lines.append("- Flow-like structure: balance constraints should be unrolled per node.")
-    if feats.get("has_routing"):
-        lines.append("- Routing is complex: prefer a smaller valid model rather than implicit quantifiers.")
-    if feats.get("has_production"):
-        lines.append("- Production mix: check units, capacities, and profit definition carefully.")
-
-    lines.append("")
-    lines.extend(vartype_guidance)
-
-    lines.append("")
-    lines.extend(sense_guidance)
-
-    if maxflow_guidance:
+    # 2) Feature-triggered hints
+    if feature_hints:
         lines.append("")
-        lines.extend(maxflow_guidance)
+        lines.extend(feature_hints)
+
+    # 3) Global semantic rules
+    lines.append("")
+    lines.extend(vartype_rules)
 
     lines.append("")
-    lines.extend(type_guidance)
+    lines.extend(sense_rules)
 
+    # 4) Type-specific template + guardrails (single layer)
+    lines.append("")
+    lines.extend(type_specific)
+
+    # 5) Optional difficulty hint
     if difficulty_hint:
         lines.append("")
         lines.append(f"Difficulty hint: {difficulty_hint}. Be extra systematic with indices and unrolling.")
 
     return "\n".join(lines).strip()
 
+# =============================================================================
+# 6) User Prompt Builder
+# =============================================================================
 
 def build_user_prompt(question_text: str) -> str:
     """
@@ -501,6 +541,9 @@ def build_user_prompt(question_text: str) -> str:
         + question_text
     )
 
+# =============================================================================
+# 7) Output Extraction / Parsing
+# =============================================================================
 
 def extract_json_from_text(text: str) -> Dict[str, Any]:
     """
@@ -524,6 +567,9 @@ def extract_json_from_text(text: str) -> Dict[str, Any]:
 
     return json.loads(text)
 
+# =============================================================================
+# 8) JSON → ModelIR Conversion
+# =============================================================================
 
 def _filter_kwargs_for(cls, raw: Dict[str, Any]) -> Dict[str, Any]:
     """

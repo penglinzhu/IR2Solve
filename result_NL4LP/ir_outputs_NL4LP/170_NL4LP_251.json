@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_251",
+    "source": null,
+    "description": "Determine the number of kayak and motorboat trips to minimize the total time needed to transport at least 550 locals across a lake.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TRANSPORT_METHODS",
+      "elements": [
+        "kayak",
+        "motorboat"
+      ],
+      "description": "The available methods of transportation across the lake."
+    }
+  ],
+  "params": [
+    {
+      "name": "people_per_trip",
+      "indices": [
+        "TRANSPORT_METHODS"
+      ],
+      "values": {
+        "kayak": 4,
+        "motorboat": 5
+      },
+      "description": "Number of people each transportation method can carry per trip."
+    },
+    {
+      "name": "time_per_trip",
+      "indices": [
+        "TRANSPORT_METHODS"
+      ],
+      "values": {
+        "kayak": 5,
+        "motorboat": 3
+      },
+      "description": "Time in minutes each transportation method takes per trip."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "TRANSPORT_METHODS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of trips made by each transportation method."
+    }
+  ],
+  "objective": {
+    "name": "min_total_time",
+    "sense": "min",
+    "expr": "sum(trips[m] * time_per_trip[m] for m in TRANSPORT_METHODS)",
+    "description": "Minimize the total time required for all trips."
+  },
+  "constraints": [
+    {
+      "name": "min_people_transport",
+      "expr_lhs": "sum(trips[m] * people_per_trip[m] for m in TRANSPORT_METHODS)",
+      "sense": ">=",
+      "expr_rhs": "550",
+      "description": "At least 550 locals must be transported across the lake."
+    },
+    {
+      "name": "max_motorboat_trips",
+      "expr_lhs": "trips['motorboat']",
+      "sense": "<=",
+      "expr_rhs": "25",
+      "description": "At most 25 motorboat trips are allowed."
+    },
+    {
+      "name": "min_kayak_trip_ratio",
+      "expr_lhs": "trips['kayak']",
+      "sense": ">=",
+      "expr_rhs": "0.75 * (trips['kayak'] + trips['motorboat'])",
+      "description": "At least 75% of the trips should be by kayak."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_62",
+    "source": null,
+    "description": "Optimize the purchase of regular and hybrid vans to minimize the total number of vans while meeting delivery and pollution constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VAN_TYPES",
+      "elements": [
+        "regular",
+        "hybrid"
+      ],
+      "description": "Types of vans available for purchase"
+    }
+  ],
+  "params": [
+    {
+      "name": "delivery_capacity",
+      "indices": [
+        "VAN_TYPES"
+      ],
+      "values": {
+        "regular": 500,
+        "hybrid": 300
+      },
+      "description": "Number of packages each type of van can deliver per day"
+    },
+    {
+      "name": "pollution",
+      "indices": [
+        "VAN_TYPES"
+      ],
+      "values": {
+        "regular": 200,
+        "hybrid": 100
+      },
+      "description": "Units of pollutants produced by each type of van per day"
+    }
+  ],
+  "vars": [
+    {
+      "name": "vans",
+      "indices": [
+        "VAN_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of vans to purchase of each type"
+    }
+  ],
+  "objective": {
+    "name": "min_total_vans",
+    "sense": "min",
+    "expr": "vans['regular'] + vans['hybrid']",
+    "description": "Minimize the total number of vans purchased"
+  },
+  "constraints": [
+    {
+      "name": "pollution_constraint",
+      "expr_lhs": "pollution['regular'] * vans['regular'] + pollution['hybrid'] * vans['hybrid']",
+      "sense": "<=",
+      "expr_rhs": "7000",
+      "description": "Total pollution produced by the vans must not exceed 7000 units per day"
+    },
+    {
+      "name": "delivery_requirement",
+      "expr_lhs": "delivery_capacity['regular'] * vans['regular'] + delivery_capacity['hybrid'] * vans['hybrid']",
+      "sense": ">=",
+      "expr_rhs": "20000",
+      "description": "Total delivery capacity must be at least 20000 packages per day"
+    }
+  ],
+  "graph": null
+}

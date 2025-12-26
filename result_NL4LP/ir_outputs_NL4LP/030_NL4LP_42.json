@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_42",
+    "source": null,
+    "description": "Optimize the number of processes to maximize the total number of coins plated.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PROCESSES",
+      "elements": [
+        "A",
+        "B"
+      ],
+      "description": "Types of processes for plating coins."
+    }
+  ],
+  "params": [
+    {
+      "name": "gold_requirement",
+      "indices": [
+        "PROCESSES"
+      ],
+      "values": {
+        "A": 3,
+        "B": 5
+      },
+      "description": "Gold units required per process."
+    },
+    {
+      "name": "wire_requirement",
+      "indices": [
+        "PROCESSES"
+      ],
+      "values": {
+        "A": 2,
+        "B": 3
+      },
+      "description": "Wire units required per process."
+    },
+    {
+      "name": "coins_plated",
+      "indices": [
+        "PROCESSES"
+      ],
+      "values": {
+        "A": 5,
+        "B": 7
+      },
+      "description": "Number of coins plated per process."
+    },
+    {
+      "name": "total_gold",
+      "indices": [],
+      "values": 500,
+      "description": "Total available units of gold."
+    },
+    {
+      "name": "total_wires",
+      "indices": [],
+      "values": 300,
+      "description": "Total available units of wires."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PROCESSES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of processes of each type to run."
+    }
+  ],
+  "objective": {
+    "name": "max_coins_plated",
+    "sense": "max",
+    "expr": "5 * x['A'] + 7 * x['B']",
+    "description": "Maximize the total number of coins plated."
+  },
+  "constraints": [
+    {
+      "name": "gold_constraint",
+      "expr_lhs": "3 * x['A'] + 5 * x['B']",
+      "sense": "<=",
+      "expr_rhs": "500",
+      "description": "Gold usage must not exceed available units."
+    },
+    {
+      "name": "wire_constraint",
+      "expr_lhs": "2 * x['A'] + 3 * x['B']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "Wire usage must not exceed available units."
+    }
+  ],
+  "graph": null
+}

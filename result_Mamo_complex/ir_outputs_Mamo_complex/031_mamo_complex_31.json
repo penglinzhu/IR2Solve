@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_31",
+    "source": null,
+    "description": "Optimize weekly meal prep to meet dietary needs at the lowest cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Food_1",
+        "Food_2",
+        "Food_3",
+        "Food_4",
+        "Food_5",
+        "Food_6",
+        "Food_7"
+      ],
+      "description": "Available food items for meal prep."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 6,
+        "Food_2": 2,
+        "Food_3": 10,
+        "Food_4": 6,
+        "Food_5": 4,
+        "Food_6": 1,
+        "Food_7": 9
+      },
+      "description": "Cost of each food item."
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 6,
+        "Food_2": 16,
+        "Food_3": 12,
+        "Food_4": 9,
+        "Food_5": 12,
+        "Food_6": 12,
+        "Food_7": 13
+      },
+      "description": "Protein content of each food item in grams."
+    },
+    {
+      "name": "carbs",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 3,
+        "Food_2": 3,
+        "Food_3": 17,
+        "Food_4": 28,
+        "Food_5": 17,
+        "Food_6": 14,
+        "Food_7": 20
+      },
+      "description": "Carbohydrate content of each food item in grams."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 73,
+        "Food_2": 181,
+        "Food_3": 231,
+        "Food_4": 160,
+        "Food_5": 209,
+        "Food_6": 184,
+        "Food_7": 118
+      },
+      "description": "Caloric content of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food item to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of food items to meet nutritional needs."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "59",
+      "description": "Ensure at least 59 grams of protein are consumed."
+    },
+    {
+      "name": "carbs_requirement",
+      "expr_lhs": "sum(carbs[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "179",
+      "description": "Ensure at least 179 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "2414",
+      "description": "Ensure at least 2,414 calories are consumed."
+    }
+  ],
+  "graph": null
+}

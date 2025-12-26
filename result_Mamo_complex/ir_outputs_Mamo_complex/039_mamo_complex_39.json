@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_39",
+    "source": null,
+    "description": "Optimize the distribution of medical supplies across regions to meet demands at minimum cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "REGIONS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "description": "Regions involved in the distribution of medical supplies."
+    }
+  ],
+  "params": [
+    {
+      "name": "initial_stock",
+      "indices": [
+        "REGIONS"
+      ],
+      "values": {
+        "1": 410,
+        "2": 266,
+        "3": 132,
+        "4": 6,
+        "5": 485
+      },
+      "description": "Initial stock of supplies in each region."
+    },
+    {
+      "name": "required_stock",
+      "indices": [
+        "REGIONS"
+      ],
+      "values": {
+        "1": 274,
+        "2": 331,
+        "3": 232,
+        "4": 359,
+        "5": 74
+      },
+      "description": "Required stock of supplies in each region."
+    },
+    {
+      "name": "transfer_cost",
+      "indices": [
+        "REGIONS",
+        "REGIONS"
+      ],
+      "values": {
+        "1": {
+          "2": 24,
+          "3": 3,
+          "4": 27,
+          "5": 31
+        },
+        "2": {
+          "1": 24,
+          "3": 11,
+          "4": 7,
+          "5": 37
+        },
+        "3": {
+          "1": 30,
+          "2": 1,
+          "4": 38,
+          "5": 22
+        },
+        "4": {
+          "1": 36,
+          "2": 18,
+          "3": 17,
+          "5": 35
+        },
+        "5": {
+          "1": 41,
+          "2": 35,
+          "3": 33,
+          "4": 33
+        }
+      },
+      "description": "Cost of transferring supplies from one region to another."
+    }
+  ],
+  "vars": [
+    {
+      "name": "transfer",
+      "indices": [
+        "REGIONS",
+        "REGIONS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of supplies transferred from one region to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(transfer_cost[i][j] * transfer[i][j] for i in REGIONS for j in REGIONS if i != j)",
+    "description": "Minimize the total cost of transferring supplies between regions."
+  },
+  "constraints": [
+    {
+      "name": "balance_region_1",
+      "expr_lhs": "initial_stock['1'] + sum(transfer[j]['1'] for j in REGIONS if j != '1') - sum(transfer['1'][j] for j in REGIONS if j != '1')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['1']",
+      "description": "Ensure region 1 meets its required stock."
+    },
+    {
+      "name": "balance_region_2",
+      "expr_lhs": "initial_stock['2'] + sum(transfer[j]['2'] for j in REGIONS if j != '2') - sum(transfer['2'][j] for j in REGIONS if j != '2')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['2']",
+      "description": "Ensure region 2 meets its required stock."
+    },
+    {
+      "name": "balance_region_3",
+      "expr_lhs": "initial_stock['3'] + sum(transfer[j]['3'] for j in REGIONS if j != '3') - sum(transfer['3'][j] for j in REGIONS if j != '3')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['3']",
+      "description": "Ensure region 3 meets its required stock."
+    },
+    {
+      "name": "balance_region_4",
+      "expr_lhs": "initial_stock['4'] + sum(transfer[j]['4'] for j in REGIONS if j != '4') - sum(transfer['4'][j] for j in REGIONS if j != '4')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['4']",
+      "description": "Ensure region 4 meets its required stock."
+    },
+    {
+      "name": "balance_region_5",
+      "expr_lhs": "initial_stock['5'] + sum(transfer[j]['5'] for j in REGIONS if j != '5') - sum(transfer['5'][j] for j in REGIONS if j != '5')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['5']",
+      "description": "Ensure region 5 meets its required stock."
+    }
+  ],
+  "graph": null
+}

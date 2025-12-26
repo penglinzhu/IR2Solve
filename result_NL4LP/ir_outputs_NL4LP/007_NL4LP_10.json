@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_10",
+    "source": null,
+    "description": "Optimize the operation of a bakery to maximize total profit from making bread and cookies given machine hour constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "bread",
+        "cookies"
+      ],
+      "description": "Types of products produced by the bakery."
+    },
+    {
+      "name": "MACHINES",
+      "elements": [
+        "mixer",
+        "oven"
+      ],
+      "description": "Types of machines used in the bakery."
+    }
+  ],
+  "params": [
+    {
+      "name": "machine_hours",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "mixer": 3000,
+        "oven": 3000
+      },
+      "description": "Maximum available hours per year for each machine."
+    },
+    {
+      "name": "time_per_product",
+      "indices": [
+        "PRODUCTS",
+        "MACHINES"
+      ],
+      "values": {
+        "bread": {
+          "mixer": 1,
+          "oven": 3
+        },
+        "cookies": {
+          "mixer": 0.5,
+          "oven": 1
+        }
+      },
+      "description": "Time required in hours for each product on each machine."
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "bread": 5,
+        "cookies": 3
+      },
+      "description": "Profit per unit of each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units produced for each product."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "5 * x['bread'] + 3 * x['cookies']",
+    "description": "Maximize total profit from bread and cookies."
+  },
+  "constraints": [
+    {
+      "name": "mixer_capacity",
+      "expr_lhs": "1 * x['bread'] + 0.5 * x['cookies']",
+      "sense": "<=",
+      "expr_rhs": "3000",
+      "description": "Mixer capacity constraint."
+    },
+    {
+      "name": "oven_capacity",
+      "expr_lhs": "3 * x['bread'] + 1 * x['cookies']",
+      "sense": "<=",
+      "expr_rhs": "3000",
+      "description": "Oven capacity constraint."
+    }
+  ],
+  "graph": null
+}

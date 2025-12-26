@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_32",
+    "source": null,
+    "description": "Jordan's diet optimization problem to minimize cost while meeting nutritional requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Kebabs",
+        "Rice"
+      ],
+      "description": "Types of food in the diet"
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Kebabs": 2,
+        "Rice": 3
+      },
+      "description": "Cost per serving of each food"
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Kebabs": 200,
+        "Rice": 300
+      },
+      "description": "Calories per serving of each food"
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Kebabs": 4,
+        "Rice": 4.5
+      },
+      "description": "Protein grams per serving of each food"
+    }
+  ],
+  "vars": [
+    {
+      "name": "servings",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * servings[f] for f in ['Kebabs', 'Rice'])",
+    "description": "Minimize the total cost of the diet"
+  },
+  "constraints": [
+    {
+      "name": "calorie_requirement",
+      "expr_lhs": "sum(calories[f] * servings[f] for f in ['Kebabs', 'Rice'])",
+      "sense": ">=",
+      "expr_rhs": "2200",
+      "description": "Ensure at least 2200 calories per day"
+    },
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * servings[f] for f in ['Kebabs', 'Rice'])",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "Ensure at least 30 grams of protein per day"
+    }
+  ],
+  "graph": null
+}

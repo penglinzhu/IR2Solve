@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_92",
+    "source": null,
+    "description": "Determine the number of small and large bones to produce to minimize meat usage while satisfying medication and preference constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BONES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of bones produced by the hospital."
+    }
+  ],
+  "params": [
+    {
+      "name": "medication_required",
+      "indices": [
+        "BONES"
+      ],
+      "values": {
+        "small": 10,
+        "large": 15
+      },
+      "description": "Units of tooth medication required per bone type."
+    },
+    {
+      "name": "meat_required",
+      "indices": [
+        "BONES"
+      ],
+      "values": {
+        "small": 12,
+        "large": 15
+      },
+      "description": "Units of meat required per bone type."
+    },
+    {
+      "name": "total_medication",
+      "indices": [],
+      "values": 2000,
+      "description": "Total units of tooth medication available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "BONES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of bone to produce."
+    }
+  ],
+  "objective": {
+    "name": "min_total_meat",
+    "sense": "min",
+    "expr": "x['small'] * meat_required['small'] + x['large'] * meat_required['large']",
+    "description": "Minimize the total amount of meat used."
+  },
+  "constraints": [
+    {
+      "name": "medication_constraint",
+      "expr_lhs": "x['small'] * medication_required['small'] + x['large'] * medication_required['large']",
+      "sense": "<=",
+      "expr_rhs": "total_medication",
+      "description": "Total medication used must not exceed available supply."
+    },
+    {
+      "name": "preference_constraint",
+      "expr_lhs": "x['small']",
+      "sense": ">=",
+      "expr_rhs": "0.5 * (x['small'] + x['large'])",
+      "description": "At least 50% of the bones made must be small."
+    },
+    {
+      "name": "large_bone_minimum",
+      "expr_lhs": "x['large']",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "At least 30 large bones must be produced."
+    }
+  ],
+  "graph": null
+}

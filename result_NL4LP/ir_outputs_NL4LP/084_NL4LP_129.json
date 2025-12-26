@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_129",
+    "source": null,
+    "description": "Optimize the usage of two radiation beams to minimize the total radiation received by the pancreas while meeting constraints on skin and tumor radiation.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BEAMS",
+      "elements": [
+        "Beam 1",
+        "Beam 2"
+      ],
+      "description": "The two available radiation beams."
+    }
+  ],
+  "params": [
+    {
+      "name": "dose_pancreas",
+      "indices": [
+        "BEAMS"
+      ],
+      "values": {
+        "Beam 1": 0.3,
+        "Beam 2": 0.2
+      },
+      "description": "Dose delivered to the pancreas per minute by each beam."
+    },
+    {
+      "name": "dose_skin",
+      "indices": [
+        "BEAMS"
+      ],
+      "values": {
+        "Beam 1": 0.2,
+        "Beam 2": 0.1
+      },
+      "description": "Dose delivered to the skin per minute by each beam."
+    },
+    {
+      "name": "dose_tumor",
+      "indices": [
+        "BEAMS"
+      ],
+      "values": {
+        "Beam 1": 0.6,
+        "Beam 2": 0.4
+      },
+      "description": "Dose delivered to the tumor per minute by each beam."
+    }
+  ],
+  "vars": [
+    {
+      "name": "time",
+      "indices": [
+        "BEAMS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Time in minutes each beam is used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pancreas_dose",
+    "sense": "min",
+    "expr": "dose_pancreas['Beam 1'] * time['Beam 1'] + dose_pancreas['Beam 2'] * time['Beam 2']",
+    "description": "Minimize the total dose received by the pancreas."
+  },
+  "constraints": [
+    {
+      "name": "skin_dose_limit",
+      "expr_lhs": "dose_skin['Beam 1'] * time['Beam 1'] + dose_skin['Beam 2'] * time['Beam 2']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "The total dose received by the skin should not exceed 4 units."
+    },
+    {
+      "name": "tumor_dose_requirement",
+      "expr_lhs": "dose_tumor['Beam 1'] * time['Beam 1'] + dose_tumor['Beam 2'] * time['Beam 2']",
+      "sense": ">=",
+      "expr_rhs": "3",
+      "description": "The total dose delivered to the tumor should be at least 3 units."
+    }
+  ],
+  "graph": null
+}

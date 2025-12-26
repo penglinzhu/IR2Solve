@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_241",
+    "source": null,
+    "description": "Optimize the transportation of equipment and staff using mobile production units to minimize parking spots.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "UNITS",
+      "elements": [
+        "large",
+        "small"
+      ],
+      "description": "Types of mobile production units"
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "UNITS"
+      ],
+      "values": {
+        "large": 6,
+        "small": 2
+      },
+      "description": "Capacity of each type of mobile production unit in terms of people"
+    },
+    {
+      "name": "parking_spots",
+      "indices": [
+        "UNITS"
+      ],
+      "values": {
+        "large": 2,
+        "small": 1
+      },
+      "description": "Number of parking spots required for each type of mobile production unit"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "UNITS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of mobile production unit used"
+    }
+  ],
+  "objective": {
+    "name": "min_total_parking_spots",
+    "sense": "min",
+    "expr": "x['large'] * parking_spots['large'] + x['small'] * parking_spots['small']",
+    "description": "Minimize the total number of parking spots required"
+  },
+  "constraints": [
+    {
+      "name": "people_transport_requirement",
+      "expr_lhs": "x['large'] * capacity['large'] + x['small'] * capacity['small']",
+      "sense": ">=",
+      "expr_rhs": "80",
+      "description": "Ensure at least 80 people can be transported"
+    },
+    {
+      "name": "min_small_units",
+      "expr_lhs": "x['small']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "At least 5 units must be small mobile units"
+    },
+    {
+      "name": "large_units_percentage",
+      "expr_lhs": "x['large']",
+      "sense": ">=",
+      "expr_rhs": "0.75 * (x['large'] + x['small'])",
+      "description": "Large units must make up at least 75% of all vehicles"
+    }
+  ],
+  "graph": null
+}

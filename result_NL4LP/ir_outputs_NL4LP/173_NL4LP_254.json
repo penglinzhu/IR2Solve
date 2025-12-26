@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_254",
+    "source": null,
+    "description": "Determine the number of golf carts and pull carts needed to transport guests while minimizing the total number of carts.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CART_TYPES",
+      "elements": [
+        "golf_cart",
+        "pull_cart"
+      ],
+      "description": "Types of carts available for transporting guests."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "CART_TYPES"
+      ],
+      "values": {
+        "golf_cart": 4,
+        "pull_cart": 1
+      },
+      "description": "Capacity of each type of cart in terms of number of guests."
+    },
+    {
+      "name": "max_golf_cart_ratio",
+      "indices": [],
+      "values": 0.6,
+      "description": "Maximum allowed ratio of golf carts to total carts."
+    },
+    {
+      "name": "min_guests",
+      "indices": [],
+      "values": 80,
+      "description": "Minimum number of guests that need to be transported."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_carts",
+      "indices": [
+        "CART_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of cart to be used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_carts",
+    "sense": "min",
+    "expr": "num_carts['golf_cart'] + num_carts['pull_cart']",
+    "description": "Minimize the total number of carts used."
+  },
+  "constraints": [
+    {
+      "name": "guest_transportation_requirement",
+      "expr_lhs": "capacity['golf_cart'] * num_carts['golf_cart'] + capacity['pull_cart'] * num_carts['pull_cart']",
+      "sense": ">=",
+      "expr_rhs": "min_guests",
+      "description": "Ensure at least the minimum number of guests are transported."
+    },
+    {
+      "name": "golf_cart_ratio_limit",
+      "expr_lhs": "num_carts['golf_cart']",
+      "sense": "<=",
+      "expr_rhs": "max_golf_cart_ratio * (num_carts['golf_cart'] + num_carts['pull_cart'])",
+      "description": "Limit the number of golf carts to at most 60% of the total carts."
+    }
+  ],
+  "graph": null
+}

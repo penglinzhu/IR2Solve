@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_252",
+    "source": null,
+    "description": "Optimize the number of tests performed in a clinic with time and accuracy constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TEST_TYPES",
+      "elements": [
+        "blood",
+        "ear"
+      ],
+      "description": "Types of tests performed at the clinic."
+    }
+  ],
+  "params": [
+    {
+      "name": "time_per_test",
+      "indices": [
+        "TEST_TYPES"
+      ],
+      "values": {
+        "blood": 30,
+        "ear": 5
+      },
+      "description": "Time in minutes required to perform each type of test."
+    },
+    {
+      "name": "total_time_available",
+      "indices": [],
+      "values": 7525,
+      "description": "Total time available for performing tests in minutes."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_tests",
+      "indices": [
+        "TEST_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of tests performed for each type."
+    }
+  ],
+  "objective": {
+    "name": "max_total_tests",
+    "sense": "max",
+    "expr": "num_tests['blood'] + num_tests['ear']",
+    "description": "Maximize the total number of tests performed."
+  },
+  "constraints": [
+    {
+      "name": "time_constraint",
+      "expr_lhs": "30 * num_tests['blood'] + 5 * num_tests['ear']",
+      "sense": "<=",
+      "expr_rhs": "7525",
+      "description": "Total time used by tests must not exceed available time."
+    },
+    {
+      "name": "accuracy_constraint",
+      "expr_lhs": "num_tests['blood']",
+      "sense": ">=",
+      "expr_rhs": "3 * num_tests['ear']",
+      "description": "At least three times as many blood tests as ear tests should be performed."
+    },
+    {
+      "name": "minimum_ear_tests",
+      "expr_lhs": "num_tests['ear']",
+      "sense": ">=",
+      "expr_rhs": "12",
+      "description": "At least 12 ear tests must be administered."
+    }
+  ],
+  "graph": null
+}

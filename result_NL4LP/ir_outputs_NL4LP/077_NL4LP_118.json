@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_118",
+    "source": null,
+    "description": "Optimize the number of throat and nasal swabs to maximize the number of patients seen given time and discomfort constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SWAB_TYPES",
+      "elements": [
+        "throat",
+        "nasal"
+      ],
+      "description": "Types of swabs conducted at the clinic."
+    }
+  ],
+  "params": [
+    {
+      "name": "time_per_swab",
+      "indices": [
+        "SWAB_TYPES"
+      ],
+      "values": {
+        "throat": 5,
+        "nasal": 3
+      },
+      "description": "Time in minutes required to conduct each type of swab."
+    },
+    {
+      "name": "total_time_available",
+      "indices": [],
+      "values": 20000,
+      "description": "Total operational time available in minutes."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_swabs",
+      "indices": [
+        "SWAB_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of swab to be conducted."
+    }
+  ],
+  "objective": {
+    "name": "max_patients_seen",
+    "sense": "max",
+    "expr": "num_swabs['throat'] + num_swabs['nasal']",
+    "description": "Maximize the total number of patients seen."
+  },
+  "constraints": [
+    {
+      "name": "nasal_swabs_minimum",
+      "expr_lhs": "num_swabs['nasal']",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "At least 30 nasal swabs must be conducted."
+    },
+    {
+      "name": "throat_to_nasal_ratio",
+      "expr_lhs": "num_swabs['throat']",
+      "sense": ">=",
+      "expr_rhs": "4 * num_swabs['nasal']",
+      "description": "At least 4 times as many throat swabs as nasal swabs must be conducted."
+    },
+    {
+      "name": "total_time_constraint",
+      "expr_lhs": "5 * num_swabs['throat'] + 3 * num_swabs['nasal']",
+      "sense": "<=",
+      "expr_rhs": "20000",
+      "description": "Total time for conducting swabs must not exceed available operational time."
+    }
+  ],
+  "graph": null
+}

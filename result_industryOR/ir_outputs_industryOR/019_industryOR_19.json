@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "problem_id": "industryOR_19",
+    "source": null,
+    "description": "Optimize coal distribution from two mines to three residential areas to minimize transportation cost in ton-kilometers.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MINES",
+      "elements": [
+        "A",
+        "B"
+      ],
+      "description": "Coal mines"
+    },
+    {
+      "name": "AREAS",
+      "elements": [
+        "1",
+        "2",
+        "3"
+      ],
+      "description": "Residential areas"
+    }
+  ],
+  "params": [
+    {
+      "name": "supply",
+      "indices": [
+        "MINES"
+      ],
+      "values": {
+        "A": 80,
+        "B": 100
+      },
+      "description": "Minimum supply of coal from each mine in tons"
+    },
+    {
+      "name": "demand",
+      "indices": [
+        "AREAS"
+      ],
+      "values": {
+        "1": 55,
+        "2": 75,
+        "3": 50
+      },
+      "description": "Coal demand of each residential area in tons"
+    },
+    {
+      "name": "distance",
+      "indices": [
+        "MINES",
+        "AREAS"
+      ],
+      "values": {
+        "A": {
+          "1": 10,
+          "2": 5,
+          "3": 6
+        },
+        "B": {
+          "1": 4,
+          "2": 8,
+          "3": 15
+        }
+      },
+      "description": "Distance in kilometers from each mine to each residential area"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "MINES",
+        "AREAS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of coal transported from each mine to each residential area in tons"
+    }
+  ],
+  "objective": {
+    "name": "min_total_ton_kilometers",
+    "sense": "min",
+    "expr": "sum(x[m][a] * distance[m][a] for m in MINES for a in AREAS)",
+    "description": "Minimize the total transportation cost in ton-kilometers"
+  },
+  "constraints": [
+    {
+      "name": "supply_constraint_A",
+      "expr_lhs": "x['A']['1'] + x['A']['2'] + x['A']['3']",
+      "sense": ">=",
+      "expr_rhs": "supply['A']",
+      "description": "Mine A must supply at least 80 tons"
+    },
+    {
+      "name": "supply_constraint_B",
+      "expr_lhs": "x['B']['1'] + x['B']['2'] + x['B']['3']",
+      "sense": ">=",
+      "expr_rhs": "supply['B']",
+      "description": "Mine B must supply at least 100 tons"
+    },
+    {
+      "name": "demand_constraint_1",
+      "expr_lhs": "x['A']['1'] + x['B']['1']",
+      "sense": "==",
+      "expr_rhs": "demand['1']",
+      "description": "Residential area 1 requires exactly 55 tons"
+    },
+    {
+      "name": "demand_constraint_2",
+      "expr_lhs": "x['A']['2'] + x['B']['2']",
+      "sense": "==",
+      "expr_rhs": "demand['2']",
+      "description": "Residential area 2 requires exactly 75 tons"
+    },
+    {
+      "name": "demand_constraint_3",
+      "expr_lhs": "x['A']['3'] + x['B']['3']",
+      "sense": "==",
+      "expr_rhs": "demand['3']",
+      "description": "Residential area 3 requires exactly 50 tons"
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_58",
+    "source": null,
+    "description": "Determine the number of brownies and lemon squares to make in order to minimize the total amount of fiber needed, subject to ingredient constraints and product mix requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "brownies",
+        "lemon_squares"
+      ],
+      "description": "Types of products made by the bakery"
+    }
+  ],
+  "params": [
+    {
+      "name": "chocolate_mix",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "brownies": 5,
+        "lemon_squares": 0
+      },
+      "description": "Units of chocolate mix required per product"
+    },
+    {
+      "name": "lemon_mix",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "brownies": 0,
+        "lemon_squares": 7
+      },
+      "description": "Units of lemon mix required per product"
+    },
+    {
+      "name": "fiber",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "brownies": 4,
+        "lemon_squares": 6
+      },
+      "description": "Units of fiber required per product"
+    },
+    {
+      "name": "chocolate_mix_available",
+      "indices": [],
+      "values": 2500,
+      "description": "Total units of chocolate mix available"
+    },
+    {
+      "name": "lemon_mix_available",
+      "indices": [],
+      "values": 3300,
+      "description": "Total units of lemon mix available"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each product to make"
+    }
+  ],
+  "objective": {
+    "name": "min_total_fiber",
+    "sense": "min",
+    "expr": "4 * x['brownies'] + 6 * x['lemon_squares']",
+    "description": "Minimize the total amount of fiber used"
+  },
+  "constraints": [
+    {
+      "name": "chocolate_mix_constraint",
+      "expr_lhs": "5 * x['brownies']",
+      "sense": "<=",
+      "expr_rhs": "chocolate_mix_available",
+      "description": "Chocolate mix usage must not exceed available supply"
+    },
+    {
+      "name": "lemon_mix_constraint",
+      "expr_lhs": "7 * x['lemon_squares']",
+      "sense": "<=",
+      "expr_rhs": "lemon_mix_available",
+      "description": "Lemon mix usage must not exceed available supply"
+    },
+    {
+      "name": "lemon_squares_greater_than_brownies",
+      "expr_lhs": "x['lemon_squares']",
+      "sense": ">=",
+      "expr_rhs": "x['brownies'] + 1",
+      "description": "Number of lemon squares must be greater than the number of brownies"
+    },
+    {
+      "name": "at_least_40_percent_brownies",
+      "expr_lhs": "x['brownies']",
+      "sense": ">=",
+      "expr_rhs": "0.4 * (x['brownies'] + x['lemon_squares'])",
+      "description": "At least 40% of the items made must be brownies"
+    }
+  ],
+  "graph": null
+}

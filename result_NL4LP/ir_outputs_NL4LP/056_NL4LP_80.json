@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_80",
+    "source": null,
+    "description": "Optimize the number of machines A and B used in a factory to minimize the total number of machines while meeting production and energy constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MACHINES",
+      "elements": [
+        "A",
+        "B"
+      ],
+      "description": "Types of machines in the factory"
+    }
+  ],
+  "params": [
+    {
+      "name": "production_capacity",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "A": 30,
+        "B": 50
+      },
+      "description": "Number of items each machine can produce per day"
+    },
+    {
+      "name": "energy_consumption",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "A": 100,
+        "B": 120
+      },
+      "description": "Energy consumption in kWh per machine per day"
+    },
+    {
+      "name": "max_energy",
+      "indices": [],
+      "values": 3000,
+      "description": "Maximum energy available per day in kWh"
+    },
+    {
+      "name": "min_items",
+      "indices": [],
+      "values": 1000,
+      "description": "Minimum number of items to produce per day"
+    },
+    {
+      "name": "max_percentage_B",
+      "indices": [],
+      "values": 0.3,
+      "description": "Maximum percentage of machines that can be of type B"
+    },
+    {
+      "name": "min_machines_A",
+      "indices": [],
+      "values": 5,
+      "description": "Minimum number of machines of type A to be used"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "MACHINES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of machines of each type to be used"
+    }
+  ],
+  "objective": {
+    "name": "min_total_machines",
+    "sense": "min",
+    "expr": "x['A'] + x['B']",
+    "description": "Minimize the total number of machines used"
+  },
+  "constraints": [
+    {
+      "name": "production_requirement",
+      "expr_lhs": "30 * x['A'] + 50 * x['B']",
+      "sense": ">=",
+      "expr_rhs": "1000",
+      "description": "Ensure at least 1000 items are produced per day"
+    },
+    {
+      "name": "energy_limit",
+      "expr_lhs": "100 * x['A'] + 120 * x['B']",
+      "sense": "<=",
+      "expr_rhs": "3000",
+      "description": "Ensure energy consumption does not exceed 3000 kWh per day"
+    },
+    {
+      "name": "max_machines_B",
+      "expr_lhs": "x['B']",
+      "sense": "<=",
+      "expr_rhs": "0.3 * (x['A'] + x['B'])",
+      "description": "At most 30% of the machines can be of type B"
+    },
+    {
+      "name": "min_machines_A",
+      "expr_lhs": "x['A']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "At least 5 machines of type A should be used"
+    }
+  ],
+  "graph": null
+}

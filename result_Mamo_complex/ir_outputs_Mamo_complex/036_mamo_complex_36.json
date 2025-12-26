@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_36",
+    "source": null,
+    "description": "Optimize the redistribution of medical supplies among clinics to meet their requirements at minimum transportation cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CLINICS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Set of clinics involved in the distribution."
+    }
+  ],
+  "params": [
+    {
+      "name": "initial_stock",
+      "indices": [
+        "CLINICS"
+      ],
+      "values": {
+        "1": 330,
+        "2": 294,
+        "3": 474,
+        "4": 86
+      },
+      "description": "Initial stock of supplies at each clinic."
+    },
+    {
+      "name": "required_stock",
+      "indices": [
+        "CLINICS"
+      ],
+      "values": {
+        "1": 476,
+        "2": 92,
+        "3": 385,
+        "4": 203
+      },
+      "description": "Required stock of supplies at each clinic."
+    },
+    {
+      "name": "transport_cost",
+      "indices": [
+        "CLINICS",
+        "CLINICS"
+      ],
+      "values": {
+        "1": {
+          "2": 2,
+          "3": 12,
+          "4": 19
+        },
+        "2": {
+          "1": 28,
+          "3": 9,
+          "4": 10
+        },
+        "3": {
+          "1": 23,
+          "2": 46,
+          "4": 7
+        },
+        "4": {
+          "1": 19,
+          "2": 16,
+          "3": 23
+        }
+      },
+      "description": "Cost of transporting supplies between clinics."
+    }
+  ],
+  "vars": [
+    {
+      "name": "flow",
+      "indices": [
+        "CLINICS",
+        "CLINICS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of supplies transported from one clinic to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(transport_cost[i][j] * flow[i][j] for i in CLINICS for j in CLINICS if i != j)",
+    "description": "Minimize the total transportation cost of redistributing supplies."
+  },
+  "constraints": [
+    {
+      "name": "clinic_1_balance",
+      "expr_lhs": "initial_stock['1'] + sum(flow[j]['1'] for j in CLINICS if j != '1') - sum(flow['1'][j] for j in CLINICS if j != '1')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['1']",
+      "description": "Ensure Clinic 1 meets its required stock."
+    },
+    {
+      "name": "clinic_2_balance",
+      "expr_lhs": "initial_stock['2'] + sum(flow[j]['2'] for j in CLINICS if j != '2') - sum(flow['2'][j] for j in CLINICS if j != '2')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['2']",
+      "description": "Ensure Clinic 2 meets its required stock."
+    },
+    {
+      "name": "clinic_3_balance",
+      "expr_lhs": "initial_stock['3'] + sum(flow[j]['3'] for j in CLINICS if j != '3') - sum(flow['3'][j] for j in CLINICS if j != '3')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['3']",
+      "description": "Ensure Clinic 3 meets its required stock."
+    },
+    {
+      "name": "clinic_4_balance",
+      "expr_lhs": "initial_stock['4'] + sum(flow[j]['4'] for j in CLINICS if j != '4') - sum(flow['4'][j] for j in CLINICS if j != '4')",
+      "sense": ">=",
+      "expr_rhs": "required_stock['4']",
+      "description": "Ensure Clinic 4 meets its required stock."
+    }
+  ],
+  "graph": null
+}

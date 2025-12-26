@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_166",
+    "source": null,
+    "description": "A corn farmer sends corn to the city using tractors and cars. Minimize the total number of vehicles needed while meeting corn transport requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VEHICLES",
+      "elements": [
+        "tractor",
+        "car"
+      ],
+      "description": "Types of vehicles used for transporting corn."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "tractor": 40,
+        "car": 20
+      },
+      "description": "Capacity of each vehicle type in kg."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "VEHICLES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of vehicle used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_vehicles",
+    "sense": "min",
+    "expr": "x['tractor'] + x['car']",
+    "description": "Minimize the total number of vehicles used."
+  },
+  "constraints": [
+    {
+      "name": "corn_requirement",
+      "expr_lhs": "40 * x['tractor'] + 20 * x['car']",
+      "sense": ">=",
+      "expr_rhs": "500",
+      "description": "At least 500 kg of corn must be sent to the city."
+    },
+    {
+      "name": "car_tractor_ratio",
+      "expr_lhs": "x['car']",
+      "sense": ">=",
+      "expr_rhs": "2 * x['tractor']",
+      "description": "The number of cars used must be at least twice the number of tractors used."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "problem_id": "industryOR_35",
+    "source": null,
+    "description": "Optimize the production of commodities in Carelland to maximize exports and minimize imports.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "COMMODITIES",
+      "elements": [
+        "steel",
+        "engines",
+        "electronics",
+        "plastics"
+      ],
+      "description": "Types of commodities produced and exported by Carelland."
+    }
+  ],
+  "params": [
+    {
+      "name": "unit_price",
+      "indices": [
+        "COMMODITIES"
+      ],
+      "values": {
+        "steel": 500,
+        "engines": 1500,
+        "electronics": 300,
+        "plastics": 1200
+      },
+      "description": "Unit prices of commodities in Klunz."
+    },
+    {
+      "name": "import_cost",
+      "indices": [
+        "COMMODITIES"
+      ],
+      "values": {
+        "steel": 250,
+        "engines": 300,
+        "electronics": 50,
+        "plastics": 300
+      },
+      "description": "Import cost per unit of commodity in Klunz."
+    },
+    {
+      "name": "labor_months",
+      "indices": [
+        "COMMODITIES"
+      ],
+      "values": {
+        "steel": 6,
+        "engines": 12,
+        "electronics": 6,
+        "plastics": 24
+      },
+      "description": "Labor required per unit of commodity in person-months."
+    },
+    {
+      "name": "production_limit",
+      "indices": [
+        "COMMODITIES"
+      ],
+      "values": {
+        "engines": 650000,
+        "plastics": 60000
+      },
+      "description": "Production limits for certain commodities."
+    },
+    {
+      "name": "total_labor",
+      "indices": [],
+      "values": 830000,
+      "description": "Total available labor force per year in person-months."
+    }
+  ],
+  "vars": [
+    {
+      "name": "production",
+      "indices": [
+        "COMMODITIES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Production quantity of each commodity."
+    }
+  ],
+  "objective": {
+    "name": "max_gdp",
+    "sense": "max",
+    "expr": "sum(production[c] * (unit_price[c] - import_cost[c]) for c in COMMODITIES)",
+    "description": "Maximize the gross domestic product by optimizing the production of commodities."
+  },
+  "constraints": [
+    {
+      "name": "labor_constraint",
+      "expr_lhs": "sum(production[c] * labor_months[c] for c in COMMODITIES)",
+      "sense": "<=",
+      "expr_rhs": "total_labor",
+      "description": "Total labor used must not exceed available labor."
+    },
+    {
+      "name": "production_limit_engines",
+      "expr_lhs": "production['engines']",
+      "sense": "<=",
+      "expr_rhs": "production_limit['engines']",
+      "description": "Production of engines must not exceed its limit."
+    },
+    {
+      "name": "production_limit_plastics",
+      "expr_lhs": "production['plastics']",
+      "sense": "<=",
+      "expr_rhs": "production_limit['plastics']",
+      "description": "Production of plastics must not exceed its limit."
+    }
+  ],
+  "graph": null
+}

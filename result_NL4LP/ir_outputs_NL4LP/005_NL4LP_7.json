@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_7",
+    "source": null,
+    "description": "Determine the minimum cost of mixing Feed A and Feed B to meet nutritional requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FEEDS",
+      "elements": [
+        "A",
+        "B"
+      ],
+      "description": "Types of animal feeds."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FEEDS"
+      ],
+      "values": {
+        "A": 100,
+        "B": 80
+      },
+      "description": "Cost per kilogram of each feed."
+    },
+    {
+      "name": "protein_content",
+      "indices": [
+        "FEEDS"
+      ],
+      "values": {
+        "A": 10,
+        "B": 7
+      },
+      "description": "Protein content per kilogram of each feed."
+    },
+    {
+      "name": "fat_content",
+      "indices": [
+        "FEEDS"
+      ],
+      "values": {
+        "A": 8,
+        "B": 15
+      },
+      "description": "Fat content per kilogram of each feed."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FEEDS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Kilograms of each feed to use in the mixture."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in ['A', 'B'])",
+    "description": "Minimize the total cost of the feed mixture."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein_content[f] * x[f] for f in ['A', 'B'])",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "Ensure the mixture contains at least 30 units of protein."
+    },
+    {
+      "name": "fat_requirement",
+      "expr_lhs": "sum(fat_content[f] * x[f] for f in ['A', 'B'])",
+      "sense": ">=",
+      "expr_rhs": "50",
+      "description": "Ensure the mixture contains at least 50 units of fat."
+    }
+  ],
+  "graph": null
+}

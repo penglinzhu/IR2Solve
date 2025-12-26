@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_27",
+    "source": null,
+    "description": "Optimize the selection of food items to meet nutritional goals at minimum cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Chicken",
+        "Pasta",
+        "Apples",
+        "Tuna",
+        "Rice"
+      ],
+      "description": "Different food items available for selection."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 8,
+        "Pasta": 10,
+        "Apples": 3,
+        "Tuna": 16,
+        "Rice": 4
+      },
+      "description": "Protein content per unit of each food item."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 8,
+        "Pasta": 30,
+        "Apples": 10,
+        "Tuna": 29,
+        "Rice": 24
+      },
+      "description": "Carbohydrate content per unit of each food item."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 118,
+        "Pasta": 131,
+        "Apples": 151,
+        "Tuna": 235,
+        "Rice": 101
+      },
+      "description": "Calorie content per unit of each food item."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 6,
+        "Pasta": 10,
+        "Apples": 1,
+        "Tuna": 9,
+        "Rice": 4
+      },
+      "description": "Cost per unit of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each food item to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of purchasing food items."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "93",
+      "description": "Ensure at least 93 grams of protein are consumed."
+    },
+    {
+      "name": "carbohydrate_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "181",
+      "description": "Ensure at least 181 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calorie_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "1620",
+      "description": "Ensure at least 1620 calories are consumed."
+    }
+  ],
+  "graph": null
+}

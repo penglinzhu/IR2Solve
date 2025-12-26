@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_198",
+    "source": null,
+    "description": "Determine the number of bags of regular and premium dog food to minimize cost while meeting nutritional requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BRANDS",
+      "elements": [
+        "regular",
+        "premium"
+      ],
+      "description": "Types of dog food brands available."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "BRANDS"
+      ],
+      "values": {
+        "regular": 20,
+        "premium": 35
+      },
+      "description": "Cost per bag of each brand."
+    },
+    {
+      "name": "calcium",
+      "indices": [
+        "BRANDS"
+      ],
+      "values": {
+        "regular": 4,
+        "premium": 12
+      },
+      "description": "Units of calcium per bag of each brand."
+    },
+    {
+      "name": "vitamin_mix",
+      "indices": [
+        "BRANDS"
+      ],
+      "values": {
+        "regular": 7,
+        "premium": 10
+      },
+      "description": "Units of vitamin mix per bag of each brand."
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "BRANDS"
+      ],
+      "values": {
+        "regular": 10,
+        "premium": 16
+      },
+      "description": "Units of protein per bag of each brand."
+    }
+  ],
+  "vars": [
+    {
+      "name": "bags",
+      "indices": [
+        "BRANDS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of bags to purchase for each brand."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[b] * bags[b] for b in ['regular', 'premium'])",
+    "description": "Minimize the total cost of purchasing dog food bags."
+  },
+  "constraints": [
+    {
+      "name": "calcium_requirement",
+      "expr_lhs": "sum(calcium[b] * bags[b] for b in ['regular', 'premium'])",
+      "sense": ">=",
+      "expr_rhs": "15",
+      "description": "Ensure at least 15 units of calcium are provided."
+    },
+    {
+      "name": "vitamin_mix_requirement",
+      "expr_lhs": "sum(vitamin_mix[b] * bags[b] for b in ['regular', 'premium'])",
+      "sense": ">=",
+      "expr_rhs": "20",
+      "description": "Ensure at least 20 units of vitamin mix are provided."
+    },
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[b] * bags[b] for b in ['regular', 'premium'])",
+      "sense": ">=",
+      "expr_rhs": "20",
+      "description": "Ensure at least 20 units of protein are provided."
+    }
+  ],
+  "graph": null
+}

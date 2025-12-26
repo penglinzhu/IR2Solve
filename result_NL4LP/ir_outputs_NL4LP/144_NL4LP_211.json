@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_211",
+    "source": null,
+    "description": "Optimize the production of strawberry and sugar cookies to maximize profit under demand and production constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "COOKIES",
+      "elements": [
+        "strawberry",
+        "sugar"
+      ],
+      "description": "Types of cookies produced by the bakery."
+    }
+  ],
+  "params": [
+    {
+      "name": "profit",
+      "indices": [
+        "COOKIES"
+      ],
+      "values": {
+        "strawberry": 5.5,
+        "sugar": 12
+      },
+      "description": "Profit per cookie type."
+    },
+    {
+      "name": "demand",
+      "indices": [
+        "COOKIES"
+      ],
+      "values": {
+        "strawberry": 100,
+        "sugar": 80
+      },
+      "description": "Maximum daily demand for each type of cookie."
+    },
+    {
+      "name": "max_production",
+      "indices": [],
+      "values": 100,
+      "description": "Maximum number of cookies that can be produced per day."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "COOKIES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of cookies to produce of each type."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "5.5 * x['strawberry'] + 12 * x['sugar']",
+    "description": "Maximize the total profit from selling cookies."
+  },
+  "constraints": [
+    {
+      "name": "demand_strawberry",
+      "expr_lhs": "x['strawberry']",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Demand constraint for strawberry cookies."
+    },
+    {
+      "name": "demand_sugar",
+      "expr_lhs": "x['sugar']",
+      "sense": "<=",
+      "expr_rhs": "80",
+      "description": "Demand constraint for sugar cookies."
+    },
+    {
+      "name": "production_capacity",
+      "expr_lhs": "x['strawberry'] + x['sugar']",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Total production capacity constraint."
+    }
+  ],
+  "graph": null
+}

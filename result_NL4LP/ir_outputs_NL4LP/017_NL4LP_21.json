@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_21",
+    "source": null,
+    "description": "Determine the optimal number of regular and premium car models to produce daily to maximize profit, given production and demand constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MODELS",
+      "elements": [
+        "regular",
+        "premium"
+      ],
+      "description": "Types of car models produced by the manufacturer."
+    }
+  ],
+  "params": [
+    {
+      "name": "profit",
+      "indices": [
+        "MODELS"
+      ],
+      "values": {
+        "regular": 5000,
+        "premium": 8500
+      },
+      "description": "Profit per car model."
+    },
+    {
+      "name": "demand_limit",
+      "indices": [
+        "MODELS"
+      ],
+      "values": {
+        "regular": 8,
+        "premium": 6
+      },
+      "description": "Maximum daily demand for each car model."
+    },
+    {
+      "name": "total_production_limit",
+      "indices": [],
+      "values": 12,
+      "description": "Maximum total number of cars that can be produced daily."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "MODELS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of cars produced daily for each model."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "5000 * x['regular'] + 8500 * x['premium']",
+    "description": "Maximize total profit from selling regular and premium car models."
+  },
+  "constraints": [
+    {
+      "name": "demand_constraint_regular",
+      "expr_lhs": "x['regular']",
+      "sense": "<=",
+      "expr_rhs": "8",
+      "description": "Production of regular models cannot exceed daily demand."
+    },
+    {
+      "name": "demand_constraint_premium",
+      "expr_lhs": "x['premium']",
+      "sense": "<=",
+      "expr_rhs": "6",
+      "description": "Production of premium models cannot exceed daily demand."
+    },
+    {
+      "name": "total_production_constraint",
+      "expr_lhs": "x['regular'] + x['premium']",
+      "sense": "<=",
+      "expr_rhs": "12",
+      "description": "Total production of cars cannot exceed the daily production limit."
+    }
+  ],
+  "graph": null
+}

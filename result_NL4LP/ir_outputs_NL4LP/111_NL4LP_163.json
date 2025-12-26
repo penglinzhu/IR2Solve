@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_163",
+    "source": null,
+    "description": "Optimize the number of small and large bins to maximize recycling material collection.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BIN_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of bins used for recycling collection."
+    }
+  ],
+  "params": [
+    {
+      "name": "workers_required",
+      "indices": [
+        "BIN_TYPES"
+      ],
+      "values": {
+        "small": 2,
+        "large": 5
+      },
+      "description": "Number of workers required for each bin type."
+    },
+    {
+      "name": "capacity",
+      "indices": [
+        "BIN_TYPES"
+      ],
+      "values": {
+        "small": 25,
+        "large": 60
+      },
+      "description": "Capacity of each bin type in units of recycling material."
+    },
+    {
+      "name": "total_workers",
+      "indices": [],
+      "values": 100,
+      "description": "Total number of workers available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_bins",
+      "indices": [
+        "BIN_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of bins of each type to be used."
+    }
+  ],
+  "objective": {
+    "name": "max_total_recycling",
+    "sense": "max",
+    "expr": "num_bins['small'] * capacity['small'] + num_bins['large'] * capacity['large']",
+    "description": "Maximize the total amount of recycling material collected."
+  },
+  "constraints": [
+    {
+      "name": "worker_constraint",
+      "expr_lhs": "num_bins['small'] * workers_required['small'] + num_bins['large'] * workers_required['large']",
+      "sense": "<=",
+      "expr_rhs": "total_workers",
+      "description": "Total workers used must not exceed available workers."
+    },
+    {
+      "name": "bin_ratio_constraint",
+      "expr_lhs": "num_bins['small']",
+      "sense": "==",
+      "expr_rhs": "3 * num_bins['large']",
+      "description": "The number of small bins must be three times the number of large bins."
+    },
+    {
+      "name": "min_small_bins",
+      "expr_lhs": "num_bins['small']",
+      "sense": ">=",
+      "expr_rhs": "10",
+      "description": "There must be at least 10 small bins."
+    },
+    {
+      "name": "min_large_bins",
+      "expr_lhs": "num_bins['large']",
+      "sense": ">=",
+      "expr_rhs": "4",
+      "description": "There must be at least 4 large bins."
+    }
+  ],
+  "graph": null
+}

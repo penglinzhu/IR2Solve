@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_12",
+    "source": null,
+    "description": "Optimize the cost of meeting daily nutritional requirements using a selection of food items.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Chicken",
+        "Rice",
+        "Broccoli",
+        "Tofu",
+        "Beans"
+      ],
+      "description": "Available food items."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 4,
+        "Rice": 8,
+        "Broccoli": 7,
+        "Tofu": 10,
+        "Beans": 1
+      },
+      "description": "Cost of each food item."
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 18,
+        "Rice": 12,
+        "Broccoli": 13,
+        "Tofu": 5,
+        "Beans": 10
+      },
+      "description": "Protein content of each food item in grams."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 6,
+        "Rice": 28,
+        "Broccoli": 19,
+        "Tofu": 16,
+        "Beans": 20
+      },
+      "description": "Carbohydrate content of each food item in grams."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 142,
+        "Rice": 88,
+        "Broccoli": 137,
+        "Tofu": 141,
+        "Beans": 150
+      },
+      "description": "Caloric content of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food item."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of food items to meet nutritional requirements."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "56",
+      "description": "Ensure at least 56 grams of protein are consumed."
+    },
+    {
+      "name": "carbohydrates_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "194",
+      "description": "Ensure at least 194 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "2012",
+      "description": "Ensure at least 2012 calories are consumed."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_93",
+    "source": null,
+    "description": "Optimize the number of orange and apple juice boxes to maximize vitamin D intake while meeting vitamin C requirements and preferences.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "JUICES",
+      "elements": [
+        "orange",
+        "apple"
+      ],
+      "description": "Types of juice available for consumption."
+    }
+  ],
+  "params": [
+    {
+      "name": "vitamin_content",
+      "indices": [
+        "JUICES",
+        "VITAMINS"
+      ],
+      "values": {
+        "orange": {
+          "D": 10,
+          "C": 8
+        },
+        "apple": {
+          "D": 12,
+          "C": 6
+        }
+      },
+      "description": "Vitamin content per box of each juice type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "JUICES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of boxes of each juice type to drink."
+    }
+  ],
+  "objective": {
+    "name": "max_total_vitamin_D",
+    "sense": "max",
+    "expr": "x['orange'] * vitamin_content['orange']['D'] + x['apple'] * vitamin_content['apple']['D']",
+    "description": "Maximize total vitamin D intake from the juice boxes."
+  },
+  "constraints": [
+    {
+      "name": "apple_preference",
+      "expr_lhs": "x['apple']",
+      "sense": ">=",
+      "expr_rhs": "3 * x['orange']",
+      "description": "The scientist must drink at least 3 times as many apple juice boxes as orange juice boxes."
+    },
+    {
+      "name": "min_orange_juice",
+      "expr_lhs": "x['orange']",
+      "sense": ">=",
+      "expr_rhs": "3",
+      "description": "The scientist must drink at least 3 orange juice boxes."
+    },
+    {
+      "name": "max_vitamin_C",
+      "expr_lhs": "x['orange'] * vitamin_content['orange']['C'] + x['apple'] * vitamin_content['apple']['C']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "The total vitamin C intake must not exceed 300 units."
+    }
+  ],
+  "graph": null
+}

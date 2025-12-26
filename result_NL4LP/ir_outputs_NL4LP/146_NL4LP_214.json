@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_214",
+    "source": null,
+    "description": "Optimize the number of pipes to transport water to houses, considering wide and narrow pipes with specific constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PIPE_TYPES",
+      "elements": [
+        "wide",
+        "narrow"
+      ],
+      "description": "Types of pipes available for water transport."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "PIPE_TYPES"
+      ],
+      "values": {
+        "wide": 25,
+        "narrow": 15
+      },
+      "description": "Capacity of each type of pipe in units of water per minute."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_pipes",
+      "indices": [
+        "PIPE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of pipes of each type to be used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pipes",
+    "sense": "min",
+    "expr": "num_pipes['wide'] + num_pipes['narrow']",
+    "description": "Minimize the total number of pipes used."
+  },
+  "constraints": [
+    {
+      "name": "water_transport_requirement",
+      "expr_lhs": "25 * num_pipes['wide'] + 15 * num_pipes['narrow']",
+      "sense": ">=",
+      "expr_rhs": "900",
+      "description": "Ensure at least 900 units of water are transported per minute."
+    },
+    {
+      "name": "wide_pipes_minimum",
+      "expr_lhs": "num_pipes['wide']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "At least 5 wide pipes must be used."
+    },
+    {
+      "name": "wide_to_narrow_ratio",
+      "expr_lhs": "num_pipes['wide']",
+      "sense": "<=",
+      "expr_rhs": "num_pipes['narrow'] / 3",
+      "description": "The number of wide pipes can be at most a third of the number of narrow pipes."
+    }
+  ],
+  "graph": null
+}

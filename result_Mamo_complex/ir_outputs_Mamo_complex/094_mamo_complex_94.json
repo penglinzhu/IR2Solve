@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_94",
+    "source": null,
+    "description": "Optimize the distribution network for SupplyCo to minimize total cost while meeting demands at retail outlets.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CENTERS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Potential distribution centers"
+    },
+    {
+      "name": "OUTLETS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Retail outlets"
+    }
+  ],
+  "params": [
+    {
+      "name": "opening_cost",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 151000,
+        "2": 192000,
+        "3": 114000,
+        "4": 171000
+      },
+      "description": "Opening costs for each distribution center in dollars"
+    },
+    {
+      "name": "transport_cost",
+      "indices": [
+        "CENTERS",
+        "OUTLETS"
+      ],
+      "values": {
+        "1": {
+          "1": 5,
+          "2": 5,
+          "3": 2,
+          "4": 3
+        },
+        "2": {
+          "1": 3,
+          "2": 3,
+          "3": 5,
+          "4": 4
+        },
+        "3": {
+          "1": 3,
+          "2": 5,
+          "3": 2,
+          "4": 4
+        },
+        "4": {
+          "1": 2,
+          "2": 4,
+          "3": 5,
+          "4": 1
+        }
+      },
+      "description": "Transportation cost per unit from each center to each outlet in dollars"
+    },
+    {
+      "name": "demand",
+      "indices": [
+        "OUTLETS"
+      ],
+      "values": {
+        "1": 859,
+        "2": 713,
+        "3": 421,
+        "4": 652
+      },
+      "description": "Demand at each retail outlet in units"
+    },
+    {
+      "name": "capacity",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 1547,
+        "2": 1656,
+        "3": 1274,
+        "4": 1882
+      },
+      "description": "Supply capacity of each distribution center in units"
+    }
+  ],
+  "vars": [
+    {
+      "name": "open_center",
+      "indices": [
+        "CENTERS"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if a center is open"
+    },
+    {
+      "name": "shipment",
+      "indices": [
+        "CENTERS",
+        "OUTLETS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of goods shipped from each center to each outlet"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(opening_cost[c] * open_center[c] for c in CENTERS) + sum(transport_cost[c][o] * shipment[c][o] for c in CENTERS for o in OUTLETS)",
+    "description": "Minimize the total cost of opening centers and transporting goods"
+  },
+  "constraints": [
+    {
+      "name": "demand_satisfaction_outlet_1",
+      "expr_lhs": "sum(shipment[c]['1'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['1']",
+      "description": "Satisfy demand at outlet 1"
+    },
+    {
+      "name": "demand_satisfaction_outlet_2",
+      "expr_lhs": "sum(shipment[c]['2'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['2']",
+      "description": "Satisfy demand at outlet 2"
+    },
+    {
+      "name": "demand_satisfaction_outlet_3",
+      "expr_lhs": "sum(shipment[c]['3'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['3']",
+      "description": "Satisfy demand at outlet 3"
+    },
+    {
+      "name": "demand_satisfaction_outlet_4",
+      "expr_lhs": "sum(shipment[c]['4'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['4']",
+      "description": "Satisfy demand at outlet 4"
+    },
+    {
+      "name": "capacity_limit_center_1",
+      "expr_lhs": "sum(shipment['1'][o] for o in OUTLETS)",
+      "sense": "<=",
+      "expr_rhs": "capacity['1'] * open_center['1']",
+      "description": "Capacity limit for center 1"
+    },
+    {
+      "name": "capacity_limit_center_2",
+      "expr_lhs": "sum(shipment['2'][o] for o in OUTLETS)",
+      "sense": "<=",
+      "expr_rhs": "capacity['2'] * open_center['2']",
+      "description": "Capacity limit for center 2"
+    },
+    {
+      "name": "capacity_limit_center_3",
+      "expr_lhs": "sum(shipment['3'][o] for o in OUTLETS)",
+      "sense": "<=",
+      "expr_rhs": "capacity['3'] * open_center['3']",
+      "description": "Capacity limit for center 3"
+    },
+    {
+      "name": "capacity_limit_center_4",
+      "expr_lhs": "sum(shipment['4'][o] for o in OUTLETS)",
+      "sense": "<=",
+      "expr_rhs": "capacity['4'] * open_center['4']",
+      "description": "Capacity limit for center 4"
+    }
+  ],
+  "graph": null
+}

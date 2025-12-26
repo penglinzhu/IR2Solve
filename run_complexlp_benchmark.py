@@ -1,4 +1,4 @@
-# run_industryor_benchmark.py
+# run_complexlp_benchmark.py
 # 批量跑 Mamo_complex_lp_clean.jsonl：NL -> (dynamic system prompt templating) -> IR -> Gurobi，记录每个问题的求解结果
 
 
@@ -20,13 +20,19 @@ from gm4opt_pipeline import (
 # ========== 配置区域 ==========
 
 # 数据集路径
-INDUSTRYOR_PATH = "data/Mamo/Mamo_complex_lp_clean.jsonl"
+DATASET_PATH = "data/Mamo/Mamo_complex_lp_clean.jsonl"
+
+# 结果根目录
+RESULT_DIR = "result_Mamo_complex"
 
 # IR JSON 输出目录
-IR_OUTPUT_DIR = "ir_outputs_Mamo_complex"
+IR_OUTPUT_DIR = os.path.join(RESULT_DIR, "ir_outputs_Mamo_complex")
 
 # 结果日志文件（CSV）
-RESULT_CSV_PATH = "Mamo_complex_results.csv"
+RESULT_CSV_PATH = os.path.join(RESULT_DIR, "Mamo_complex_results.csv")
+
+# Summary 输出
+SUMMARY_TXT_PATH = os.path.join(RESULT_DIR, "Mamo_complex_summary.txt")
 
 # 使用的 LLM 模型名称
 LLM_MODEL_NAME = "gpt-4o"
@@ -71,7 +77,7 @@ def solve_one_instance(
     NL -> (dynamic system prompt templating) -> IR(JSON) -> ModelIR -> (optional Graph/Difficulty) -> Gurobi
     返回一行日志用的 dict。
     """
-    instance_id = f"industryOR_{idx}"
+    instance_id = f"mamo_complex_{idx}"
     status_str = "ERROR"
     obj_value: Optional[float] = None
     correct = False
@@ -100,7 +106,7 @@ def solve_one_instance(
             res.ir_dict["meta"] = {}
         res.ir_dict["meta"]["problem_id"] = instance_id
 
-        # 1) 保存 IR JSON 到本地
+        # 1) 保存 IR JSON 到本地（路径已改到 RESULT_DIR 下）
         ensure_dir(IR_OUTPUT_DIR)
         safe_problem_id = "".join(
             c if c.isalnum() or c in "-_." else "_" for c in instance_id
@@ -138,7 +144,9 @@ def solve_one_instance(
 # ========== 主函数 ==========
 
 def main():
-    ensure_dir(os.path.dirname(RESULT_CSV_PATH) or ".")
+    # 确保结果目录存在
+    ensure_dir(RESULT_DIR)
+    ensure_dir(IR_OUTPUT_DIR)
 
     client = OpenAI()
 
@@ -160,7 +168,7 @@ def main():
         writer.writeheader()
 
         # 逐行读取 jsonl（每行一个 JSON）
-        with open(INDUSTRYOR_PATH, "r", encoding="utf-8") as f_in:
+        with open(DATASET_PATH, "r", encoding="utf-8") as f_in:
             for idx, line in enumerate(f_in):
                 line = line.strip()
                 if not line:
@@ -175,7 +183,7 @@ def main():
                     print(f"[ERROR] JSON decode failed at line {idx+1}: {e}")
                     row = {
                         "index": idx,
-                        "problem_id": f"industryOR_{idx}",
+                        "problem_id": f"mamo_complex_{idx}",
                         "gurobi_status": "ERROR",
                         "obj_value": "",
                         "ground_truth": "",
@@ -185,6 +193,7 @@ def main():
                     writer.writerow(row)
                     continue
 
+                # === 数据集字段：Question / Answer ===
                 question_text = record.get("Question", "")
                 gt_answer_raw = record.get("Answer", "")
 
@@ -208,16 +217,22 @@ def main():
                     f"correct={row['correct']}, error={row['error']}"
                 )
 
-    print("\n====== SUMMARY ======")
-    print(f"Total instances: {total}")
-    print(f"Solved (got ObjVal): {solved}")
-    print(f"Correct (ObjVal ≈ Answer): {correct_cnt}")
+    # ====== SUMMARY（同时写入 txt）======
+    summary_lines = []
+    summary_lines.append("====== SUMMARY ======")
+    summary_lines.append(f"Total instances: {total}")
+    summary_lines.append(f"Solved (got ObjVal): {solved}")
+    summary_lines.append(f"Correct (ObjVal ≈ Answer): {correct_cnt}")
     if total > 0:
-        print(
-            f"Accuracy over all instances: {correct_cnt}/{total} "
-            f"= {correct_cnt / total:.3f}"
+        summary_lines.append(
+            f"Accuracy over all instances: {correct_cnt}/{total} = {correct_cnt / total:.3f}"
         )
-        print(f"Solved ratio: {solved}/{total} = {solved / total:.3f}")
+        summary_lines.append(f"Solved ratio: {solved}/{total} = {solved / total:.3f}")
+
+    print("\n" + "\n".join(summary_lines))
+
+    with open(SUMMARY_TXT_PATH, "w", encoding="utf-8") as f_sum:
+        f_sum.write("\n".join(summary_lines) + "\n")
 
 
 if __name__ == "__main__":

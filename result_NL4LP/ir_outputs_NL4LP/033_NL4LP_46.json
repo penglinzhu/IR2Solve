@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_46",
+    "source": null,
+    "description": "Determine the number of cash-based and card-only ticket machines to minimize the total number of machines while meeting processing and paper usage requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MACHINES",
+      "elements": [
+        "cash",
+        "card"
+      ],
+      "description": "Types of ticket machines: cash-based and card-only."
+    }
+  ],
+  "params": [
+    {
+      "name": "processing_capacity",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "cash": 20,
+        "card": 30
+      },
+      "description": "Number of people each machine type can process per hour."
+    },
+    {
+      "name": "paper_usage",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "cash": 4,
+        "card": 5
+      },
+      "description": "Number of paper rolls each machine type uses per hour."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_machines",
+      "indices": [
+        "MACHINES"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of each type of ticket machine to be bought."
+    }
+  ],
+  "objective": {
+    "name": "min_total_machines",
+    "sense": "min",
+    "expr": "num_machines['cash'] + num_machines['card']",
+    "description": "Minimize the total number of ticket machines."
+  },
+  "constraints": [
+    {
+      "name": "processing_requirement",
+      "expr_lhs": "processing_capacity['cash'] * num_machines['cash'] + processing_capacity['card'] * num_machines['card']",
+      "sense": ">=",
+      "expr_rhs": "500",
+      "description": "Ensure at least 500 people can be processed per hour."
+    },
+    {
+      "name": "paper_usage_limit",
+      "expr_lhs": "paper_usage['cash'] * num_machines['cash'] + paper_usage['card'] * num_machines['card']",
+      "sense": "<=",
+      "expr_rhs": "90",
+      "description": "Ensure no more than 90 rolls of paper are used per hour."
+    },
+    {
+      "name": "card_machine_limit",
+      "expr_lhs": "num_machines['card']",
+      "sense": "<=",
+      "expr_rhs": "num_machines['cash']",
+      "description": "The number of card-only machines must not exceed the number of cash-based machines."
+    }
+  ],
+  "graph": null
+}

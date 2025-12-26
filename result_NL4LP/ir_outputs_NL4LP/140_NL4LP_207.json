@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_207",
+    "source": null,
+    "description": "Maximize the profit from selling regular and deluxe tacos given demand and supply constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TACOS",
+      "elements": [
+        "regular",
+        "deluxe"
+      ],
+      "description": "Types of tacos sold at the stand."
+    }
+  ],
+  "params": [],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "TACOS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of tacos to make of each type."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "2.50 * x['regular'] + 3.55 * x['deluxe']",
+    "description": "Maximize the total profit from selling tacos."
+  },
+  "constraints": [
+    {
+      "name": "demand_regular",
+      "expr_lhs": "x['regular']",
+      "sense": "<=",
+      "expr_rhs": "50",
+      "description": "Demand constraint for regular tacos."
+    },
+    {
+      "name": "demand_deluxe",
+      "expr_lhs": "x['deluxe']",
+      "sense": "<=",
+      "expr_rhs": "40",
+      "description": "Demand constraint for deluxe tacos."
+    },
+    {
+      "name": "supply_total",
+      "expr_lhs": "x['regular'] + x['deluxe']",
+      "sense": "<=",
+      "expr_rhs": "70",
+      "description": "Total supply constraint for tacos."
+    }
+  ],
+  "graph": null
+}

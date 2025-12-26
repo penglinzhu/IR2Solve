@@ -1,0 +1,275 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_87",
+    "source": null,
+    "description": "Optimize the selection of distribution centers and transportation to minimize total costs while meeting store demands.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CENTERS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "description": "Potential distribution centers"
+    },
+    {
+      "name": "STORES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "description": "Retail stores needing supply"
+    }
+  ],
+  "params": [
+    {
+      "name": "opening_cost",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 151000,
+        "2": 192000,
+        "3": 114000,
+        "4": 171000,
+        "5": 160000,
+        "6": 120000,
+        "7": 182000,
+        "8": 186000
+      },
+      "description": "Opening costs for each distribution center"
+    },
+    {
+      "name": "transport_cost",
+      "indices": [
+        "CENTERS",
+        "STORES"
+      ],
+      "values": {
+        "1": {
+          "1": 3,
+          "2": 3,
+          "3": 5,
+          "4": 4,
+          "5": 3
+        },
+        "2": {
+          "1": 5,
+          "2": 2,
+          "3": 4,
+          "4": 2,
+          "5": 4
+        },
+        "3": {
+          "1": 5,
+          "2": 1,
+          "3": 4,
+          "4": 2,
+          "5": 5
+        },
+        "4": {
+          "1": 4,
+          "2": 1,
+          "3": 1,
+          "4": 3,
+          "5": 3
+        },
+        "5": {
+          "1": 2,
+          "2": 4,
+          "3": 4,
+          "4": 3,
+          "5": 4
+        },
+        "6": {
+          "1": 4,
+          "2": 1,
+          "3": 3,
+          "4": 5,
+          "5": 3
+        },
+        "7": {
+          "1": 5,
+          "2": 1,
+          "3": 2,
+          "4": 4,
+          "5": 1
+        },
+        "8": {
+          "1": 4,
+          "2": 2,
+          "3": 2,
+          "4": 1,
+          "5": 2
+        }
+      },
+      "description": "Transportation cost per unit from each center to each store"
+    },
+    {
+      "name": "demand",
+      "indices": [
+        "STORES"
+      ],
+      "values": {
+        "1": 964,
+        "2": 739,
+        "3": 491,
+        "4": 766,
+        "5": 854
+      },
+      "description": "Demand of each retail store in units"
+    },
+    {
+      "name": "capacity",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 1308,
+        "2": 1575,
+        "3": 834,
+        "4": 1005,
+        "5": 1904,
+        "6": 1825,
+        "7": 1821,
+        "8": 1365
+      },
+      "description": "Supply capacity of each distribution center in units"
+    }
+  ],
+  "vars": [
+    {
+      "name": "open_center",
+      "indices": [
+        "CENTERS"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if a distribution center is open"
+    },
+    {
+      "name": "flow",
+      "indices": [
+        "CENTERS",
+        "STORES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Flow of goods from distribution centers to stores"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(opening_cost[c] * open_center[c] for c in CENTERS) + sum(transport_cost[c][s] * flow[c][s] for c in CENTERS for s in STORES)",
+    "description": "Minimize the total cost including opening and transportation costs"
+  },
+  "constraints": [
+    {
+      "name": "demand_satisfaction_store_1",
+      "expr_lhs": "sum(flow[c]['1'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['1']",
+      "description": "Satisfy demand for store 1"
+    },
+    {
+      "name": "demand_satisfaction_store_2",
+      "expr_lhs": "sum(flow[c]['2'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['2']",
+      "description": "Satisfy demand for store 2"
+    },
+    {
+      "name": "demand_satisfaction_store_3",
+      "expr_lhs": "sum(flow[c]['3'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['3']",
+      "description": "Satisfy demand for store 3"
+    },
+    {
+      "name": "demand_satisfaction_store_4",
+      "expr_lhs": "sum(flow[c]['4'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['4']",
+      "description": "Satisfy demand for store 4"
+    },
+    {
+      "name": "demand_satisfaction_store_5",
+      "expr_lhs": "sum(flow[c]['5'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['5']",
+      "description": "Satisfy demand for store 5"
+    },
+    {
+      "name": "capacity_limit_center_1",
+      "expr_lhs": "sum(flow['1'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['1'] * open_center['1']",
+      "description": "Capacity limit for center 1"
+    },
+    {
+      "name": "capacity_limit_center_2",
+      "expr_lhs": "sum(flow['2'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['2'] * open_center['2']",
+      "description": "Capacity limit for center 2"
+    },
+    {
+      "name": "capacity_limit_center_3",
+      "expr_lhs": "sum(flow['3'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['3'] * open_center['3']",
+      "description": "Capacity limit for center 3"
+    },
+    {
+      "name": "capacity_limit_center_4",
+      "expr_lhs": "sum(flow['4'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['4'] * open_center['4']",
+      "description": "Capacity limit for center 4"
+    },
+    {
+      "name": "capacity_limit_center_5",
+      "expr_lhs": "sum(flow['5'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['5'] * open_center['5']",
+      "description": "Capacity limit for center 5"
+    },
+    {
+      "name": "capacity_limit_center_6",
+      "expr_lhs": "sum(flow['6'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['6'] * open_center['6']",
+      "description": "Capacity limit for center 6"
+    },
+    {
+      "name": "capacity_limit_center_7",
+      "expr_lhs": "sum(flow['7'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['7'] * open_center['7']",
+      "description": "Capacity limit for center 7"
+    },
+    {
+      "name": "capacity_limit_center_8",
+      "expr_lhs": "sum(flow['8'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['8'] * open_center['8']",
+      "description": "Capacity limit for center 8"
+    }
+  ],
+  "graph": null
+}

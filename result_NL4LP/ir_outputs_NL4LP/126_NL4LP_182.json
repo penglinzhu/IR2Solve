@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_182",
+    "source": null,
+    "description": "Determine the number of cars and buses to transport employees while minimizing pollution.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TRANSPORT_TYPES",
+      "elements": [
+        "car",
+        "bus"
+      ],
+      "description": "Types of transport available for employees."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "values": {
+        "car": 4,
+        "bus": 20
+      },
+      "description": "Capacity of each transport type in terms of number of employees."
+    },
+    {
+      "name": "pollution",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "values": {
+        "car": 10,
+        "bus": 30
+      },
+      "description": "Pollution produced by each transport type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of transport used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pollution",
+    "sense": "min",
+    "expr": "sum(pollution[t] * x[t] for t in TRANSPORT_TYPES)",
+    "description": "Minimize the total pollution produced by the transport."
+  },
+  "constraints": [
+    {
+      "name": "employee_transport_requirement",
+      "expr_lhs": "sum(capacity[t] * x[t] for t in TRANSPORT_TYPES)",
+      "sense": ">=",
+      "expr_rhs": "300",
+      "description": "At least 300 employees need to be transported."
+    },
+    {
+      "name": "bus_limit",
+      "expr_lhs": "x['bus']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "At most 4 buses can be used."
+    }
+  ],
+  "graph": null
+}

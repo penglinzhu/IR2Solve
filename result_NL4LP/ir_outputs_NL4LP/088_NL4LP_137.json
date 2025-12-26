@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_137",
+    "source": null,
+    "description": "Optimize the number of patients vaccinated with pill and shot vaccines under time and ratio constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VACCINES",
+      "elements": [
+        "pill",
+        "shot"
+      ],
+      "description": "Types of vaccines available at the clinic."
+    }
+  ],
+  "params": [
+    {
+      "name": "time_per_vaccine",
+      "indices": [
+        "VACCINES"
+      ],
+      "values": {
+        "pill": 10,
+        "shot": 20
+      },
+      "description": "Time in minutes required to administer each type of vaccine."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "VACCINES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of vaccine administered."
+    }
+  ],
+  "objective": {
+    "name": "max_total_vaccinations",
+    "sense": "max",
+    "expr": "x['pill'] + x['shot']",
+    "description": "Maximize the total number of patients vaccinated."
+  },
+  "constraints": [
+    {
+      "name": "time_constraint",
+      "expr_lhs": "10 * x['pill'] + 20 * x['shot']",
+      "sense": "<=",
+      "expr_rhs": "10000",
+      "description": "Total time for administering vaccines must not exceed 10000 minutes."
+    },
+    {
+      "name": "shot_to_pill_ratio",
+      "expr_lhs": "x['shot']",
+      "sense": ">=",
+      "expr_rhs": "3 * x['pill']",
+      "description": "The number of shots must be at least three times the number of pills."
+    },
+    {
+      "name": "min_pill_vaccines",
+      "expr_lhs": "x['pill']",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "At least 30 pill vaccines must be administered."
+    }
+  ],
+  "graph": null
+}

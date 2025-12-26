@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_261",
+    "source": null,
+    "description": "Optimize the production of medication patches and anti-biotic creams to maximize the number of people treated.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "medication_patch",
+        "anti_biotic_cream"
+      ],
+      "description": "Types of products produced by the hospital."
+    }
+  ],
+  "params": [
+    {
+      "name": "time_required",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "medication_patch": 3,
+        "anti_biotic_cream": 5
+      },
+      "description": "Time required to prepare each product in minutes."
+    },
+    {
+      "name": "materials_required",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "medication_patch": 5,
+        "anti_biotic_cream": 6
+      },
+      "description": "Materials required to prepare each product in units."
+    },
+    {
+      "name": "treatment_capacity",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "medication_patch": 3,
+        "anti_biotic_cream": 2
+      },
+      "description": "Number of people treated per batch of each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "batches",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of batches to produce for each product."
+    }
+  ],
+  "objective": {
+    "name": "max_people_treated",
+    "sense": "max",
+    "expr": "batches['medication_patch'] * treatment_capacity['medication_patch'] + batches['anti_biotic_cream'] * treatment_capacity['anti_biotic_cream']",
+    "description": "Maximize the number of people that can be treated."
+  },
+  "constraints": [
+    {
+      "name": "time_constraint",
+      "expr_lhs": "batches['medication_patch'] * time_required['medication_patch'] + batches['anti_biotic_cream'] * time_required['anti_biotic_cream']",
+      "sense": "<=",
+      "expr_rhs": "400",
+      "description": "Total preparation time cannot exceed available staff time."
+    },
+    {
+      "name": "materials_constraint",
+      "expr_lhs": "batches['medication_patch'] * materials_required['medication_patch'] + batches['anti_biotic_cream'] * materials_required['anti_biotic_cream']",
+      "sense": "<=",
+      "expr_rhs": "530",
+      "description": "Total materials used cannot exceed available materials."
+    },
+    {
+      "name": "storage_constraint",
+      "expr_lhs": "batches['medication_patch'] + batches['anti_biotic_cream']",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Total number of batches cannot exceed storage capacity."
+    },
+    {
+      "name": "demand_constraint",
+      "expr_lhs": "batches['anti_biotic_cream']",
+      "sense": ">=",
+      "expr_rhs": "2 * batches['medication_patch']",
+      "description": "At least twice as many anti-biotic creams as medication patches must be produced."
+    }
+  ],
+  "graph": null
+}

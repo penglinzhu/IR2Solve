@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_234",
+    "source": null,
+    "description": "Determine the optimal number of large and small cruise ship trips to minimize pollution while meeting customer transport and trip composition requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SHIP_TYPES",
+      "elements": [
+        "large",
+        "small"
+      ],
+      "description": "Types of cruise ships available for trips."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "SHIP_TYPES"
+      ],
+      "values": {
+        "large": 2000,
+        "small": 800
+      },
+      "description": "Customer capacity for each type of cruise ship trip."
+    },
+    {
+      "name": "pollution",
+      "indices": [
+        "SHIP_TYPES"
+      ],
+      "values": {
+        "large": 20,
+        "small": 15
+      },
+      "description": "Pollution units produced by each type of cruise ship trip."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "SHIP_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of trips for each type of cruise ship."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pollution",
+    "sense": "min",
+    "expr": "sum(trips[s] * pollution[s] for s in SHIP_TYPES)",
+    "description": "Minimize the total pollution produced by all cruise ship trips."
+  },
+  "constraints": [
+    {
+      "name": "customer_transport_requirement",
+      "expr_lhs": "trips['large'] * capacity['large'] + trips['small'] * capacity['small']",
+      "sense": ">=",
+      "expr_rhs": "20000",
+      "description": "Ensure at least 20000 customers are transported."
+    },
+    {
+      "name": "max_large_trips",
+      "expr_lhs": "trips['large']",
+      "sense": "<=",
+      "expr_rhs": "7",
+      "description": "There can be at most 7 large cruise ship trips."
+    },
+    {
+      "name": "min_small_trip_proportion",
+      "expr_lhs": "trips['small']",
+      "sense": ">=",
+      "expr_rhs": "0.4 * (trips['large'] + trips['small'])",
+      "description": "At least 40% of the total trips must be made by small cruise ships."
+    }
+  ],
+  "graph": null
+}

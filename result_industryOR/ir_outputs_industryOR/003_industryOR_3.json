@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "problem_id": "industryOR_3",
+    "source": null,
+    "description": "Optimize the hiring of candidates to minimize total salary while meeting budget, qualification, and experience constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CANDIDATES",
+      "elements": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "description": "List of candidates available for hiring."
+    }
+  ],
+  "params": [
+    {
+      "name": "salary",
+      "indices": [
+        "CANDIDATES"
+      ],
+      "values": {
+        "A": 8100,
+        "B": 20000,
+        "C": 21000,
+        "D": 3000,
+        "E": 8000
+      },
+      "description": "Salary requirements of each candidate."
+    },
+    {
+      "name": "qualification",
+      "indices": [
+        "CANDIDATES"
+      ],
+      "values": {
+        "A": "Bachelor",
+        "B": "Master",
+        "C": "PhD",
+        "D": "None",
+        "E": "None"
+      },
+      "description": "Qualification of each candidate."
+    },
+    {
+      "name": "experience",
+      "indices": [
+        "CANDIDATES"
+      ],
+      "values": {
+        "A": 3,
+        "B": 10,
+        "C": 4,
+        "D": 3,
+        "E": 7
+      },
+      "description": "Work experience of each candidate in years."
+    }
+  ],
+  "vars": [
+    {
+      "name": "hire",
+      "indices": [
+        "CANDIDATES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary decision variable indicating whether to hire a candidate."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(hire[c] * salary[c] for c in CANDIDATES)",
+    "description": "Minimize the total salary paid to the hired candidates."
+  },
+  "constraints": [
+    {
+      "name": "max_3_employees",
+      "expr_lhs": "sum(hire[c] for c in CANDIDATES)",
+      "sense": "<=",
+      "expr_rhs": "3",
+      "description": "Hire at most 3 new employees."
+    },
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "sum(hire[c] * salary[c] for c in CANDIDATES)",
+      "sense": "<=",
+      "expr_rhs": "35000",
+      "description": "Total salary must not exceed the budget of $35,000."
+    },
+    {
+      "name": "qualification_constraint",
+      "expr_lhs": "hire['B'] + hire['C']",
+      "sense": ">=",
+      "expr_rhs": "1",
+      "description": "Select at least one candidate with a master's or PhD degree."
+    },
+    {
+      "name": "experience_constraint",
+      "expr_lhs": "sum(hire[c] * experience[c] for c in CANDIDATES)",
+      "sense": ">=",
+      "expr_rhs": "12",
+      "description": "Total work experience of selected candidates must be at least 12 years."
+    },
+    {
+      "name": "conflict_A_E",
+      "expr_lhs": "hire['A'] + hire['E']",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "At most one of candidates A and E can be hired due to similar skills."
+    },
+    {
+      "name": "min_2_employees",
+      "expr_lhs": "sum(hire[c] for c in CANDIDATES)",
+      "sense": ">=",
+      "expr_rhs": "2",
+      "description": "Hire at least 2 new employees."
+    }
+  ],
+  "graph": null
+}

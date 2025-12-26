@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_5",
+    "source": null,
+    "description": "Optimize the daily diet to meet nutritional requirements at minimum cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Chicken",
+        "Rice",
+        "Apples",
+        "Steak",
+        "Lentils",
+        "Fish",
+        "Tofu",
+        "Cheese",
+        "Bread"
+      ],
+      "description": "Different food items available for the diet."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 15,
+        "Rice": 1,
+        "Apples": 1,
+        "Steak": 6,
+        "Lentils": 3,
+        "Fish": 17,
+        "Tofu": 18,
+        "Cheese": 12,
+        "Bread": 2
+      },
+      "description": "Protein content per unit of each food item."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 18,
+        "Rice": 25,
+        "Apples": 21,
+        "Steak": 3,
+        "Lentils": 7,
+        "Fish": 13,
+        "Tofu": 27,
+        "Cheese": 17,
+        "Bread": 30
+      },
+      "description": "Carbohydrate content per unit of each food item."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 300,
+        "Rice": 267,
+        "Apples": 266,
+        "Steak": 119,
+        "Lentils": 166,
+        "Fish": 129,
+        "Tofu": 216,
+        "Cheese": 76,
+        "Bread": 258
+      },
+      "description": "Calorie content per unit of each food item."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 4,
+        "Rice": 2,
+        "Apples": 5,
+        "Steak": 10,
+        "Lentils": 2,
+        "Fish": 8,
+        "Tofu": 10,
+        "Cheese": 9,
+        "Bread": 4
+      },
+      "description": "Cost per unit of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each food item to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of purchasing food items."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "90",
+      "description": "Ensure at least 90 grams of protein are consumed."
+    },
+    {
+      "name": "carbohydrates_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "105",
+      "description": "Ensure at least 105 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "1805",
+      "description": "Ensure at least 1805 calories are consumed."
+    }
+  ],
+  "graph": null
+}

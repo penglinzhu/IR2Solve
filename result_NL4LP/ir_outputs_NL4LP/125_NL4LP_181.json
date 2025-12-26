@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_181",
+    "source": null,
+    "description": "Optimize the transportation of patients to the hospital using helicopters and buses to minimize total time.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TRANSPORT_MODES",
+      "elements": [
+        "helicopter",
+        "bus"
+      ],
+      "description": "Modes of transport available for patient transportation."
+    }
+  ],
+  "params": [
+    {
+      "name": "patients_per_trip",
+      "indices": [
+        "TRANSPORT_MODES"
+      ],
+      "values": {
+        "helicopter": 5,
+        "bus": 8
+      },
+      "description": "Number of patients each transport mode can carry per trip."
+    },
+    {
+      "name": "time_per_trip",
+      "indices": [
+        "TRANSPORT_MODES"
+      ],
+      "values": {
+        "helicopter": 1,
+        "bus": 3
+      },
+      "description": "Time taken per trip for each transport mode in hours."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "TRANSPORT_MODES"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of trips made by each transport mode."
+    }
+  ],
+  "objective": {
+    "name": "min_total_time",
+    "sense": "min",
+    "expr": "trips['helicopter'] * time_per_trip['helicopter'] + trips['bus'] * time_per_trip['bus']",
+    "description": "Minimize the total time to transport all patients."
+  },
+  "constraints": [
+    {
+      "name": "min_patients_transport",
+      "expr_lhs": "trips['helicopter'] * patients_per_trip['helicopter'] + trips['bus'] * patients_per_trip['bus']",
+      "sense": ">=",
+      "expr_rhs": "120",
+      "description": "At least 120 patients need to be transported."
+    },
+    {
+      "name": "min_helicopter_trips",
+      "expr_lhs": "trips['helicopter']",
+      "sense": ">=",
+      "expr_rhs": "0.3 * (trips['helicopter'] + trips['bus'])",
+      "description": "At least 30% of the trips should be by helicopter."
+    },
+    {
+      "name": "max_bus_trips",
+      "expr_lhs": "trips['bus']",
+      "sense": "<=",
+      "expr_rhs": "10",
+      "description": "There can be at most 10 bus trips."
+    }
+  ],
+  "graph": null
+}

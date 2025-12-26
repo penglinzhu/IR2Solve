@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_65",
+    "source": null,
+    "description": "Optimize the production of light and heavy grilled cheese sandwiches to minimize total production time.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SANDWICHES",
+      "elements": [
+        "light",
+        "heavy"
+      ],
+      "description": "Types of grilled cheese sandwiches."
+    }
+  ],
+  "params": [
+    {
+      "name": "bread_required",
+      "indices": [
+        "SANDWICHES"
+      ],
+      "values": {
+        "light": 2,
+        "heavy": 3
+      },
+      "description": "Slices of bread required per sandwich type."
+    },
+    {
+      "name": "cheese_required",
+      "indices": [
+        "SANDWICHES"
+      ],
+      "values": {
+        "light": 3,
+        "heavy": 5
+      },
+      "description": "Slices of cheese required per sandwich type."
+    },
+    {
+      "name": "time_required",
+      "indices": [
+        "SANDWICHES"
+      ],
+      "values": {
+        "light": 10,
+        "heavy": 15
+      },
+      "description": "Minutes required to make each sandwich type."
+    },
+    {
+      "name": "bread_available",
+      "indices": [],
+      "values": 300,
+      "description": "Total slices of bread available."
+    },
+    {
+      "name": "cheese_available",
+      "indices": [],
+      "values": 500,
+      "description": "Total slices of cheese available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "SANDWICHES"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of each type of sandwich to make."
+    }
+  ],
+  "objective": {
+    "name": "min_total_time",
+    "sense": "min",
+    "expr": "10 * x['light'] + 15 * x['heavy']",
+    "description": "Minimize the total production time for sandwiches."
+  },
+  "constraints": [
+    {
+      "name": "bread_constraint",
+      "expr_lhs": "2 * x['light'] + 3 * x['heavy']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "Bread availability constraint."
+    },
+    {
+      "name": "cheese_constraint",
+      "expr_lhs": "3 * x['light'] + 5 * x['heavy']",
+      "sense": "<=",
+      "expr_rhs": "500",
+      "description": "Cheese availability constraint."
+    },
+    {
+      "name": "heavy_to_light_ratio",
+      "expr_lhs": "x['heavy']",
+      "sense": ">=",
+      "expr_rhs": "3 * x['light']",
+      "description": "At least three times as many heavy sandwiches as light sandwiches."
+    }
+  ],
+  "graph": null
+}

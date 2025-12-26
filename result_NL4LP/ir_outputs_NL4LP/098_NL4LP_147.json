@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_147",
+    "source": null,
+    "description": "Determine the number of small and large buses to hire for a school field trip to minimize the total number of buses while meeting student transportation and parking constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BUS_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of buses available for hire"
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "BUS_TYPES"
+      ],
+      "values": {
+        "small": 20,
+        "large": 50
+      },
+      "description": "Capacity of each type of bus"
+    },
+    {
+      "name": "total_students",
+      "indices": [],
+      "values": 500,
+      "description": "Total number of students needing transportation"
+    },
+    {
+      "name": "max_large_bus_percentage",
+      "indices": [],
+      "values": 0.2,
+      "description": "Maximum percentage of buses that can be large"
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_buses",
+      "indices": [
+        "BUS_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of buses to hire of each type"
+    }
+  ],
+  "objective": {
+    "name": "min_total_buses",
+    "sense": "min",
+    "expr": "num_buses['small'] + num_buses['large']",
+    "description": "Minimize the total number of buses hired"
+  },
+  "constraints": [
+    {
+      "name": "student_transportation_requirement",
+      "expr_lhs": "capacity['small'] * num_buses['small'] + capacity['large'] * num_buses['large']",
+      "sense": ">=",
+      "expr_rhs": "total_students",
+      "description": "Ensure enough buses are hired to transport all students"
+    },
+    {
+      "name": "large_bus_limit",
+      "expr_lhs": "num_buses['large']",
+      "sense": "<=",
+      "expr_rhs": "max_large_bus_percentage * (num_buses['small'] + num_buses['large'])",
+      "description": "Limit the number of large buses to 20% of the total buses"
+    }
+  ],
+  "graph": null
+}

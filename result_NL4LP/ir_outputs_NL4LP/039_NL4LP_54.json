@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_54",
+    "source": null,
+    "description": "Maximize the total production of oil using small and large oil wells on 300 acres of land with constraints on drill bits and pollution.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WELL_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of oil wells available for use."
+    }
+  ],
+  "params": [
+    {
+      "name": "production_per_acre",
+      "indices": [
+        "WELL_TYPES"
+      ],
+      "values": {
+        "small": 2,
+        "large": 5
+      },
+      "description": "Barrels of oil produced per acre by each type of well."
+    },
+    {
+      "name": "pollution_per_acre",
+      "indices": [
+        "WELL_TYPES"
+      ],
+      "values": {
+        "small": 10,
+        "large": 20
+      },
+      "description": "Units of pollution produced per acre by each type of well."
+    },
+    {
+      "name": "drill_bits_per_acre",
+      "indices": [
+        "WELL_TYPES"
+      ],
+      "values": {
+        "small": 5,
+        "large": 10
+      },
+      "description": "Drill bits required per acre by each type of well."
+    },
+    {
+      "name": "total_acres",
+      "indices": [],
+      "values": 300,
+      "description": "Total acres of land available."
+    },
+    {
+      "name": "max_drill_bits",
+      "indices": [],
+      "values": 2500,
+      "description": "Maximum number of drill bits available."
+    },
+    {
+      "name": "max_pollution",
+      "indices": [],
+      "values": 4500,
+      "description": "Maximum units of pollution allowed."
+    }
+  ],
+  "vars": [
+    {
+      "name": "acres",
+      "indices": [
+        "WELL_TYPES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Acres of land used for each type of oil well."
+    }
+  ],
+  "objective": {
+    "name": "max_total_production",
+    "sense": "max",
+    "expr": "acres['small'] * production_per_acre['small'] + acres['large'] * production_per_acre['large']",
+    "description": "Maximize the total production of oil."
+  },
+  "constraints": [
+    {
+      "name": "total_acres_constraint",
+      "expr_lhs": "acres['small'] + acres['large']",
+      "sense": "<=",
+      "expr_rhs": "total_acres",
+      "description": "Total acres used cannot exceed available land."
+    },
+    {
+      "name": "drill_bits_constraint",
+      "expr_lhs": "acres['small'] * drill_bits_per_acre['small'] + acres['large'] * drill_bits_per_acre['large']",
+      "sense": "<=",
+      "expr_rhs": "max_drill_bits",
+      "description": "Total drill bits used cannot exceed available drill bits."
+    },
+    {
+      "name": "pollution_constraint",
+      "expr_lhs": "acres['small'] * pollution_per_acre['small'] + acres['large'] * pollution_per_acre['large']",
+      "sense": "<=",
+      "expr_rhs": "max_pollution",
+      "description": "Total pollution produced cannot exceed allowed pollution."
+    }
+  ],
+  "graph": null
+}

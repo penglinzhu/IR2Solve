@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_200",
+    "source": null,
+    "description": "Optimize the weekly production of laminate planks and carpets to maximize profit under demand and production constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "laminate_planks",
+        "carpets"
+      ],
+      "description": "Types of products produced by the company"
+    }
+  ],
+  "params": [
+    {
+      "name": "demand",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "laminate_planks": 15000,
+        "carpets": 5000
+      },
+      "description": "Minimum demand for each product in square feet"
+    },
+    {
+      "name": "max_production",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "laminate_planks": 40000,
+        "carpets": 20000
+      },
+      "description": "Maximum production capacity for each product in square feet"
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "laminate_planks": 2.1,
+        "carpets": 3.3
+      },
+      "description": "Profit per square foot for each product"
+    }
+  ],
+  "vars": [
+    {
+      "name": "production",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Production quantity for each product in square feet"
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "production['laminate_planks'] * profit['laminate_planks'] + production['carpets'] * profit['carpets']",
+    "description": "Maximize total profit from the production of laminate planks and carpets"
+  },
+  "constraints": [
+    {
+      "name": "demand_laminate_planks",
+      "expr_lhs": "production['laminate_planks']",
+      "sense": ">=",
+      "expr_rhs": "demand['laminate_planks']",
+      "description": "Meet the minimum demand for laminate planks"
+    },
+    {
+      "name": "demand_carpets",
+      "expr_lhs": "production['carpets']",
+      "sense": ">=",
+      "expr_rhs": "demand['carpets']",
+      "description": "Meet the minimum demand for carpets"
+    },
+    {
+      "name": "total_shipping_requirement",
+      "expr_lhs": "production['laminate_planks'] + production['carpets']",
+      "sense": ">=",
+      "expr_rhs": "50000",
+      "description": "Meet the total shipping requirement of at least 50,000 square feet"
+    },
+    {
+      "name": "max_production_laminate_planks",
+      "expr_lhs": "production['laminate_planks']",
+      "sense": "<=",
+      "expr_rhs": "max_production['laminate_planks']",
+      "description": "Do not exceed the maximum production capacity for laminate planks"
+    },
+    {
+      "name": "max_production_carpets",
+      "expr_lhs": "production['carpets']",
+      "sense": "<=",
+      "expr_rhs": "max_production['carpets']",
+      "description": "Do not exceed the maximum production capacity for carpets"
+    }
+  ],
+  "graph": null
+}

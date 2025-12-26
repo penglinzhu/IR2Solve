@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "problem_id": "industryOR_20",
+    "source": null,
+    "description": "Maximize profit from producing products A and B, considering byproduct C.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "A",
+        "B"
+      ],
+      "description": "Set of products."
+    },
+    {
+      "name": "BYPRODUCTS",
+      "elements": [
+        "C"
+      ],
+      "description": "Set of byproducts."
+    }
+  ],
+  "params": [
+    {
+      "name": "front_process_time",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "A": 2,
+        "B": 3
+      },
+      "description": "Time required for the front process per unit of product."
+    },
+    {
+      "name": "back_process_time",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "A": 3,
+        "B": 4
+      },
+      "description": "Time required for the back process per unit of product."
+    },
+    {
+      "name": "available_front_time",
+      "indices": [],
+      "values": 16,
+      "description": "Total available time for the front process."
+    },
+    {
+      "name": "available_back_time",
+      "indices": [],
+      "values": 24,
+      "description": "Total available time for the back process."
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "A": 4,
+        "B": 10
+      },
+      "description": "Profit per unit of product sold."
+    },
+    {
+      "name": "byproduct_profit",
+      "indices": [
+        "BYPRODUCTS"
+      ],
+      "values": {
+        "C": 3
+      },
+      "description": "Profit per unit of byproduct sold."
+    },
+    {
+      "name": "disposal_cost",
+      "indices": [
+        "BYPRODUCTS"
+      ],
+      "values": {
+        "C": 2
+      },
+      "description": "Cost per unit of byproduct disposed."
+    },
+    {
+      "name": "max_byproduct_sale",
+      "indices": [
+        "BYPRODUCTS"
+      ],
+      "values": {
+        "C": 5
+      },
+      "description": "Maximum units of byproduct that can be sold."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Units of product produced."
+    },
+    {
+      "name": "y",
+      "indices": [
+        "BYPRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Units of byproduct sold."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "4 * x['A'] + 10 * x['B'] + 3 * y['C'] - 2 * (2 * x['B'] - y['C'])",
+    "description": "Maximize total profit from products and byproducts."
+  },
+  "constraints": [
+    {
+      "name": "front_process_time_constraint",
+      "expr_lhs": "2 * x['A'] + 3 * x['B']",
+      "sense": "<=",
+      "expr_rhs": "16",
+      "description": "Front process time constraint."
+    },
+    {
+      "name": "back_process_time_constraint",
+      "expr_lhs": "3 * x['A'] + 4 * x['B']",
+      "sense": "<=",
+      "expr_rhs": "24",
+      "description": "Back process time constraint."
+    },
+    {
+      "name": "byproduct_sale_constraint",
+      "expr_lhs": "y['C']",
+      "sense": "<=",
+      "expr_rhs": "5",
+      "description": "Maximum units of byproduct C that can be sold."
+    },
+    {
+      "name": "byproduct_production_constraint",
+      "expr_lhs": "y['C']",
+      "sense": "<=",
+      "expr_rhs": "2 * x['B']",
+      "description": "Byproduct C produced is twice the units of product B."
+    }
+  ],
+  "graph": null
+}

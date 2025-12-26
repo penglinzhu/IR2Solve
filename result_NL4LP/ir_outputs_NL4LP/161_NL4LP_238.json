@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_238",
+    "source": null,
+    "description": "Optimize the distribution of products to retail and factory outlet stores to minimize the number of stores open while meeting customer and employee constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "STORE_TYPES",
+      "elements": [
+        "retail",
+        "factory"
+      ],
+      "description": "Types of stores where products can be distributed."
+    }
+  ],
+  "params": [
+    {
+      "name": "customers_per_store",
+      "indices": [
+        "STORE_TYPES"
+      ],
+      "values": {
+        "retail": 200,
+        "factory": 80
+      },
+      "description": "Number of customers each store type brings in per day."
+    },
+    {
+      "name": "employees_per_store",
+      "indices": [
+        "STORE_TYPES"
+      ],
+      "values": {
+        "retail": 6,
+        "factory": 4
+      },
+      "description": "Number of employees required to operate each store type."
+    },
+    {
+      "name": "min_customers",
+      "indices": [],
+      "values": 1200,
+      "description": "Minimum number of customers required per day."
+    },
+    {
+      "name": "max_employees",
+      "indices": [],
+      "values": 50,
+      "description": "Maximum number of employees available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "open_stores",
+      "indices": [
+        "STORE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of stores of each type that are open."
+    }
+  ],
+  "objective": {
+    "name": "minimize_open_stores",
+    "sense": "min",
+    "expr": "open_stores['retail'] + open_stores['factory']",
+    "description": "Minimize the total number of stores that must be open."
+  },
+  "constraints": [
+    {
+      "name": "customer_requirement",
+      "expr_lhs": "customers_per_store['retail'] * open_stores['retail'] + customers_per_store['factory'] * open_stores['factory']",
+      "sense": ">=",
+      "expr_rhs": "min_customers",
+      "description": "Ensure at least the minimum number of customers are served per day."
+    },
+    {
+      "name": "employee_limit",
+      "expr_lhs": "employees_per_store['retail'] * open_stores['retail'] + employees_per_store['factory'] * open_stores['factory']",
+      "sense": "<=",
+      "expr_rhs": "max_employees",
+      "description": "Ensure the number of employees does not exceed the available limit."
+    }
+  ],
+  "graph": null
+}

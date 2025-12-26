@@ -22,11 +22,17 @@ from gm4opt_pipeline import (
 # IndustryOR 数据集路径
 INDUSTRYOR_PATH = "data/IndustryOR/IndustryOR.jsonl"
 
+# 结果根目录
+RESULT_DIR = "result_industryOR"
+
 # IR JSON 输出目录
-IR_OUTPUT_DIR = "ir_outputs_industryOR"
+IR_OUTPUT_DIR = os.path.join(RESULT_DIR, "ir_outputs_industryOR")
 
 # 结果日志文件（CSV）
-RESULT_CSV_PATH = "industryOR_results.csv"
+RESULT_CSV_PATH = os.path.join(RESULT_DIR, "industryOR_results.csv")
+
+# Summary 输出
+SUMMARY_TXT_PATH = os.path.join(RESULT_DIR, "industryOR_summary.txt")
 
 # 使用的 LLM 模型名称
 LLM_MODEL_NAME = "gpt-4o"
@@ -83,10 +89,10 @@ def solve_one_instance(
         cfg = PipelineConfig(
             model_name=LLM_MODEL_NAME,
             temperature=0.0,
-            enable_dynamic_prompt=True,   
-            enable_graph=True,            
-            enable_difficulty=True,       
-            solve_with_gurobi=True,       
+            enable_dynamic_prompt=True,
+            enable_graph=True,
+            enable_difficulty=True,
+            solve_with_gurobi=True,
         )
 
         res = run_gm4opt_pipeline(
@@ -100,7 +106,7 @@ def solve_one_instance(
             res.ir_dict["meta"] = {}
         res.ir_dict["meta"]["problem_id"] = instance_id
 
-        # 1) 保存 IR JSON 到本地
+        # 1) 保存 IR JSON 到本地（路径已改到 RESULT_DIR 下）
         ensure_dir(IR_OUTPUT_DIR)
         safe_problem_id = "".join(
             c if c.isalnum() or c in "-_." else "_" for c in instance_id
@@ -130,15 +136,16 @@ def solve_one_instance(
         "gurobi_status": status_str,
         "obj_value": obj_value if obj_value is not None else "",
         "ground_truth": gt_value if gt_value is not None else "",
-        "correct": int(correct), 
+        "correct": int(correct),
         "error": error_msg,
     }
-
 
 # ========== 主函数 ==========
 
 def main():
-    ensure_dir(os.path.dirname(RESULT_CSV_PATH) or ".")
+    # 确保结果目录存在
+    ensure_dir(RESULT_DIR)
+    ensure_dir(IR_OUTPUT_DIR)
 
     client = OpenAI()  # 从环境变量读取 OPENAI_API_KEY
 
@@ -210,16 +217,24 @@ def main():
                     f"correct={row['correct']}, error={row['error']}"
                 )
 
-    print("\n====== SUMMARY ======")
-    print(f"Total instances: {total}")
-    print(f"Solved (got ObjVal): {solved}")
-    print(f"Correct (ObjVal ≈ en_answer): {correct_cnt}")
+    # ====== SUMMARY（同时写入 txt）======
+    summary_lines = []
+    summary_lines.append("====== SUMMARY ======")
+    summary_lines.append(f"Total instances: {total}")
+    summary_lines.append(f"Solved (got ObjVal): {solved}")
+    summary_lines.append(f"Correct (ObjVal ≈ en_answer): {correct_cnt}")
     if total > 0:
-        print(
-            f"Accuracy over all instances: {correct_cnt}/{total} "
-            f"= {correct_cnt / total:.3f}"
+        summary_lines.append(
+            f"Accuracy over all instances: {correct_cnt}/{total} = {correct_cnt / total:.3f}"
         )
-        print(f"Solved ratio: {solved}/{total} = {solved / total:.3f}")
+        summary_lines.append(f"Solved ratio: {solved}/{total} = {solved / total:.3f}")
+
+    # 控制台输出保持一致
+    print("\n" + "\n".join(summary_lines))
+
+    # 写入到 result_industryOR/industryOR_summary.txt
+    with open(SUMMARY_TXT_PATH, "w", encoding="utf-8") as f_sum:
+        f_sum.write("\n".join(summary_lines) + "\n")
 
 
 if __name__ == "__main__":

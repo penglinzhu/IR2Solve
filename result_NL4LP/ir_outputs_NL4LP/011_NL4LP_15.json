@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_15",
+    "source": null,
+    "description": "Optimize the cost of purchasing pills to meet daily medicine requirements for Z1 and D3.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PILLS",
+      "elements": [
+        "Zodiac",
+        "Sunny"
+      ],
+      "description": "Types of pills available."
+    },
+    {
+      "name": "MEDICINES",
+      "elements": [
+        "Z1",
+        "D3"
+      ],
+      "description": "Types of medicines required."
+    }
+  ],
+  "params": [
+    {
+      "name": "content",
+      "indices": [
+        "PILLS",
+        "MEDICINES"
+      ],
+      "values": {
+        "Zodiac": {
+          "Z1": 1.3,
+          "D3": 1.5
+        },
+        "Sunny": {
+          "Z1": 1.2,
+          "D3": 5.0
+        }
+      },
+      "description": "Grams of each medicine contained in each pill."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "PILLS"
+      ],
+      "values": {
+        "Zodiac": 1,
+        "Sunny": 3
+      },
+      "description": "Cost per pill."
+    },
+    {
+      "name": "requirement",
+      "indices": [
+        "MEDICINES"
+      ],
+      "values": {
+        "Z1": 5,
+        "D3": 10
+      },
+      "description": "Daily requirement of each medicine in grams."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PILLS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of pills to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[p] * x[p] for p in PILLS)",
+    "description": "Minimize the total cost of purchasing pills."
+  },
+  "constraints": [
+    {
+      "name": "z1_requirement",
+      "expr_lhs": "content['Zodiac']['Z1'] * x['Zodiac'] + content['Sunny']['Z1'] * x['Sunny']",
+      "sense": ">=",
+      "expr_rhs": "requirement['Z1']",
+      "description": "Ensure at least 5 grams of Z1 are taken daily."
+    },
+    {
+      "name": "d3_requirement",
+      "expr_lhs": "content['Zodiac']['D3'] * x['Zodiac'] + content['Sunny']['D3'] * x['Sunny']",
+      "sense": ">=",
+      "expr_rhs": "requirement['D3']",
+      "description": "Ensure at least 10 grams of D3 are taken daily."
+    }
+  ],
+  "graph": null
+}

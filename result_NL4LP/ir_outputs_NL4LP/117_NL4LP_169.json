@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_169",
+    "source": null,
+    "description": "Optimize the number of small and large kegs used to maximize the total amount of glacial water transported.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "KEGS",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of kegs available for transporting water."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "KEGS"
+      ],
+      "values": {
+        "small": 40,
+        "large": 100
+      },
+      "description": "Capacity of each type of keg in liters."
+    },
+    {
+      "name": "max_kegs",
+      "indices": [
+        "KEGS"
+      ],
+      "values": {
+        "small": 30,
+        "large": 10
+      },
+      "description": "Maximum number of each type of keg available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "KEGS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of kegs of each type to use."
+    }
+  ],
+  "objective": {
+    "name": "max_total_water",
+    "sense": "max",
+    "expr": "x['small'] * capacity['small'] + x['large'] * capacity['large']",
+    "description": "Maximize the total amount of glacial water transported."
+  },
+  "constraints": [
+    {
+      "name": "max_small_kegs",
+      "expr_lhs": "x['small']",
+      "sense": "<=",
+      "expr_rhs": "max_kegs['small']",
+      "description": "Cannot use more small kegs than available."
+    },
+    {
+      "name": "max_large_kegs",
+      "expr_lhs": "x['large']",
+      "sense": "<=",
+      "expr_rhs": "max_kegs['large']",
+      "description": "Cannot use more large kegs than available."
+    },
+    {
+      "name": "total_kegs_limit",
+      "expr_lhs": "x['small'] + x['large']",
+      "sense": "<=",
+      "expr_rhs": "25",
+      "description": "Cannot use more than 25 kegs in total."
+    },
+    {
+      "name": "min_large_kegs",
+      "expr_lhs": "x['large']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "At least 5 kegs must be large."
+    },
+    {
+      "name": "small_large_ratio",
+      "expr_lhs": "x['small']",
+      "sense": ">=",
+      "expr_rhs": "2 * x['large']",
+      "description": "At least twice as many small kegs must be used than large kegs."
+    }
+  ],
+  "graph": null
+}

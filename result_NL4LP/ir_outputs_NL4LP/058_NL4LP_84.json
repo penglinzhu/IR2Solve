@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_84",
+    "source": null,
+    "description": "Optimize the allocation of mining techniques to maximize daily production of rare earth oxide under machine and pollution constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TECHNIQUES",
+      "elements": [
+        "heap_leaching",
+        "vat_leaching"
+      ],
+      "description": "The mining techniques available for use."
+    }
+  ],
+  "params": [
+    {
+      "name": "production_rate",
+      "indices": [
+        "TECHNIQUES"
+      ],
+      "values": {
+        "heap_leaching": 3,
+        "vat_leaching": 5
+      },
+      "description": "Daily production of rare earth oxide per square mile for each technique."
+    },
+    {
+      "name": "wastewater_rate",
+      "indices": [
+        "TECHNIQUES"
+      ],
+      "values": {
+        "heap_leaching": 8,
+        "vat_leaching": 17
+      },
+      "description": "Daily production of polluted wastewater per square mile for each technique."
+    },
+    {
+      "name": "machine_requirement",
+      "indices": [
+        "TECHNIQUES"
+      ],
+      "values": {
+        "heap_leaching": 10,
+        "vat_leaching": 20
+      },
+      "description": "Number of extraction machines required per square mile for each technique."
+    }
+  ],
+  "vars": [
+    {
+      "name": "land_allocation",
+      "indices": [
+        "TECHNIQUES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Proportion of land allocated to each mining technique."
+    }
+  ],
+  "objective": {
+    "name": "max_daily_production",
+    "sense": "max",
+    "expr": "sum(land_allocation[t] * production_rate[t] for t in TECHNIQUES)",
+    "description": "Maximize the daily production of rare earth oxide."
+  },
+  "constraints": [
+    {
+      "name": "total_land_constraint",
+      "expr_lhs": "sum(land_allocation[t] for t in TECHNIQUES)",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Total land allocated cannot exceed 100 square miles."
+    },
+    {
+      "name": "machine_constraint",
+      "expr_lhs": "sum(land_allocation[t] * machine_requirement[t] for t in TECHNIQUES)",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Total number of machines used cannot exceed 100."
+    },
+    {
+      "name": "wastewater_constraint",
+      "expr_lhs": "sum(land_allocation[t] * wastewater_rate[t] for t in TECHNIQUES)",
+      "sense": "<=",
+      "expr_rhs": "90",
+      "description": "Total amount of polluted wastewater produced cannot exceed 90 tons daily."
+    }
+  ],
+  "graph": null
+}

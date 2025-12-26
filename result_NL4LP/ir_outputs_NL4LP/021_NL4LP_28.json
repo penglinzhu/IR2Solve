@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_28",
+    "source": null,
+    "description": "Optimize the production of chocolate and vanilla ice cream to maximize profit under time and worker constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "ICE_CREAM_TYPES",
+      "elements": [
+        "chocolate",
+        "vanilla"
+      ],
+      "description": "Types of ice cream produced."
+    }
+  ],
+  "params": [
+    {
+      "name": "production_time",
+      "indices": [
+        "ICE_CREAM_TYPES"
+      ],
+      "values": {
+        "chocolate": 1,
+        "vanilla": 2
+      },
+      "description": "Time in hours required to produce one gallon of each type of ice cream."
+    },
+    {
+      "name": "profit_per_gallon",
+      "indices": [
+        "ICE_CREAM_TYPES"
+      ],
+      "values": {
+        "chocolate": 200,
+        "vanilla": 300
+      },
+      "description": "Profit per gallon for each type of ice cream."
+    },
+    {
+      "name": "workers_required",
+      "indices": [
+        "ICE_CREAM_TYPES"
+      ],
+      "values": {
+        "chocolate": 1,
+        "vanilla": 2
+      },
+      "description": "Number of workers required to produce one gallon of each type of ice cream."
+    }
+  ],
+  "vars": [
+    {
+      "name": "gallons",
+      "indices": [
+        "ICE_CREAM_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of gallons to produce for each type of ice cream."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "sum(profit_per_gallon[i] * gallons[i] for i in ICE_CREAM_TYPES)",
+    "description": "Maximize the total profit from selling ice cream."
+  },
+  "constraints": [
+    {
+      "name": "min_chocolate_production",
+      "expr_lhs": "gallons['chocolate']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "At least 5 gallons of chocolate ice cream must be produced."
+    },
+    {
+      "name": "max_chocolate_production",
+      "expr_lhs": "gallons['chocolate']",
+      "sense": "<=",
+      "expr_rhs": "10",
+      "description": "At most 10 gallons of chocolate ice cream can be produced."
+    },
+    {
+      "name": "min_vanilla_production",
+      "expr_lhs": "gallons['vanilla']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "At least 5 gallons of vanilla ice cream must be produced."
+    },
+    {
+      "name": "max_vanilla_production",
+      "expr_lhs": "gallons['vanilla']",
+      "sense": "<=",
+      "expr_rhs": "8",
+      "description": "At most 8 gallons of vanilla ice cream can be produced."
+    },
+    {
+      "name": "total_production_time",
+      "expr_lhs": "sum(production_time[i] * gallons[i] for i in ICE_CREAM_TYPES)",
+      "sense": "<=",
+      "expr_rhs": "30",
+      "description": "Total production time cannot exceed 30 hours."
+    },
+    {
+      "name": "min_workers",
+      "expr_lhs": "sum(workers_required[i] * gallons[i] for i in ICE_CREAM_TYPES)",
+      "sense": ">=",
+      "expr_rhs": "6",
+      "description": "At least 6 workers are needed in total."
+    }
+  ],
+  "graph": null
+}

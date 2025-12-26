@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_259",
+    "source": null,
+    "description": "Determine the number of smoothies and protein bars to maximize protein intake under calorie constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MEALS",
+      "elements": [
+        "smoothie",
+        "protein_bar"
+      ],
+      "description": "Types of meal preps available."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein_content",
+      "indices": [
+        "MEALS"
+      ],
+      "values": {
+        "smoothie": 2,
+        "protein_bar": 7
+      },
+      "description": "Protein content per meal type."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "MEALS"
+      ],
+      "values": {
+        "smoothie": 300,
+        "protein_bar": 250
+      },
+      "description": "Caloric content per meal type."
+    },
+    {
+      "name": "max_calories",
+      "indices": [],
+      "values": 2000,
+      "description": "Maximum calories that can be consumed."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "MEALS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each meal type to consume."
+    }
+  ],
+  "objective": {
+    "name": "max_protein_intake",
+    "sense": "max",
+    "expr": "2 * x['smoothie'] + 7 * x['protein_bar']",
+    "description": "Maximize total protein intake."
+  },
+  "constraints": [
+    {
+      "name": "calorie_limit",
+      "expr_lhs": "300 * x['smoothie'] + 250 * x['protein_bar']",
+      "sense": "<=",
+      "expr_rhs": "2000",
+      "description": "Total calorie intake must not exceed 2000."
+    },
+    {
+      "name": "protein_bar_smoothie_ratio",
+      "expr_lhs": "x['protein_bar']",
+      "sense": "==",
+      "expr_rhs": "2 * x['smoothie']",
+      "description": "The number of protein bars must be twice the number of smoothies."
+    }
+  ],
+  "graph": null
+}

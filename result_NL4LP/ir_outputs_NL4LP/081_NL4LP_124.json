@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_124",
+    "source": null,
+    "description": "Optimize the amount of sulfate and ginger in a shampoo to minimize the total effective time.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "INGREDIENTS",
+      "elements": [
+        "sulfate",
+        "ginger"
+      ],
+      "description": "Types of ingredients to be added to the shampoo."
+    }
+  ],
+  "params": [
+    {
+      "name": "time_per_unit",
+      "indices": [
+        "INGREDIENTS"
+      ],
+      "values": {
+        "sulfate": 0.5,
+        "ginger": 0.75
+      },
+      "description": "Time in minutes for each unit of ingredient to be effective."
+    }
+  ],
+  "vars": [
+    {
+      "name": "units",
+      "indices": [
+        "INGREDIENTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each ingredient to be added to the shampoo."
+    }
+  ],
+  "objective": {
+    "name": "min_total_effective_time",
+    "sense": "min",
+    "expr": "units['sulfate'] * time_per_unit['sulfate'] + units['ginger'] * time_per_unit['ginger']",
+    "description": "Minimize the total effective time of the shampoo mixture."
+  },
+  "constraints": [
+    {
+      "name": "min_sulfate_requirement",
+      "expr_lhs": "units['sulfate']",
+      "sense": ">=",
+      "expr_rhs": "100",
+      "description": "The shampoo must contain at least 100 units of sulfate."
+    },
+    {
+      "name": "total_ingredient_requirement",
+      "expr_lhs": "units['sulfate'] + units['ginger']",
+      "sense": "==",
+      "expr_rhs": "400",
+      "description": "The total units of sulfate and ginger must be 400."
+    },
+    {
+      "name": "sulfate_ginger_ratio_limit",
+      "expr_lhs": "units['sulfate']",
+      "sense": "<=",
+      "expr_rhs": "2 * units['ginger']",
+      "description": "There can be at most twice the amount of sulfate as ginger in the shampoo."
+    }
+  ],
+  "graph": null
+}

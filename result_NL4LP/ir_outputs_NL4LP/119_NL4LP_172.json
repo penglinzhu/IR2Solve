@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_172",
+    "source": null,
+    "description": "Determine the number of hot-air balloon and gondola lift rides to minimize pollution while transporting at least 70 visitors.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TRANSPORT_METHODS",
+      "elements": [
+        "hot_air_balloon",
+        "gondola_lift"
+      ],
+      "description": "Types of transport methods available."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "TRANSPORT_METHODS"
+      ],
+      "values": {
+        "hot_air_balloon": 4,
+        "gondola_lift": 6
+      },
+      "description": "Number of visitors each transport method can carry."
+    },
+    {
+      "name": "pollution",
+      "indices": [
+        "TRANSPORT_METHODS"
+      ],
+      "values": {
+        "hot_air_balloon": 10,
+        "gondola_lift": 15
+      },
+      "description": "Pollution units produced by each transport method."
+    }
+  ],
+  "vars": [
+    {
+      "name": "rides",
+      "indices": [
+        "TRANSPORT_METHODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of rides for each transport method."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pollution",
+    "sense": "min",
+    "expr": "sum(pollution[t] * rides[t] for t in TRANSPORT_METHODS)",
+    "description": "Minimize the total pollution produced by the transport methods."
+  },
+  "constraints": [
+    {
+      "name": "visitor_requirement",
+      "expr_lhs": "sum(capacity[t] * rides[t] for t in TRANSPORT_METHODS)",
+      "sense": ">=",
+      "expr_rhs": "70",
+      "description": "At least 70 visitors need to be transported."
+    },
+    {
+      "name": "max_hot_air_balloon_rides",
+      "expr_lhs": "rides['hot_air_balloon']",
+      "sense": "<=",
+      "expr_rhs": "10",
+      "description": "There can be at most 10 hot-air balloon rides."
+    }
+  ],
+  "graph": null
+}

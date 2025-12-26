@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_159",
+    "source": null,
+    "description": "Optimize the number of small and large suitcases to maximize the total number of snacks delivered.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SUITCASES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of suitcases available for sending snacks."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "SUITCASES"
+      ],
+      "values": {
+        "small": 50,
+        "large": 80
+      },
+      "description": "Capacity of each type of suitcase in terms of number of snacks."
+    },
+    {
+      "name": "max_available",
+      "indices": [
+        "SUITCASES"
+      ],
+      "values": {
+        "small": 70,
+        "large": 50
+      },
+      "description": "Maximum number of each type of suitcase available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "SUITCASES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of suitcase to send."
+    }
+  ],
+  "objective": {
+    "name": "max_total_snacks",
+    "sense": "max",
+    "expr": "50 * x['small'] + 80 * x['large']",
+    "description": "Maximize the total number of snacks delivered."
+  },
+  "constraints": [
+    {
+      "name": "small_large_ratio",
+      "expr_lhs": "x['small']",
+      "sense": ">=",
+      "expr_rhs": "2 * x['large']",
+      "description": "At least twice as many small suitcases as large suitcases must be used."
+    },
+    {
+      "name": "max_small_suitcases",
+      "expr_lhs": "x['small']",
+      "sense": "<=",
+      "expr_rhs": "70",
+      "description": "At most 70 small suitcases can be used."
+    },
+    {
+      "name": "max_large_suitcases",
+      "expr_lhs": "x['large']",
+      "sense": "<=",
+      "expr_rhs": "50",
+      "description": "At most 50 large suitcases can be used."
+    },
+    {
+      "name": "min_large_suitcases",
+      "expr_lhs": "x['large']",
+      "sense": ">=",
+      "expr_rhs": "15",
+      "description": "At least 15 large suitcases must be used."
+    },
+    {
+      "name": "max_total_suitcases",
+      "expr_lhs": "x['small'] + x['large']",
+      "sense": "<=",
+      "expr_rhs": "70",
+      "description": "At most 70 suitcases in total can be used."
+    }
+  ],
+  "graph": null
+}

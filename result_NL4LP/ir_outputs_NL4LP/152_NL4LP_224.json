@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_224",
+    "source": null,
+    "description": "Optimize the number of molars and canines filled to minimize pain killer usage under resin and minimum filling constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TEETH_TYPES",
+      "elements": [
+        "molars",
+        "canines"
+      ],
+      "description": "Types of teeth to fill cavities in."
+    }
+  ],
+  "params": [
+    {
+      "name": "resin_requirement",
+      "indices": [
+        "TEETH_TYPES"
+      ],
+      "values": {
+        "molars": 20,
+        "canines": 15
+      },
+      "description": "Resin required per tooth type."
+    },
+    {
+      "name": "pain_killer_requirement",
+      "indices": [
+        "TEETH_TYPES"
+      ],
+      "values": {
+        "molars": 3,
+        "canines": 2.3
+      },
+      "description": "Pain killer required per tooth type."
+    },
+    {
+      "name": "total_resin",
+      "indices": [],
+      "values": 3000,
+      "description": "Total available units of resin."
+    },
+    {
+      "name": "min_molars",
+      "indices": [],
+      "values": 45,
+      "description": "Minimum number of molars to fill."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "TEETH_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of teeth to fill."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pain_killer",
+    "sense": "min",
+    "expr": "x['molars'] * pain_killer_requirement['molars'] + x['canines'] * pain_killer_requirement['canines']",
+    "description": "Minimize the total amount of pain killer used."
+  },
+  "constraints": [
+    {
+      "name": "resin_constraint",
+      "expr_lhs": "x['molars'] * resin_requirement['molars'] + x['canines'] * resin_requirement['canines']",
+      "sense": "<=",
+      "expr_rhs": "total_resin",
+      "description": "Total resin used must not exceed available resin."
+    },
+    {
+      "name": "min_molars_constraint",
+      "expr_lhs": "x['molars']",
+      "sense": ">=",
+      "expr_rhs": "min_molars",
+      "description": "At least 45 molars must be filled."
+    },
+    {
+      "name": "canines_ratio_constraint",
+      "expr_lhs": "x['canines']",
+      "sense": ">=",
+      "expr_rhs": "0.6 * (x['molars'] + x['canines'])",
+      "description": "At least 60% of the filled cavities must be in canines."
+    }
+  ],
+  "graph": null
+}

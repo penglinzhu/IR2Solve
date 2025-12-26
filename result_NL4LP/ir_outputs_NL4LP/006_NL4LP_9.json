@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_9",
+    "source": null,
+    "description": "Optimize the quantity of banana-haters and combo packages to maximize net profit given stock constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PACKAGES",
+      "elements": [
+        "banana_haters",
+        "combo"
+      ],
+      "description": "Types of packages available for sale."
+    },
+    {
+      "name": "ITEMS",
+      "elements": [
+        "apples",
+        "bananas",
+        "grapes"
+      ],
+      "description": "Types of items in stock."
+    }
+  ],
+  "params": [
+    {
+      "name": "stock",
+      "indices": [
+        "ITEMS"
+      ],
+      "values": {
+        "apples": 10,
+        "bananas": 20,
+        "grapes": 80
+      },
+      "description": "Available stock of each item."
+    },
+    {
+      "name": "package_content",
+      "indices": [
+        "PACKAGES",
+        "ITEMS"
+      ],
+      "values": {
+        "banana_haters": {
+          "apples": 6,
+          "bananas": 0,
+          "grapes": 30
+        },
+        "combo": {
+          "apples": 5,
+          "bananas": 6,
+          "grapes": 20
+        }
+      },
+      "description": "Content of each package type."
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "PACKAGES"
+      ],
+      "values": {
+        "banana_haters": 6,
+        "combo": 7
+      },
+      "description": "Profit from selling each package type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "quantity",
+      "indices": [
+        "PACKAGES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Quantity of each package type to prepare."
+    }
+  ],
+  "objective": {
+    "name": "max_net_profit",
+    "sense": "max",
+    "expr": "6 * quantity['banana_haters'] + 7 * quantity['combo']",
+    "description": "Maximize the net profit from selling packages."
+  },
+  "constraints": [
+    {
+      "name": "stock_apples",
+      "expr_lhs": "6 * quantity['banana_haters'] + 5 * quantity['combo']",
+      "sense": "<=",
+      "expr_rhs": "10",
+      "description": "Do not exceed the stock of apples."
+    },
+    {
+      "name": "stock_bananas",
+      "expr_lhs": "6 * quantity['combo']",
+      "sense": "<=",
+      "expr_rhs": "20",
+      "description": "Do not exceed the stock of bananas."
+    },
+    {
+      "name": "stock_grapes",
+      "expr_lhs": "30 * quantity['banana_haters'] + 20 * quantity['combo']",
+      "sense": "<=",
+      "expr_rhs": "80",
+      "description": "Do not exceed the stock of grapes."
+    }
+  ],
+  "graph": null
+}

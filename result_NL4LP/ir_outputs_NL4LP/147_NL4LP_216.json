@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_216",
+    "source": null,
+    "description": "Optimize the number of bags of subsoil and topsoil to minimize water usage while respecting capacity and composition constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SOIL_TYPES",
+      "elements": [
+        "subsoil",
+        "topsoil"
+      ],
+      "description": "Types of soil available for the garden bed."
+    }
+  ],
+  "params": [
+    {
+      "name": "water_requirement",
+      "indices": [
+        "SOIL_TYPES"
+      ],
+      "values": {
+        "subsoil": 10,
+        "topsoil": 6
+      },
+      "description": "Water required to hydrate one bag of each soil type per day."
+    },
+    {
+      "name": "total_capacity",
+      "indices": [],
+      "values": 150,
+      "description": "Total capacity of bags that can be transported."
+    },
+    {
+      "name": "min_topsoil",
+      "indices": [],
+      "values": 10,
+      "description": "Minimum number of topsoil bags required."
+    },
+    {
+      "name": "max_topsoil_percentage",
+      "indices": [],
+      "values": 0.3,
+      "description": "Maximum percentage of topsoil bags allowed."
+    }
+  ],
+  "vars": [
+    {
+      "name": "bags",
+      "indices": [
+        "SOIL_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of bags to be bought for each soil type."
+    }
+  ],
+  "objective": {
+    "name": "min_total_water",
+    "sense": "min",
+    "expr": "bags['subsoil'] * water_requirement['subsoil'] + bags['topsoil'] * water_requirement['topsoil']",
+    "description": "Minimize the total amount of water required to hydrate the garden bed."
+  },
+  "constraints": [
+    {
+      "name": "total_capacity_constraint",
+      "expr_lhs": "bags['subsoil'] + bags['topsoil']",
+      "sense": "<=",
+      "expr_rhs": "total_capacity",
+      "description": "Total number of bags must not exceed the truck's capacity."
+    },
+    {
+      "name": "min_topsoil_constraint",
+      "expr_lhs": "bags['topsoil']",
+      "sense": ">=",
+      "expr_rhs": "min_topsoil",
+      "description": "At least 10 bags of topsoil must be used."
+    },
+    {
+      "name": "max_topsoil_percentage_constraint",
+      "expr_lhs": "bags['topsoil']",
+      "sense": "<=",
+      "expr_rhs": "max_topsoil_percentage * (bags['subsoil'] + bags['topsoil'])",
+      "description": "At most 30% of all bags can be topsoil."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_242",
+    "source": null,
+    "description": "Determine the number of small and large boxes to use for shipping masks to minimize the total number of boxes while meeting mask distribution requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BOX_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of boxes used for shipping masks."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "BOX_TYPES"
+      ],
+      "values": {
+        "small": 25,
+        "large": 45
+      },
+      "description": "Number of masks each box type can hold."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "BOX_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of boxes of each type to use."
+    }
+  ],
+  "objective": {
+    "name": "min_total_boxes",
+    "sense": "min",
+    "expr": "x['small'] + x['large']",
+    "description": "Minimize the total number of boxes used."
+  },
+  "constraints": [
+    {
+      "name": "mask_requirement",
+      "expr_lhs": "25 * x['small'] + 45 * x['large']",
+      "sense": ">=",
+      "expr_rhs": "750",
+      "description": "Ensure at least 750 masks are distributed."
+    },
+    {
+      "name": "small_large_ratio",
+      "expr_lhs": "x['small']",
+      "sense": ">=",
+      "expr_rhs": "3 * x['large']",
+      "description": "Ensure at least three times as many small boxes as large boxes are used."
+    },
+    {
+      "name": "min_large_boxes",
+      "expr_lhs": "x['large']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "Ensure at least 5 large boxes are used."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_69",
+    "source": null,
+    "description": "Determine the number of regular and emergency fire fighters to hire to minimize the total number of fire fighters while meeting time and budget constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FIREFIGHTER_TYPES",
+      "elements": [
+        "regular",
+        "emergency"
+      ],
+      "description": "Types of fire fighters employed by the department."
+    }
+  ],
+  "params": [
+    {
+      "name": "hours_per_shift",
+      "indices": [
+        "FIREFIGHTER_TYPES"
+      ],
+      "values": {
+        "regular": 10,
+        "emergency": 6
+      },
+      "description": "Hours worked per shift by each type of fire fighter."
+    },
+    {
+      "name": "cost_per_shift",
+      "indices": [
+        "FIREFIGHTER_TYPES"
+      ],
+      "values": {
+        "regular": 300,
+        "emergency": 100
+      },
+      "description": "Cost per shift for each type of fire fighter."
+    },
+    {
+      "name": "required_hours",
+      "indices": [],
+      "values": 300,
+      "description": "Minimum required hours of fire fighter time."
+    },
+    {
+      "name": "budget",
+      "indices": [],
+      "values": 7000,
+      "description": "Total budget available for hiring fire fighters."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FIREFIGHTER_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of shifts to hire for each type of fire fighter."
+    }
+  ],
+  "objective": {
+    "name": "min_total_fire_fighters",
+    "sense": "min",
+    "expr": "x['regular'] + x['emergency']",
+    "description": "Minimize the total number of fire fighters hired."
+  },
+  "constraints": [
+    {
+      "name": "time_requirement",
+      "expr_lhs": "10 * x['regular'] + 6 * x['emergency']",
+      "sense": ">=",
+      "expr_rhs": "300",
+      "description": "Ensure at least 300 hours of fire fighter time."
+    },
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "300 * x['regular'] + 100 * x['emergency']",
+      "sense": "<=",
+      "expr_rhs": "7000",
+      "description": "Ensure the total cost does not exceed the budget."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_144",
+    "source": null,
+    "description": "Optimize the number of tricks performed by otters and dolphins given treat constraints and performer limits.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PERFORMERS",
+      "elements": [
+        "otters",
+        "dolphins"
+      ],
+      "description": "Types of performers in the aquarium show."
+    }
+  ],
+  "params": [
+    {
+      "name": "tricks_per_performance",
+      "indices": [
+        "PERFORMERS"
+      ],
+      "values": {
+        "otters": 3,
+        "dolphins": 1
+      },
+      "description": "Number of tricks each performer type can do per performance."
+    },
+    {
+      "name": "treats_per_performance",
+      "indices": [
+        "PERFORMERS"
+      ],
+      "values": {
+        "otters": 3,
+        "dolphins": 5
+      },
+      "description": "Number of treats required for each performer type per performance."
+    },
+    {
+      "name": "total_treats",
+      "indices": [],
+      "values": 200,
+      "description": "Total number of treats available."
+    },
+    {
+      "name": "min_dolphins",
+      "indices": [],
+      "values": 10,
+      "description": "Minimum number of dolphins required."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_performers",
+      "indices": [
+        "PERFORMERS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of performer used in the show."
+    }
+  ],
+  "objective": {
+    "name": "max_total_tricks",
+    "sense": "max",
+    "expr": "num_performers['otters'] * tricks_per_performance['otters'] + num_performers['dolphins'] * tricks_per_performance['dolphins']",
+    "description": "Maximize the total number of tricks performed by otters and dolphins."
+  },
+  "constraints": [
+    {
+      "name": "treats_constraint",
+      "expr_lhs": "num_performers['otters'] * treats_per_performance['otters'] + num_performers['dolphins'] * treats_per_performance['dolphins']",
+      "sense": "<=",
+      "expr_rhs": "total_treats",
+      "description": "Total treats used by performers must not exceed available treats."
+    },
+    {
+      "name": "min_dolphins_constraint",
+      "expr_lhs": "num_performers['dolphins']",
+      "sense": ">=",
+      "expr_rhs": "min_dolphins",
+      "description": "At least 10 dolphins must be used."
+    },
+    {
+      "name": "max_otters_constraint",
+      "expr_lhs": "num_performers['otters']",
+      "sense": "<=",
+      "expr_rhs": "0.3 * (num_performers['otters'] + num_performers['dolphins'])",
+      "description": "At most 30% of the performers can be otters."
+    }
+  ],
+  "graph": null
+}

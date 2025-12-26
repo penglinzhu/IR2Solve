@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_4",
+    "source": null,
+    "description": "Minimize the weekly wage bill for a store employing senior citizens and young adults under various constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WORKER_TYPES",
+      "elements": [
+        "senior_citizens",
+        "young_adults"
+      ],
+      "description": "Types of workers employed by the store."
+    }
+  ],
+  "params": [
+    {
+      "name": "wage",
+      "indices": [
+        "WORKER_TYPES"
+      ],
+      "values": {
+        "senior_citizens": 500,
+        "young_adults": 750
+      },
+      "description": "Weekly wage for each type of worker."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "WORKER_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of workers of each type employed by the store."
+    }
+  ],
+  "objective": {
+    "name": "min_total_wage_bill",
+    "sense": "min",
+    "expr": "wage['senior_citizens'] * x['senior_citizens'] + wage['young_adults'] * x['young_adults']",
+    "description": "Minimize the total weekly wage bill for all workers."
+  },
+  "constraints": [
+    {
+      "name": "wage_bill_limit",
+      "expr_lhs": "wage['senior_citizens'] * x['senior_citizens'] + wage['young_adults'] * x['young_adults']",
+      "sense": "<=",
+      "expr_rhs": "30000",
+      "description": "The total weekly wage bill must be below $30000."
+    },
+    {
+      "name": "minimum_total_workers",
+      "expr_lhs": "x['senior_citizens'] + x['young_adults']",
+      "sense": ">=",
+      "expr_rhs": "50",
+      "description": "The store requires at least 50 workers in total."
+    },
+    {
+      "name": "minimum_young_adults",
+      "expr_lhs": "x['young_adults']",
+      "sense": ">=",
+      "expr_rhs": "10",
+      "description": "At least 10 workers must be young adults."
+    },
+    {
+      "name": "young_adults_ratio",
+      "expr_lhs": "x['young_adults']",
+      "sense": ">=",
+      "expr_rhs": "x['senior_citizens'] / 3",
+      "description": "The number of young adults should be at least a third of the number of senior citizens."
+    }
+  ],
+  "graph": null
+}

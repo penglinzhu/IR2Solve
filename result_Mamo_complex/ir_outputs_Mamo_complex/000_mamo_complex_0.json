@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_0",
+    "source": null,
+    "description": "Optimize the meal plan for a bodybuilder to minimize cost while meeting nutritional requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Steak",
+        "Tofu",
+        "Chicken",
+        "Broccoli",
+        "Rice",
+        "Spinach"
+      ],
+      "description": "Available food items for the meal plan."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 14,
+        "Tofu": 2,
+        "Chicken": 17,
+        "Broccoli": 3,
+        "Rice": 15,
+        "Spinach": 2
+      },
+      "description": "Protein content in grams per serving of each food."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 23,
+        "Tofu": 13,
+        "Chicken": 13,
+        "Broccoli": 1,
+        "Rice": 23,
+        "Spinach": 8
+      },
+      "description": "Carbohydrate content in grams per serving of each food."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 63,
+        "Tofu": 162,
+        "Chicken": 260,
+        "Broccoli": 55,
+        "Rice": 231,
+        "Spinach": 297
+      },
+      "description": "Caloric content per serving of each food."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 4,
+        "Tofu": 6,
+        "Chicken": 6,
+        "Broccoli": 8,
+        "Rice": 8,
+        "Spinach": 5
+      },
+      "description": "Cost per serving of each food."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food item."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of the meal plan."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "83",
+      "description": "Ensure at least 83 grams of protein."
+    },
+    {
+      "name": "carbohydrates_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "192",
+      "description": "Ensure at least 192 grams of carbohydrates."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "2089",
+      "description": "Ensure at least 2089 calories."
+    }
+  ],
+  "graph": null
+}

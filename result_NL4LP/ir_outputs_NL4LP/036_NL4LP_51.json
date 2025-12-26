@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_51",
+    "source": null,
+    "description": "Determine the number of rural and urban factories to build to minimize the total number of factories while meeting production and manager constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FACTORY_TYPES",
+      "elements": [
+        "rural",
+        "urban"
+      ],
+      "description": "Types of factories that can be built."
+    }
+  ],
+  "params": [
+    {
+      "name": "production_capacity",
+      "indices": [
+        "FACTORY_TYPES"
+      ],
+      "values": {
+        "rural": 100,
+        "urban": 200
+      },
+      "description": "Number of phones produced per day by each factory type."
+    },
+    {
+      "name": "manager_requirement",
+      "indices": [
+        "FACTORY_TYPES"
+      ],
+      "values": {
+        "rural": 8,
+        "urban": 20
+      },
+      "description": "Number of managers required for each factory type."
+    },
+    {
+      "name": "total_managers",
+      "indices": [],
+      "values": 260,
+      "description": "Total number of managers available."
+    },
+    {
+      "name": "min_phones",
+      "indices": [],
+      "values": 3000,
+      "description": "Minimum number of phones that must be produced per day."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_factories",
+      "indices": [
+        "FACTORY_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of factories to build of each type."
+    }
+  ],
+  "objective": {
+    "name": "min_total_factories",
+    "sense": "min",
+    "expr": "num_factories['rural'] + num_factories['urban']",
+    "description": "Minimize the total number of factories built."
+  },
+  "constraints": [
+    {
+      "name": "manager_constraint",
+      "expr_lhs": "8 * num_factories['rural'] + 20 * num_factories['urban']",
+      "sense": "<=",
+      "expr_rhs": "260",
+      "description": "Total number of managers used cannot exceed available managers."
+    },
+    {
+      "name": "production_constraint",
+      "expr_lhs": "100 * num_factories['rural'] + 200 * num_factories['urban']",
+      "sense": ">=",
+      "expr_rhs": "3000",
+      "description": "Total number of phones produced must meet the minimum requirement."
+    }
+  ],
+  "graph": null
+}

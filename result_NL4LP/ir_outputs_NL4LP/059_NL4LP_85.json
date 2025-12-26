@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_85",
+    "source": null,
+    "description": "Optimize the production of milk and dark chocolate bars to minimize total production time given resource constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CHOCOLATE_TYPES",
+      "elements": [
+        "milk",
+        "dark"
+      ],
+      "description": "Types of chocolate bars produced in the shop."
+    }
+  ],
+  "params": [
+    {
+      "name": "cocoa_requirement",
+      "indices": [
+        "CHOCOLATE_TYPES"
+      ],
+      "values": {
+        "milk": 4,
+        "dark": 6
+      },
+      "description": "Cocoa units required per chocolate bar type."
+    },
+    {
+      "name": "milk_requirement",
+      "indices": [
+        "CHOCOLATE_TYPES"
+      ],
+      "values": {
+        "milk": 7,
+        "dark": 3
+      },
+      "description": "Milk units required per chocolate bar type."
+    },
+    {
+      "name": "cocoa_available",
+      "indices": [],
+      "values": 2000,
+      "description": "Total cocoa units available."
+    },
+    {
+      "name": "milk_available",
+      "indices": [],
+      "values": 1750,
+      "description": "Total milk units available."
+    },
+    {
+      "name": "production_time",
+      "indices": [
+        "CHOCOLATE_TYPES"
+      ],
+      "values": {
+        "milk": 15,
+        "dark": 12
+      },
+      "description": "Production time in minutes per chocolate bar type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CHOCOLATE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of chocolate bars to produce for each type."
+    }
+  ],
+  "objective": {
+    "name": "min_total_production_time",
+    "sense": "min",
+    "expr": "15 * x['milk'] + 12 * x['dark']",
+    "description": "Minimize the total production time for all chocolate bars."
+  },
+  "constraints": [
+    {
+      "name": "cocoa_constraint",
+      "expr_lhs": "4 * x['milk'] + 6 * x['dark']",
+      "sense": "<=",
+      "expr_rhs": "2000",
+      "description": "Cocoa availability constraint."
+    },
+    {
+      "name": "milk_constraint",
+      "expr_lhs": "7 * x['milk'] + 3 * x['dark']",
+      "sense": "<=",
+      "expr_rhs": "1750",
+      "description": "Milk availability constraint."
+    },
+    {
+      "name": "production_ratio_constraint",
+      "expr_lhs": "x['milk']",
+      "sense": ">=",
+      "expr_rhs": "2 * x['dark']",
+      "description": "At least twice as many milk chocolate bars as dark chocolate bars."
+    }
+  ],
+  "graph": null
+}

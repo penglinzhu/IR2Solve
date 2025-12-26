@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_245",
+    "source": null,
+    "description": "Optimize the number of trains and trams to transport at least 600 people per hour with constraints on the number of trams relative to trains.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TRANSPORT_TYPES",
+      "elements": [
+        "train",
+        "tram"
+      ],
+      "description": "Types of transportation units considered."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "values": {
+        "train": 120,
+        "tram": 30
+      },
+      "description": "Capacity of each transportation type in terms of people per hour."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of transportation unit."
+    }
+  ],
+  "objective": {
+    "name": "min_total_units",
+    "sense": "min",
+    "expr": "x['train'] + x['tram']",
+    "description": "Minimize the total number of transportation units."
+  },
+  "constraints": [
+    {
+      "name": "transport_capacity",
+      "expr_lhs": "capacity['train'] * x['train'] + capacity['tram'] * x['tram']",
+      "sense": ">=",
+      "expr_rhs": "600",
+      "description": "Ensure at least 600 people can be transported per hour."
+    },
+    {
+      "name": "tram_train_ratio",
+      "expr_lhs": "x['tram']",
+      "sense": ">=",
+      "expr_rhs": "2 * x['train']",
+      "description": "The number of trams must be at least twice the number of trains."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_165",
+    "source": null,
+    "description": "Optimize the number of jars used to ship at least 100000 ml of jam with constraints on jar sizes.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "JAR_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of jars used by the company."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "JAR_TYPES"
+      ],
+      "values": {
+        "small": 50,
+        "large": 200
+      },
+      "description": "Capacity of each jar type in ml."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_jars",
+      "indices": [
+        "JAR_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of jars of each type to be used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_jars",
+    "sense": "min",
+    "expr": "num_jars['small'] + num_jars['large']",
+    "description": "Minimize the total number of jars used."
+  },
+  "constraints": [
+    {
+      "name": "large_jars_limit",
+      "expr_lhs": "num_jars['large']",
+      "sense": "<=",
+      "expr_rhs": "num_jars['small']",
+      "description": "The number of large jars cannot exceed the number of small jars."
+    },
+    {
+      "name": "minimum_jam_requirement",
+      "expr_lhs": "capacity['small'] * num_jars['small'] + capacity['large'] * num_jars['large']",
+      "sense": ">=",
+      "expr_rhs": "100000",
+      "description": "The total jam shipped must be at least 100000 ml."
+    }
+  ],
+  "graph": null
+}

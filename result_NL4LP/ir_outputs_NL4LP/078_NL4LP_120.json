@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_120",
+    "source": null,
+    "description": "Determine the number of bananas and mangoes a gorilla should consume to minimize sugar intake while meeting nutritional requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FRUITS",
+      "elements": [
+        "banana",
+        "mango"
+      ],
+      "description": "Types of fruits available for feeding the gorilla."
+    }
+  ],
+  "params": [
+    {
+      "name": "calories",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "banana": 80,
+        "mango": 100
+      },
+      "description": "Calories per fruit type."
+    },
+    {
+      "name": "potassium",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "banana": 20,
+        "mango": 15
+      },
+      "description": "Potassium content per fruit type in grams."
+    },
+    {
+      "name": "sugar",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "banana": 10,
+        "mango": 8
+      },
+      "description": "Sugar content per fruit type in grams."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FRUITS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of fruit to feed the gorilla."
+    }
+  ],
+  "objective": {
+    "name": "min_sugar_intake",
+    "sense": "min",
+    "expr": "x['banana'] * sugar['banana'] + x['mango'] * sugar['mango']",
+    "description": "Minimize the total sugar intake from the fruits."
+  },
+  "constraints": [
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "x['banana'] * calories['banana'] + x['mango'] * calories['mango']",
+      "sense": ">=",
+      "expr_rhs": "4000",
+      "description": "Ensure the gorilla consumes at least 4000 calories."
+    },
+    {
+      "name": "potassium_requirement",
+      "expr_lhs": "x['banana'] * potassium['banana'] + x['mango'] * potassium['mango']",
+      "sense": ">=",
+      "expr_rhs": "150",
+      "description": "Ensure the gorilla consumes at least 150 grams of potassium."
+    },
+    {
+      "name": "mango_preference_limit",
+      "expr_lhs": "x['mango']",
+      "sense": "<=",
+      "expr_rhs": "0.33 * (x['banana'] + x['mango'])",
+      "description": "At most 33% of the fruits consumed can be mangoes."
+    }
+  ],
+  "graph": null
+}

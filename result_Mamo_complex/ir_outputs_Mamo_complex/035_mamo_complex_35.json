@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_35",
+    "source": null,
+    "description": "Optimize the allocation of products among six international warehouses to meet their needs at the lowest transportation cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WAREHOUSES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "description": "Set of warehouses involved in the logistics problem."
+    }
+  ],
+  "params": [
+    {
+      "name": "current_inventory",
+      "indices": [
+        "WAREHOUSES"
+      ],
+      "values": {
+        "1": 497,
+        "2": 39,
+        "3": 416,
+        "4": 71,
+        "5": 445,
+        "6": 471
+      },
+      "description": "Current inventory levels at each warehouse."
+    },
+    {
+      "name": "required_inventory",
+      "indices": [
+        "WAREHOUSES"
+      ],
+      "values": {
+        "1": 161,
+        "2": 257,
+        "3": 252,
+        "4": 251,
+        "5": 372,
+        "6": 370
+      },
+      "description": "Required inventory levels at each warehouse."
+    },
+    {
+      "name": "transport_cost",
+      "indices": [
+        "WAREHOUSES",
+        "WAREHOUSES"
+      ],
+      "values": {
+        "1": {
+          "2": 5,
+          "3": 7,
+          "4": 5,
+          "5": 27,
+          "6": 49
+        },
+        "2": {
+          "1": 31,
+          "3": 14,
+          "4": 31,
+          "5": 3,
+          "6": 4
+        },
+        "3": {
+          "1": 9,
+          "2": 13,
+          "4": 23,
+          "5": 38,
+          "6": 19
+        },
+        "4": {
+          "1": 47,
+          "2": 34,
+          "3": 7,
+          "5": 34,
+          "6": 35
+        },
+        "5": {
+          "1": 21,
+          "2": 11,
+          "3": 6,
+          "4": 7,
+          "6": 50
+        },
+        "6": {
+          "1": 28,
+          "2": 41,
+          "3": 34,
+          "4": 17,
+          "5": 32
+        }
+      },
+      "description": "Cost of transporting one unit of product between each pair of warehouses."
+    }
+  ],
+  "vars": [
+    {
+      "name": "flow",
+      "indices": [
+        "WAREHOUSES",
+        "WAREHOUSES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of product transported from one warehouse to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(transport_cost[i][j] * flow[i][j] for i in WAREHOUSES for j in WAREHOUSES if i != j)",
+    "description": "Minimize the total transportation cost of reallocating products among warehouses."
+  },
+  "constraints": [
+    {
+      "name": "balance_warehouse_1",
+      "expr_lhs": "current_inventory['1'] + sum(flow[j]['1'] for j in WAREHOUSES if j != '1') - sum(flow['1'][j] for j in WAREHOUSES if j != '1')",
+      "sense": "==",
+      "expr_rhs": "required_inventory['1']",
+      "description": "Ensure warehouse 1 meets its required inventory level."
+    },
+    {
+      "name": "balance_warehouse_2",
+      "expr_lhs": "current_inventory['2'] + sum(flow[j]['2'] for j in WAREHOUSES if j != '2') - sum(flow['2'][j] for j in WAREHOUSES if j != '2')",
+      "sense": "==",
+      "expr_rhs": "required_inventory['2']",
+      "description": "Ensure warehouse 2 meets its required inventory level."
+    },
+    {
+      "name": "balance_warehouse_3",
+      "expr_lhs": "current_inventory['3'] + sum(flow[j]['3'] for j in WAREHOUSES if j != '3') - sum(flow['3'][j] for j in WAREHOUSES if j != '3')",
+      "sense": "==",
+      "expr_rhs": "required_inventory['3']",
+      "description": "Ensure warehouse 3 meets its required inventory level."
+    },
+    {
+      "name": "balance_warehouse_4",
+      "expr_lhs": "current_inventory['4'] + sum(flow[j]['4'] for j in WAREHOUSES if j != '4') - sum(flow['4'][j] for j in WAREHOUSES if j != '4')",
+      "sense": "==",
+      "expr_rhs": "required_inventory['4']",
+      "description": "Ensure warehouse 4 meets its required inventory level."
+    },
+    {
+      "name": "balance_warehouse_5",
+      "expr_lhs": "current_inventory['5'] + sum(flow[j]['5'] for j in WAREHOUSES if j != '5') - sum(flow['5'][j] for j in WAREHOUSES if j != '5')",
+      "sense": "==",
+      "expr_rhs": "required_inventory['5']",
+      "description": "Ensure warehouse 5 meets its required inventory level."
+    },
+    {
+      "name": "balance_warehouse_6",
+      "expr_lhs": "current_inventory['6'] + sum(flow[j]['6'] for j in WAREHOUSES if j != '6') - sum(flow['6'][j] for j in WAREHOUSES if j != '6')",
+      "sense": "==",
+      "expr_rhs": "required_inventory['6']",
+      "description": "Ensure warehouse 6 meets its required inventory level."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_156",
+    "source": null,
+    "description": "Optimize the number of wagons used to transport ore to the surface.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WAGON_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of wagons used for transporting ore."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "WAGON_TYPES"
+      ],
+      "values": {
+        "small": 20,
+        "large": 50
+      },
+      "description": "Capacity of each type of wagon in units of ore."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_wagons",
+      "indices": [
+        "WAGON_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of wagons of each type used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_wagons",
+    "sense": "min",
+    "expr": "num_wagons['small'] + num_wagons['large']",
+    "description": "Minimize the total number of wagons used."
+  },
+  "constraints": [
+    {
+      "name": "ore_transport_requirement",
+      "expr_lhs": "20 * num_wagons['small'] + 50 * num_wagons['large']",
+      "sense": ">=",
+      "expr_rhs": "2000",
+      "description": "Ensure at least 2000 units of ore are transported to the surface."
+    },
+    {
+      "name": "small_wagon_ratio",
+      "expr_lhs": "num_wagons['small']",
+      "sense": ">=",
+      "expr_rhs": "2 * num_wagons['large']",
+      "description": "The number of small wagons must be at least twice the number of large wagons."
+    },
+    {
+      "name": "min_large_wagons",
+      "expr_lhs": "num_wagons['large']",
+      "sense": ">=",
+      "expr_rhs": "10",
+      "description": "At least 10 large wagons must be used."
+    }
+  ],
+  "graph": null
+}

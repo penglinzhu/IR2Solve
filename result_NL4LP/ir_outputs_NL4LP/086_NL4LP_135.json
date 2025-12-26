@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_135",
+    "source": null,
+    "description": "Determine the number of packs of blueberries and strawberries to consume to minimize sugar intake while meeting anti-oxidant and mineral requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FRUITS",
+      "elements": [
+        "blueberries",
+        "strawberries"
+      ],
+      "description": "Types of fruits considered in the diet."
+    }
+  ],
+  "params": [
+    {
+      "name": "antioxidants",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "blueberries": 3,
+        "strawberries": 1
+      },
+      "description": "Units of anti-oxidants per pack of each fruit."
+    },
+    {
+      "name": "minerals",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "blueberries": 5,
+        "strawberries": 7
+      },
+      "description": "Units of minerals per pack of each fruit."
+    },
+    {
+      "name": "sugar",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "blueberries": 5,
+        "strawberries": 7
+      },
+      "description": "Grams of sugar per pack of each fruit."
+    }
+  ],
+  "vars": [
+    {
+      "name": "packs",
+      "indices": [
+        "FRUITS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of packs of each fruit to consume."
+    }
+  ],
+  "objective": {
+    "name": "min_total_sugar",
+    "sense": "min",
+    "expr": "sugar['blueberries'] * packs['blueberries'] + sugar['strawberries'] * packs['strawberries']",
+    "description": "Minimize the total sugar intake from consuming the packs of fruits."
+  },
+  "constraints": [
+    {
+      "name": "antioxidant_requirement",
+      "expr_lhs": "antioxidants['blueberries'] * packs['blueberries'] + antioxidants['strawberries'] * packs['strawberries']",
+      "sense": ">=",
+      "expr_rhs": "90",
+      "description": "Ensure at least 90 units of anti-oxidants are consumed."
+    },
+    {
+      "name": "mineral_requirement",
+      "expr_lhs": "minerals['blueberries'] * packs['blueberries'] + minerals['strawberries'] * packs['strawberries']",
+      "sense": ">=",
+      "expr_rhs": "100",
+      "description": "Ensure at least 100 units of minerals are consumed."
+    },
+    {
+      "name": "strawberry_blueberry_ratio",
+      "expr_lhs": "packs['strawberries']",
+      "sense": ">=",
+      "expr_rhs": "3 * packs['blueberries']",
+      "description": "Ensure at least 3 times as many packs of strawberries as blueberries are consumed."
+    }
+  ],
+  "graph": null
+}

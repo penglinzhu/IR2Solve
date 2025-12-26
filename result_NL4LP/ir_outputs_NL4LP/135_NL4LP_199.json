@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_199",
+    "source": null,
+    "description": "Determine the optimal number of tanks of each type of oil to process to maximize net revenue given compound constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "OILS",
+      "elements": [
+        "light",
+        "non_sticky",
+        "heavy"
+      ],
+      "description": "Types of crude oil processed by Maple Oil"
+    }
+  ],
+  "params": [
+    {
+      "name": "revenue",
+      "indices": [
+        "OILS"
+      ],
+      "values": {
+        "light": 550,
+        "non_sticky": 750,
+        "heavy": 950
+      },
+      "description": "Net revenue per tank of each type of oil"
+    },
+    {
+      "name": "compound_A",
+      "indices": [
+        "OILS"
+      ],
+      "values": {
+        "light": 3,
+        "non_sticky": 6,
+        "heavy": 9
+      },
+      "description": "Units of compound A required per tank of each type of oil"
+    },
+    {
+      "name": "compound_B",
+      "indices": [
+        "OILS"
+      ],
+      "values": {
+        "light": 3,
+        "non_sticky": 2,
+        "heavy": 3
+      },
+      "description": "Units of compound B required per tank of each type of oil"
+    },
+    {
+      "name": "available_A",
+      "indices": [],
+      "values": 250,
+      "description": "Total available units of compound A"
+    },
+    {
+      "name": "available_B",
+      "indices": [],
+      "values": 150,
+      "description": "Total available units of compound B"
+    }
+  ],
+  "vars": [
+    {
+      "name": "tanks",
+      "indices": [
+        "OILS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of tanks of each type of oil to process"
+    }
+  ],
+  "objective": {
+    "name": "max_net_revenue",
+    "sense": "max",
+    "expr": "sum(revenue[o] * tanks[o] for o in OILS)",
+    "description": "Maximize the net revenue from processing tanks of oil"
+  },
+  "constraints": [
+    {
+      "name": "compound_A_constraint",
+      "expr_lhs": "sum(compound_A[o] * tanks[o] for o in OILS)",
+      "sense": "<=",
+      "expr_rhs": "available_A",
+      "description": "Total usage of compound A must not exceed available units"
+    },
+    {
+      "name": "compound_B_constraint",
+      "expr_lhs": "sum(compound_B[o] * tanks[o] for o in OILS)",
+      "sense": "<=",
+      "expr_rhs": "available_B",
+      "description": "Total usage of compound B must not exceed available units"
+    }
+  ],
+  "graph": null
+}

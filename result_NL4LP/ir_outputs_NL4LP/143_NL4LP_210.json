@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_210",
+    "source": null,
+    "description": "Determine the optimal number of personal and commercial software licenses to produce to maximize profits under budget and sales constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "LICENSE_TYPES",
+      "elements": [
+        "personal",
+        "commercial"
+      ],
+      "description": "Types of software licenses"
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "LICENSE_TYPES"
+      ],
+      "values": {
+        "personal": 550,
+        "commercial": 2000
+      },
+      "description": "Cost to generate each type of license"
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "LICENSE_TYPES"
+      ],
+      "values": {
+        "personal": 450,
+        "commercial": 1200
+      },
+      "description": "Profit per license type"
+    },
+    {
+      "name": "max_sales",
+      "indices": [],
+      "values": 300,
+      "description": "Maximum number of licenses that can be sold per month"
+    },
+    {
+      "name": "max_budget",
+      "indices": [],
+      "values": 400000,
+      "description": "Maximum budget for generating licenses"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "LICENSE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of licenses to produce for each type"
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "450 * x['personal'] + 1200 * x['commercial']",
+    "description": "Maximize total profit from selling licenses"
+  },
+  "constraints": [
+    {
+      "name": "sales_limit",
+      "expr_lhs": "x['personal'] + x['commercial']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "Total licenses sold cannot exceed maximum sales limit"
+    },
+    {
+      "name": "budget_limit",
+      "expr_lhs": "550 * x['personal'] + 2000 * x['commercial']",
+      "sense": "<=",
+      "expr_rhs": "400000",
+      "description": "Total cost of generating licenses cannot exceed budget"
+    }
+  ],
+  "graph": null
+}

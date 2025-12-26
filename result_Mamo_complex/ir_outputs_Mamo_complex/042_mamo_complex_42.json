@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_42",
+    "source": null,
+    "description": "Minimize the total travel cost for a delivery truck to visit each warehouse exactly once and return to the starting warehouse.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WAREHOUSES",
+      "elements": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "description": "Warehouses located in different cities."
+    }
+  ],
+  "params": [
+    {
+      "name": "travel_cost",
+      "indices": [
+        "WAREHOUSES",
+        "WAREHOUSES"
+      ],
+      "values": {
+        "A": {
+          "B": 15,
+          "C": 88,
+          "D": 54,
+          "E": 92
+        },
+        "B": {
+          "A": 15,
+          "C": 29,
+          "D": 98,
+          "E": 33
+        },
+        "C": {
+          "A": 88,
+          "B": 29,
+          "D": 96,
+          "E": 96
+        },
+        "D": {
+          "A": 54,
+          "B": 98,
+          "C": 96,
+          "E": 63
+        },
+        "E": {
+          "A": 92,
+          "B": 33,
+          "C": 96,
+          "D": 63
+        }
+      },
+      "description": "Cost to travel between warehouses."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "WAREHOUSES",
+        "WAREHOUSES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "1 if the route includes travel from one warehouse to another, 0 otherwise."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(travel_cost[i][j] * x[i][j] for i in WAREHOUSES for j in WAREHOUSES if i != j)",
+    "description": "Minimize the total travel cost for the delivery route."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_warehouse_once_A",
+      "expr_lhs": "sum(x['A'][j] for j in WAREHOUSES if j != 'A')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse A must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_warehouse_once_B",
+      "expr_lhs": "sum(x['B'][j] for j in WAREHOUSES if j != 'B')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse B must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_warehouse_once_C",
+      "expr_lhs": "sum(x['C'][j] for j in WAREHOUSES if j != 'C')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse C must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_warehouse_once_D",
+      "expr_lhs": "sum(x['D'][j] for j in WAREHOUSES if j != 'D')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse D must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_warehouse_once_E",
+      "expr_lhs": "sum(x['E'][j] for j in WAREHOUSES if j != 'E')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse E must be departed from exactly once."
+    },
+    {
+      "name": "enter_each_warehouse_once_A",
+      "expr_lhs": "sum(x[i]['A'] for i in WAREHOUSES if i != 'A')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse A must be entered exactly once."
+    },
+    {
+      "name": "enter_each_warehouse_once_B",
+      "expr_lhs": "sum(x[i]['B'] for i in WAREHOUSES if i != 'B')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse B must be entered exactly once."
+    },
+    {
+      "name": "enter_each_warehouse_once_C",
+      "expr_lhs": "sum(x[i]['C'] for i in WAREHOUSES if i != 'C')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse C must be entered exactly once."
+    },
+    {
+      "name": "enter_each_warehouse_once_D",
+      "expr_lhs": "sum(x[i]['D'] for i in WAREHOUSES if i != 'D')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse D must be entered exactly once."
+    },
+    {
+      "name": "enter_each_warehouse_once_E",
+      "expr_lhs": "sum(x[i]['E'] for i in WAREHOUSES if i != 'E')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Warehouse E must be entered exactly once."
+    }
+  ],
+  "graph": null
+}

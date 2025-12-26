@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_248",
+    "source": null,
+    "description": "Determine the number of escalators and elevators to install to minimize space while meeting transport capacity and ratio requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TRANSPORT_TYPES",
+      "elements": [
+        "escalators",
+        "elevators"
+      ],
+      "description": "Types of transport installations available at the airport."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity_per_minute",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "values": {
+        "escalators": 20,
+        "elevators": 8
+      },
+      "description": "Number of people each transport type can move per minute."
+    },
+    {
+      "name": "space_per_unit",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "values": {
+        "escalators": 5,
+        "elevators": 2
+      },
+      "description": "Space taken by each unit of transport type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "TRANSPORT_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units to install for each transport type."
+    }
+  ],
+  "objective": {
+    "name": "min_total_space",
+    "sense": "min",
+    "expr": "sum(space_per_unit[t] * x[t] for t in TRANSPORT_TYPES)",
+    "description": "Minimize the total space taken by the installed transport units."
+  },
+  "constraints": [
+    {
+      "name": "capacity_requirement",
+      "expr_lhs": "capacity_per_minute['escalators'] * x['escalators'] + capacity_per_minute['elevators'] * x['elevators']",
+      "sense": ">=",
+      "expr_rhs": "400",
+      "description": "Ensure the total transport capacity is at least 400 people per minute."
+    },
+    {
+      "name": "escalator_to_elevator_ratio",
+      "expr_lhs": "x['escalators']",
+      "sense": ">=",
+      "expr_rhs": "3 * x['elevators']",
+      "description": "Ensure there are at least three times more escalators than elevators."
+    },
+    {
+      "name": "minimum_elevators",
+      "expr_lhs": "x['elevators']",
+      "sense": ">=",
+      "expr_rhs": "2",
+      "description": "Ensure at least 2 elevators are installed."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_98",
+    "source": null,
+    "description": "Optimize the number of patients whose blood pressure can be taken using automatic and manual machines.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MACHINES",
+      "elements": [
+        "automatic",
+        "manual"
+      ],
+      "description": "Types of machines used for taking blood pressure."
+    }
+  ],
+  "params": [
+    {
+      "name": "time_per_patient",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "automatic": 10,
+        "manual": 15
+      },
+      "description": "Time in minutes required per patient for each machine type."
+    },
+    {
+      "name": "clinic_open_time",
+      "indices": [],
+      "values": 20000,
+      "description": "Total time in minutes the clinic is open."
+    }
+  ],
+  "vars": [
+    {
+      "name": "patients",
+      "indices": [
+        "MACHINES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of patients processed by each machine type."
+    }
+  ],
+  "objective": {
+    "name": "max_patients",
+    "sense": "max",
+    "expr": "patients['automatic'] + patients['manual']",
+    "description": "Maximize the total number of patients whose blood pressure can be taken."
+  },
+  "constraints": [
+    {
+      "name": "time_constraint_automatic",
+      "expr_lhs": "time_per_patient['automatic'] * patients['automatic']",
+      "sense": "<=",
+      "expr_rhs": "clinic_open_time",
+      "description": "Time constraint for the automatic machine."
+    },
+    {
+      "name": "time_constraint_manual",
+      "expr_lhs": "time_per_patient['manual'] * patients['manual']",
+      "sense": "<=",
+      "expr_rhs": "clinic_open_time",
+      "description": "Time constraint for the manual machine."
+    },
+    {
+      "name": "manual_vs_automatic",
+      "expr_lhs": "patients['manual']",
+      "sense": ">=",
+      "expr_rhs": "2 * patients['automatic']",
+      "description": "At least twice as many patients must be processed by the manual machine than the automatic machine."
+    },
+    {
+      "name": "minimum_automatic_patients",
+      "expr_lhs": "patients['automatic']",
+      "sense": ">=",
+      "expr_rhs": "20",
+      "description": "At least 20 patients must be processed by the automatic machine."
+    }
+  ],
+  "graph": null
+}

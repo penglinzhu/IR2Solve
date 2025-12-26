@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_79",
+    "source": null,
+    "description": "Determine the number of part time and full time workers to schedule to minimize the total number of workers while meeting labor and budget constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WORKER_TYPES",
+      "elements": [
+        "part_time",
+        "full_time"
+      ],
+      "description": "Types of workers employed by the firm."
+    }
+  ],
+  "params": [
+    {
+      "name": "hours_per_shift",
+      "indices": [
+        "WORKER_TYPES"
+      ],
+      "values": {
+        "part_time": 4,
+        "full_time": 8
+      },
+      "description": "Number of hours worked per shift by each type of worker."
+    },
+    {
+      "name": "cost_per_shift",
+      "indices": [
+        "WORKER_TYPES"
+      ],
+      "values": {
+        "part_time": 100,
+        "full_time": 300
+      },
+      "description": "Cost per shift for each type of worker."
+    },
+    {
+      "name": "required_hours",
+      "indices": [],
+      "values": 500,
+      "description": "Total hours of labor required for the project."
+    },
+    {
+      "name": "budget",
+      "indices": [],
+      "values": 15000,
+      "description": "Total budget available for paying workers."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_workers",
+      "indices": [
+        "WORKER_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of workers to schedule for each type."
+    }
+  ],
+  "objective": {
+    "name": "min_total_workers",
+    "sense": "min",
+    "expr": "num_workers['part_time'] + num_workers['full_time']",
+    "description": "Minimize the total number of workers scheduled."
+  },
+  "constraints": [
+    {
+      "name": "labor_requirement",
+      "expr_lhs": "4 * num_workers['part_time'] + 8 * num_workers['full_time']",
+      "sense": ">=",
+      "expr_rhs": "500",
+      "description": "Ensure the total hours worked meets the project requirement."
+    },
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "100 * num_workers['part_time'] + 300 * num_workers['full_time']",
+      "sense": "<=",
+      "expr_rhs": "15000",
+      "description": "Ensure the total cost does not exceed the budget."
+    }
+  ],
+  "graph": null
+}

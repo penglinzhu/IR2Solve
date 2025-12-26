@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "problem_id": "industryOR_7",
+    "source": null,
+    "description": "Minimize pollution by choosing transportation modes and trips for goods transport.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MODES",
+      "elements": [
+        "motorcycle",
+        "small_truck",
+        "large_truck"
+      ],
+      "description": "Available modes of transportation."
+    }
+  ],
+  "params": [
+    {
+      "name": "pollution",
+      "indices": [
+        "MODES"
+      ],
+      "values": {
+        "motorcycle": 40,
+        "small_truck": 70,
+        "large_truck": 100
+      },
+      "description": "Pollution units produced per trip for each mode."
+    },
+    {
+      "name": "capacity",
+      "indices": [
+        "MODES"
+      ],
+      "values": {
+        "motorcycle": 10,
+        "small_truck": 20,
+        "large_truck": 50
+      },
+      "description": "Product units transported per trip for each mode."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "MODES"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of trips for each mode."
+    },
+    {
+      "name": "use_mode",
+      "indices": [
+        "MODES"
+      ],
+      "vartype": "binary",
+      "lb": 0,
+      "ub": 1,
+      "description": "Binary variable indicating if a mode is used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pollution",
+    "sense": "min",
+    "expr": "sum(pollution[mode] * trips[mode] for mode in ['motorcycle', 'small_truck', 'large_truck'])",
+    "description": "Minimize total pollution from all trips."
+  },
+  "constraints": [
+    {
+      "name": "mode_selection_limit",
+      "expr_lhs": "use_mode['motorcycle'] + use_mode['small_truck'] + use_mode['large_truck']",
+      "sense": "<=",
+      "expr_rhs": "2",
+      "description": "The company can only choose two modes of transportation."
+    },
+    {
+      "name": "motorcycle_trip_limit",
+      "expr_lhs": "trips['motorcycle']",
+      "sense": "<=",
+      "expr_rhs": "8",
+      "description": "The number of motorcycle trips cannot exceed 8."
+    },
+    {
+      "name": "product_transport_requirement",
+      "expr_lhs": "sum(capacity[mode] * trips[mode] for mode in ['motorcycle', 'small_truck', 'large_truck'])",
+      "sense": ">=",
+      "expr_rhs": "300",
+      "description": "The company needs to transport at least 300 units of products."
+    },
+    {
+      "name": "total_trip_limit",
+      "expr_lhs": "trips['motorcycle'] + trips['small_truck'] + trips['large_truck']",
+      "sense": "<=",
+      "expr_rhs": "20",
+      "description": "The total number of trips must be less than or equal to 20."
+    },
+    {
+      "name": "motorcycle_usage",
+      "expr_lhs": "trips['motorcycle']",
+      "sense": "<=",
+      "expr_rhs": "8 * use_mode['motorcycle']",
+      "description": "Trips for motorcycles are only allowed if the mode is selected."
+    },
+    {
+      "name": "small_truck_usage",
+      "expr_lhs": "trips['small_truck']",
+      "sense": "<=",
+      "expr_rhs": "20 * use_mode['small_truck']",
+      "description": "Trips for small trucks are only allowed if the mode is selected."
+    },
+    {
+      "name": "large_truck_usage",
+      "expr_lhs": "trips['large_truck']",
+      "sense": "<=",
+      "expr_rhs": "20 * use_mode['large_truck']",
+      "description": "Trips for large trucks are only allowed if the mode is selected."
+    }
+  ],
+  "graph": null
+}

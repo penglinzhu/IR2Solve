@@ -1,0 +1,717 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_61",
+    "source": null,
+    "description": "Calculate the maximum amount of resources that can be transported from the Central Supply Hub (Sector 0) to the Farthest Outpost (Sector 8) per Martian day.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SECTORS",
+      "elements": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "description": "Sectors in the Martian colony."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "SECTORS",
+        "SECTORS"
+      ],
+      "values": {
+        "0": {
+          "1": 7,
+          "2": 4,
+          "3": 17,
+          "4": 4,
+          "5": 18,
+          "6": 17,
+          "7": 5,
+          "8": 14
+        },
+        "1": {
+          "0": 2,
+          "2": 11,
+          "3": 10,
+          "4": 1,
+          "5": 19,
+          "6": 6,
+          "7": 16,
+          "8": 13
+        },
+        "2": {
+          "0": 8,
+          "1": 15,
+          "3": 5,
+          "4": 1,
+          "5": 5,
+          "6": 11,
+          "7": 17,
+          "8": 18
+        },
+        "3": {
+          "0": 2,
+          "1": 5,
+          "4": 6,
+          "5": 17,
+          "6": 1,
+          "7": 16,
+          "8": 14
+        },
+        "4": {
+          "0": 15,
+          "1": 6,
+          "2": 20,
+          "3": 15,
+          "5": 7,
+          "6": 13,
+          "7": 6,
+          "8": 19
+        },
+        "5": {
+          "0": 15,
+          "1": 2,
+          "2": 8,
+          "3": 2,
+          "4": 3,
+          "6": 2,
+          "7": 9,
+          "8": 2
+        },
+        "6": {
+          "0": 10,
+          "1": 12,
+          "2": 11,
+          "3": 10,
+          "4": 19,
+          "5": 9,
+          "7": 17,
+          "8": 1
+        },
+        "7": {
+          "0": 0,
+          "1": 20,
+          "2": 15,
+          "3": 19,
+          "4": 20,
+          "5": 18,
+          "6": 14,
+          "8": 8
+        },
+        "8": {
+          "0": 16,
+          "1": 13,
+          "2": 3,
+          "3": 3,
+          "4": 20,
+          "5": 19,
+          "6": 2,
+          "7": 7
+        }
+      },
+      "description": "Capacity of resource flow between sectors."
+    }
+  ],
+  "vars": [
+    {
+      "name": "flow",
+      "indices": [
+        "SECTORS",
+        "SECTORS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Flow of resources between sectors."
+    },
+    {
+      "name": "F",
+      "indices": [],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Total flow from Sector 0 to Sector 8."
+    }
+  ],
+  "objective": {
+    "name": "max_total_flow",
+    "sense": "max",
+    "expr": "F",
+    "description": "Maximize the total flow from Sector 0 to Sector 8."
+  },
+  "constraints": [
+    {
+      "name": "source_flow_balance",
+      "expr_lhs": "flow['0']['1'] + flow['0']['2'] + flow['0']['3'] + flow['0']['4'] + flow['0']['5'] + flow['0']['6'] + flow['0']['7'] + flow['0']['8']",
+      "sense": "==",
+      "expr_rhs": "F",
+      "description": "Flow balance at the source (Sector 0)."
+    },
+    {
+      "name": "sink_flow_balance",
+      "expr_lhs": "flow['0']['8'] + flow['1']['8'] + flow['2']['8'] + flow['3']['8'] + flow['4']['8'] + flow['5']['8'] + flow['6']['8'] + flow['7']['8']",
+      "sense": "==",
+      "expr_rhs": "F",
+      "description": "Flow balance at the sink (Sector 8)."
+    },
+    {
+      "name": "flow_conservation_1",
+      "expr_lhs": "flow['0']['1'] + flow['2']['1'] + flow['3']['1'] + flow['4']['1'] + flow['5']['1'] + flow['6']['1'] + flow['7']['1'] + flow['8']['1']",
+      "sense": "==",
+      "expr_rhs": "flow['1']['0'] + flow['1']['2'] + flow['1']['3'] + flow['1']['4'] + flow['1']['5'] + flow['1']['6'] + flow['1']['7'] + flow['1']['8']",
+      "description": "Flow conservation at Sector 1."
+    },
+    {
+      "name": "flow_conservation_2",
+      "expr_lhs": "flow['0']['2'] + flow['1']['2'] + flow['3']['2'] + flow['4']['2'] + flow['5']['2'] + flow['6']['2'] + flow['7']['2'] + flow['8']['2']",
+      "sense": "==",
+      "expr_rhs": "flow['2']['0'] + flow['2']['1'] + flow['2']['3'] + flow['2']['4'] + flow['2']['5'] + flow['2']['6'] + flow['2']['7'] + flow['2']['8']",
+      "description": "Flow conservation at Sector 2."
+    },
+    {
+      "name": "flow_conservation_3",
+      "expr_lhs": "flow['0']['3'] + flow['1']['3'] + flow['2']['3'] + flow['4']['3'] + flow['5']['3'] + flow['6']['3'] + flow['7']['3'] + flow['8']['3']",
+      "sense": "==",
+      "expr_rhs": "flow['3']['0'] + flow['3']['1'] + flow['3']['2'] + flow['3']['4'] + flow['3']['5'] + flow['3']['6'] + flow['3']['7'] + flow['3']['8']",
+      "description": "Flow conservation at Sector 3."
+    },
+    {
+      "name": "flow_conservation_4",
+      "expr_lhs": "flow['0']['4'] + flow['1']['4'] + flow['2']['4'] + flow['3']['4'] + flow['5']['4'] + flow['6']['4'] + flow['7']['4'] + flow['8']['4']",
+      "sense": "==",
+      "expr_rhs": "flow['4']['0'] + flow['4']['1'] + flow['4']['2'] + flow['4']['3'] + flow['4']['5'] + flow['4']['6'] + flow['4']['7'] + flow['4']['8']",
+      "description": "Flow conservation at Sector 4."
+    },
+    {
+      "name": "flow_conservation_5",
+      "expr_lhs": "flow['0']['5'] + flow['1']['5'] + flow['2']['5'] + flow['3']['5'] + flow['4']['5'] + flow['6']['5'] + flow['7']['5'] + flow['8']['5']",
+      "sense": "==",
+      "expr_rhs": "flow['5']['0'] + flow['5']['1'] + flow['5']['2'] + flow['5']['3'] + flow['5']['4'] + flow['5']['6'] + flow['5']['7'] + flow['5']['8']",
+      "description": "Flow conservation at Sector 5."
+    },
+    {
+      "name": "flow_conservation_6",
+      "expr_lhs": "flow['0']['6'] + flow['1']['6'] + flow['2']['6'] + flow['3']['6'] + flow['4']['6'] + flow['5']['6'] + flow['7']['6'] + flow['8']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['6']['0'] + flow['6']['1'] + flow['6']['2'] + flow['6']['3'] + flow['6']['4'] + flow['6']['5'] + flow['6']['7'] + flow['6']['8']",
+      "description": "Flow conservation at Sector 6."
+    },
+    {
+      "name": "flow_conservation_7",
+      "expr_lhs": "flow['0']['7'] + flow['1']['7'] + flow['2']['7'] + flow['3']['7'] + flow['4']['7'] + flow['5']['7'] + flow['6']['7'] + flow['8']['7']",
+      "sense": "==",
+      "expr_rhs": "flow['7']['0'] + flow['7']['1'] + flow['7']['2'] + flow['7']['3'] + flow['7']['4'] + flow['7']['5'] + flow['7']['6'] + flow['7']['8']",
+      "description": "Flow conservation at Sector 7."
+    },
+    {
+      "name": "capacity_0_1",
+      "expr_lhs": "flow['0']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['1']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 1."
+    },
+    {
+      "name": "capacity_0_2",
+      "expr_lhs": "flow['0']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['2']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 2."
+    },
+    {
+      "name": "capacity_0_3",
+      "expr_lhs": "flow['0']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['3']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 3."
+    },
+    {
+      "name": "capacity_0_4",
+      "expr_lhs": "flow['0']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['4']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 4."
+    },
+    {
+      "name": "capacity_0_5",
+      "expr_lhs": "flow['0']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['5']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 5."
+    },
+    {
+      "name": "capacity_0_6",
+      "expr_lhs": "flow['0']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['6']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 6."
+    },
+    {
+      "name": "capacity_0_7",
+      "expr_lhs": "flow['0']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['7']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 7."
+    },
+    {
+      "name": "capacity_0_8",
+      "expr_lhs": "flow['0']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['8']",
+      "description": "Capacity constraint for flow from Sector 0 to Sector 8."
+    },
+    {
+      "name": "capacity_1_0",
+      "expr_lhs": "flow['1']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['0']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 0."
+    },
+    {
+      "name": "capacity_1_2",
+      "expr_lhs": "flow['1']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['2']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 2."
+    },
+    {
+      "name": "capacity_1_3",
+      "expr_lhs": "flow['1']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['3']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 3."
+    },
+    {
+      "name": "capacity_1_4",
+      "expr_lhs": "flow['1']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['4']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 4."
+    },
+    {
+      "name": "capacity_1_5",
+      "expr_lhs": "flow['1']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['5']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 5."
+    },
+    {
+      "name": "capacity_1_6",
+      "expr_lhs": "flow['1']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['6']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 6."
+    },
+    {
+      "name": "capacity_1_7",
+      "expr_lhs": "flow['1']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['7']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 7."
+    },
+    {
+      "name": "capacity_1_8",
+      "expr_lhs": "flow['1']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['8']",
+      "description": "Capacity constraint for flow from Sector 1 to Sector 8."
+    },
+    {
+      "name": "capacity_2_0",
+      "expr_lhs": "flow['2']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['0']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 0."
+    },
+    {
+      "name": "capacity_2_1",
+      "expr_lhs": "flow['2']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['1']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 1."
+    },
+    {
+      "name": "capacity_2_3",
+      "expr_lhs": "flow['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['3']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 3."
+    },
+    {
+      "name": "capacity_2_4",
+      "expr_lhs": "flow['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['4']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 4."
+    },
+    {
+      "name": "capacity_2_5",
+      "expr_lhs": "flow['2']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['5']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 5."
+    },
+    {
+      "name": "capacity_2_6",
+      "expr_lhs": "flow['2']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['6']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 6."
+    },
+    {
+      "name": "capacity_2_7",
+      "expr_lhs": "flow['2']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['7']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 7."
+    },
+    {
+      "name": "capacity_2_8",
+      "expr_lhs": "flow['2']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['8']",
+      "description": "Capacity constraint for flow from Sector 2 to Sector 8."
+    },
+    {
+      "name": "capacity_3_0",
+      "expr_lhs": "flow['3']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['0']",
+      "description": "Capacity constraint for flow from Sector 3 to Sector 0."
+    },
+    {
+      "name": "capacity_3_1",
+      "expr_lhs": "flow['3']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['1']",
+      "description": "Capacity constraint for flow from Sector 3 to Sector 1."
+    },
+    {
+      "name": "capacity_3_4",
+      "expr_lhs": "flow['3']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['4']",
+      "description": "Capacity constraint for flow from Sector 3 to Sector 4."
+    },
+    {
+      "name": "capacity_3_5",
+      "expr_lhs": "flow['3']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['5']",
+      "description": "Capacity constraint for flow from Sector 3 to Sector 5."
+    },
+    {
+      "name": "capacity_3_6",
+      "expr_lhs": "flow['3']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['6']",
+      "description": "Capacity constraint for flow from Sector 3 to Sector 6."
+    },
+    {
+      "name": "capacity_3_7",
+      "expr_lhs": "flow['3']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['7']",
+      "description": "Capacity constraint for flow from Sector 3 to Sector 7."
+    },
+    {
+      "name": "capacity_3_8",
+      "expr_lhs": "flow['3']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['8']",
+      "description": "Capacity constraint for flow from Sector 3 to Sector 8."
+    },
+    {
+      "name": "capacity_4_0",
+      "expr_lhs": "flow['4']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['0']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 0."
+    },
+    {
+      "name": "capacity_4_1",
+      "expr_lhs": "flow['4']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['1']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 1."
+    },
+    {
+      "name": "capacity_4_2",
+      "expr_lhs": "flow['4']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['2']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 2."
+    },
+    {
+      "name": "capacity_4_3",
+      "expr_lhs": "flow['4']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['3']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 3."
+    },
+    {
+      "name": "capacity_4_5",
+      "expr_lhs": "flow['4']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['5']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 5."
+    },
+    {
+      "name": "capacity_4_6",
+      "expr_lhs": "flow['4']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['6']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 6."
+    },
+    {
+      "name": "capacity_4_7",
+      "expr_lhs": "flow['4']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['7']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 7."
+    },
+    {
+      "name": "capacity_4_8",
+      "expr_lhs": "flow['4']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['8']",
+      "description": "Capacity constraint for flow from Sector 4 to Sector 8."
+    },
+    {
+      "name": "capacity_5_0",
+      "expr_lhs": "flow['5']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['0']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 0."
+    },
+    {
+      "name": "capacity_5_1",
+      "expr_lhs": "flow['5']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['1']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 1."
+    },
+    {
+      "name": "capacity_5_2",
+      "expr_lhs": "flow['5']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['2']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 2."
+    },
+    {
+      "name": "capacity_5_3",
+      "expr_lhs": "flow['5']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['3']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 3."
+    },
+    {
+      "name": "capacity_5_4",
+      "expr_lhs": "flow['5']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['4']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 4."
+    },
+    {
+      "name": "capacity_5_6",
+      "expr_lhs": "flow['5']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['6']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 6."
+    },
+    {
+      "name": "capacity_5_7",
+      "expr_lhs": "flow['5']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['7']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 7."
+    },
+    {
+      "name": "capacity_5_8",
+      "expr_lhs": "flow['5']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['8']",
+      "description": "Capacity constraint for flow from Sector 5 to Sector 8."
+    },
+    {
+      "name": "capacity_6_0",
+      "expr_lhs": "flow['6']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['0']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 0."
+    },
+    {
+      "name": "capacity_6_1",
+      "expr_lhs": "flow['6']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['1']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 1."
+    },
+    {
+      "name": "capacity_6_2",
+      "expr_lhs": "flow['6']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['2']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 2."
+    },
+    {
+      "name": "capacity_6_3",
+      "expr_lhs": "flow['6']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['3']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 3."
+    },
+    {
+      "name": "capacity_6_4",
+      "expr_lhs": "flow['6']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['4']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 4."
+    },
+    {
+      "name": "capacity_6_5",
+      "expr_lhs": "flow['6']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['5']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 5."
+    },
+    {
+      "name": "capacity_6_7",
+      "expr_lhs": "flow['6']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['7']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 7."
+    },
+    {
+      "name": "capacity_6_8",
+      "expr_lhs": "flow['6']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['8']",
+      "description": "Capacity constraint for flow from Sector 6 to Sector 8."
+    },
+    {
+      "name": "capacity_7_0",
+      "expr_lhs": "flow['7']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['0']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 0."
+    },
+    {
+      "name": "capacity_7_1",
+      "expr_lhs": "flow['7']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['1']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 1."
+    },
+    {
+      "name": "capacity_7_2",
+      "expr_lhs": "flow['7']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['2']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 2."
+    },
+    {
+      "name": "capacity_7_3",
+      "expr_lhs": "flow['7']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['3']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 3."
+    },
+    {
+      "name": "capacity_7_4",
+      "expr_lhs": "flow['7']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['4']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 4."
+    },
+    {
+      "name": "capacity_7_5",
+      "expr_lhs": "flow['7']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['5']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 5."
+    },
+    {
+      "name": "capacity_7_6",
+      "expr_lhs": "flow['7']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['6']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 6."
+    },
+    {
+      "name": "capacity_7_8",
+      "expr_lhs": "flow['7']['8']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['8']",
+      "description": "Capacity constraint for flow from Sector 7 to Sector 8."
+    },
+    {
+      "name": "capacity_8_0",
+      "expr_lhs": "flow['8']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['0']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 0."
+    },
+    {
+      "name": "capacity_8_1",
+      "expr_lhs": "flow['8']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['1']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 1."
+    },
+    {
+      "name": "capacity_8_2",
+      "expr_lhs": "flow['8']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['2']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 2."
+    },
+    {
+      "name": "capacity_8_3",
+      "expr_lhs": "flow['8']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['3']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 3."
+    },
+    {
+      "name": "capacity_8_4",
+      "expr_lhs": "flow['8']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['4']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 4."
+    },
+    {
+      "name": "capacity_8_5",
+      "expr_lhs": "flow['8']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['5']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 5."
+    },
+    {
+      "name": "capacity_8_6",
+      "expr_lhs": "flow['8']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['6']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 6."
+    },
+    {
+      "name": "capacity_8_7",
+      "expr_lhs": "flow['8']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['8']['7']",
+      "description": "Capacity constraint for flow from Sector 8 to Sector 7."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_26",
+    "source": null,
+    "description": "Optimize the diet to meet nutritional needs at the lowest cost using Chicken, Tofu, Rice, and Avocado.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Chicken",
+        "Tofu",
+        "Rice",
+        "Avocado"
+      ],
+      "description": "Available food items"
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 2,
+        "Tofu": 18,
+        "Rice": 2,
+        "Avocado": 18
+      },
+      "description": "Protein content per unit of each food"
+    },
+    {
+      "name": "carbs",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 4,
+        "Tofu": 17,
+        "Rice": 28,
+        "Avocado": 27
+      },
+      "description": "Carbohydrate content per unit of each food"
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 218,
+        "Tofu": 290,
+        "Rice": 298,
+        "Avocado": 158
+      },
+      "description": "Calorie content per unit of each food"
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 3,
+        "Tofu": 6,
+        "Rice": 1,
+        "Avocado": 10
+      },
+      "description": "Cost per unit of each food"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each food to purchase"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of purchasing the foods"
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "86",
+      "description": "Ensure at least 86 grams of protein are consumed"
+    },
+    {
+      "name": "carbs_requirement",
+      "expr_lhs": "sum(carbs[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "120",
+      "description": "Ensure at least 120 grams of carbohydrates are consumed"
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "2435",
+      "description": "Ensure at least 2435 calories are consumed"
+    }
+  ],
+  "graph": null
+}

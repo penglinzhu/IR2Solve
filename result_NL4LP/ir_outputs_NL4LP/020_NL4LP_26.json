@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_26",
+    "source": null,
+    "description": "Determine the optimal number of mangos and guavas to sell to maximize profit under budget and sales constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FRUITS",
+      "elements": [
+        "mango",
+        "guava"
+      ],
+      "description": "Types of fruits sold by the food truck."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "mango": 5,
+        "guava": 3
+      },
+      "description": "Cost per unit of each fruit."
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "mango": 3,
+        "guava": 4
+      },
+      "description": "Profit per unit of each fruit."
+    }
+  ],
+  "vars": [
+    {
+      "name": "sold",
+      "indices": [
+        "FRUITS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of each type of fruit sold."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "profit['mango'] * sold['mango'] + profit['guava'] * sold['guava']",
+    "description": "Maximize the total profit from selling mangos and guavas."
+  },
+  "constraints": [
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "cost['mango'] * sold['mango'] + cost['guava'] * sold['guava']",
+      "sense": "<=",
+      "expr_rhs": "20000",
+      "description": "Total spending on fruits must not exceed $20000."
+    },
+    {
+      "name": "mango_minimum_sales",
+      "expr_lhs": "sold['mango']",
+      "sense": ">=",
+      "expr_rhs": "100",
+      "description": "At least 100 mangos must be sold."
+    },
+    {
+      "name": "mango_maximum_sales",
+      "expr_lhs": "sold['mango']",
+      "sense": "<=",
+      "expr_rhs": "150",
+      "description": "At most 150 mangos can be sold."
+    },
+    {
+      "name": "guava_maximum_sales",
+      "expr_lhs": "sold['guava']",
+      "sense": "<=",
+      "expr_rhs": "sold['mango'] / 3",
+      "description": "The number of guavas sold must not exceed a third of the mangos sold."
+    }
+  ],
+  "graph": null
+}

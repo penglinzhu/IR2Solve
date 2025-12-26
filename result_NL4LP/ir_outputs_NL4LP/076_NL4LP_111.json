@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_111",
+    "source": null,
+    "description": "Maximize the amount of foam produced by making cheap and expensive boxes under resource and heat constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BOX_TYPES",
+      "elements": [
+        "cheap",
+        "expensive"
+      ],
+      "description": "Types of boxes produced by the store."
+    }
+  ],
+  "params": [
+    {
+      "name": "metal_usage",
+      "indices": [
+        "BOX_TYPES"
+      ],
+      "values": {
+        "cheap": 3,
+        "expensive": 5
+      },
+      "description": "Units of metal used per box type."
+    },
+    {
+      "name": "acid_usage",
+      "indices": [
+        "BOX_TYPES"
+      ],
+      "values": {
+        "cheap": 5,
+        "expensive": 8
+      },
+      "description": "Units of acid used per box type."
+    },
+    {
+      "name": "foam_production",
+      "indices": [
+        "BOX_TYPES"
+      ],
+      "values": {
+        "cheap": 8,
+        "expensive": 10
+      },
+      "description": "Units of foam produced per box type."
+    },
+    {
+      "name": "heat_production",
+      "indices": [
+        "BOX_TYPES"
+      ],
+      "values": {
+        "cheap": 2,
+        "expensive": 3
+      },
+      "description": "Units of heat produced per box type."
+    },
+    {
+      "name": "metal_available",
+      "indices": [],
+      "values": 200,
+      "description": "Total units of metal available."
+    },
+    {
+      "name": "acid_available",
+      "indices": [],
+      "values": 300,
+      "description": "Total units of acid available."
+    },
+    {
+      "name": "heat_limit",
+      "indices": [],
+      "values": 50,
+      "description": "Maximum units of heat that can be given off."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "BOX_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of box to produce."
+    }
+  ],
+  "objective": {
+    "name": "max_foam_production",
+    "sense": "max",
+    "expr": "8 * x['cheap'] + 10 * x['expensive']",
+    "description": "Maximize the total foam produced."
+  },
+  "constraints": [
+    {
+      "name": "metal_constraint",
+      "expr_lhs": "3 * x['cheap'] + 5 * x['expensive']",
+      "sense": "<=",
+      "expr_rhs": "200",
+      "description": "Metal usage must not exceed available metal."
+    },
+    {
+      "name": "acid_constraint",
+      "expr_lhs": "5 * x['cheap'] + 8 * x['expensive']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "Acid usage must not exceed available acid."
+    },
+    {
+      "name": "heat_constraint",
+      "expr_lhs": "2 * x['cheap'] + 3 * x['expensive']",
+      "sense": "<=",
+      "expr_rhs": "50",
+      "description": "Heat production must not exceed the limit."
+    }
+  ],
+  "graph": null
+}

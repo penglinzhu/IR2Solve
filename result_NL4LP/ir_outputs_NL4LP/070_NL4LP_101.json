@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_101",
+    "source": null,
+    "description": "Optimize the number of demonstrations to maximize minty foam production under resource constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "DEMONSTRATIONS",
+      "elements": [
+        "1",
+        "2"
+      ],
+      "description": "Types of demonstrations performed in the science show."
+    }
+  ],
+  "params": [
+    {
+      "name": "mint_usage",
+      "indices": [
+        "DEMONSTRATIONS"
+      ],
+      "values": {
+        "1": 10,
+        "2": 12
+      },
+      "description": "Units of mint used per demonstration."
+    },
+    {
+      "name": "active_ingredient_usage",
+      "indices": [
+        "DEMONSTRATIONS"
+      ],
+      "values": {
+        "1": 20,
+        "2": 15
+      },
+      "description": "Units of active ingredient used per demonstration."
+    },
+    {
+      "name": "minty_foam_production",
+      "indices": [
+        "DEMONSTRATIONS"
+      ],
+      "values": {
+        "1": 25,
+        "2": 18
+      },
+      "description": "Units of minty foam produced per demonstration."
+    },
+    {
+      "name": "black_tar_production",
+      "indices": [
+        "DEMONSTRATIONS"
+      ],
+      "values": {
+        "1": 5,
+        "2": 3
+      },
+      "description": "Units of black tar produced per demonstration."
+    },
+    {
+      "name": "available_mint",
+      "indices": [],
+      "values": 120,
+      "description": "Total available units of mint."
+    },
+    {
+      "name": "available_active_ingredient",
+      "indices": [],
+      "values": 100,
+      "description": "Total available units of active ingredient."
+    },
+    {
+      "name": "max_black_tar",
+      "indices": [],
+      "values": 50,
+      "description": "Maximum allowable units of black tar."
+    }
+  ],
+  "vars": [
+    {
+      "name": "demos",
+      "indices": [
+        "DEMONSTRATIONS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each demonstration to perform."
+    }
+  ],
+  "objective": {
+    "name": "max_minty_foam",
+    "sense": "max",
+    "expr": "25 * demos['1'] + 18 * demos['2']",
+    "description": "Maximize the total production of minty foam."
+  },
+  "constraints": [
+    {
+      "name": "mint_constraint",
+      "expr_lhs": "10 * demos['1'] + 12 * demos['2']",
+      "sense": "<=",
+      "expr_rhs": "120",
+      "description": "Mint usage must not exceed available mint."
+    },
+    {
+      "name": "active_ingredient_constraint",
+      "expr_lhs": "20 * demos['1'] + 15 * demos['2']",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Active ingredient usage must not exceed available active ingredient."
+    },
+    {
+      "name": "black_tar_constraint",
+      "expr_lhs": "5 * demos['1'] + 3 * demos['2']",
+      "sense": "<=",
+      "expr_rhs": "50",
+      "description": "Black tar production must not exceed the maximum allowable limit."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_267",
+    "source": null,
+    "description": "Optimize the number of sedans and buses to purchase to minimize the total number of vehicles while meeting customer and pollution constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VEHICLES",
+      "elements": [
+        "sedan",
+        "bus"
+      ],
+      "description": "Types of vehicles available for purchase."
+    }
+  ],
+  "params": [
+    {
+      "name": "seating_capacity",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "sedan": 50,
+        "bus": 250
+      },
+      "description": "Seating capacity per vehicle type."
+    },
+    {
+      "name": "pollution",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "sedan": 10,
+        "bus": 40
+      },
+      "description": "Pollution units produced per vehicle type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "VEHICLES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of vehicles to purchase of each type."
+    }
+  ],
+  "objective": {
+    "name": "min_total_vehicles",
+    "sense": "min",
+    "expr": "x['sedan'] + x['bus']",
+    "description": "Minimize the total number of vehicles purchased."
+  },
+  "constraints": [
+    {
+      "name": "pollution_limit",
+      "expr_lhs": "10 * x['sedan'] + 40 * x['bus']",
+      "sense": "<=",
+      "expr_rhs": "800",
+      "description": "Total pollution must not exceed 800 units per day."
+    },
+    {
+      "name": "customer_requirement",
+      "expr_lhs": "50 * x['sedan'] + 250 * x['bus']",
+      "sense": ">=",
+      "expr_rhs": "4600",
+      "description": "Total seating capacity must accommodate at least 4600 customers per day."
+    }
+  ],
+  "graph": null
+}

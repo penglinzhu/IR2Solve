@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_52",
+    "source": null,
+    "description": "Determine the number of each type of ice cream machine to buy to minimize the total number of machines while meeting production and heat constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MACHINES",
+      "elements": [
+        "counter_top",
+        "fridge"
+      ],
+      "description": "Types of ice cream machines available for purchase."
+    }
+  ],
+  "params": [
+    {
+      "name": "production_capacity",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "counter_top": 80,
+        "fridge": 150
+      },
+      "description": "Daily production capacity of each machine type in cones."
+    },
+    {
+      "name": "heat_output",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "counter_top": 50,
+        "fridge": 70
+      },
+      "description": "Heat output of each machine type in units."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "MACHINES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of machine to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_machines",
+    "sense": "min",
+    "expr": "x['counter_top'] + x['fridge']",
+    "description": "Minimize the total number of machines purchased."
+  },
+  "constraints": [
+    {
+      "name": "heat_constraint",
+      "expr_lhs": "50 * x['counter_top'] + 70 * x['fridge']",
+      "sense": "<=",
+      "expr_rhs": "500",
+      "description": "Total heat output must not exceed 500 units."
+    },
+    {
+      "name": "production_constraint",
+      "expr_lhs": "80 * x['counter_top'] + 150 * x['fridge']",
+      "sense": ">=",
+      "expr_rhs": "1000",
+      "description": "Total production must be at least 1000 cones."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_99",
+    "source": null,
+    "description": "Determine the number of servings of two syrups to minimize sugar intake while meeting medicine requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SYRUPS",
+      "elements": [
+        "1",
+        "2"
+      ],
+      "description": "Types of syrups available for treatment."
+    }
+  ],
+  "params": [
+    {
+      "name": "medicine_throat",
+      "indices": [
+        "SYRUPS"
+      ],
+      "values": {
+        "1": 0.5,
+        "2": 0.2
+      },
+      "description": "Units of medicine delivered to the throat per serving of each syrup."
+    },
+    {
+      "name": "medicine_lungs",
+      "indices": [
+        "SYRUPS"
+      ],
+      "values": {
+        "1": 0.4,
+        "2": 0.5
+      },
+      "description": "Units of medicine delivered to the lungs per serving of each syrup."
+    },
+    {
+      "name": "sugar_content",
+      "indices": [
+        "SYRUPS"
+      ],
+      "values": {
+        "1": 0.5,
+        "2": 0.3
+      },
+      "description": "Units of sugar per serving of each syrup."
+    }
+  ],
+  "vars": [
+    {
+      "name": "servings",
+      "indices": [
+        "SYRUPS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each syrup."
+    }
+  ],
+  "objective": {
+    "name": "min_total_sugar",
+    "sense": "min",
+    "expr": "sum(sugar_content[s] * servings[s] for s in ['1', '2'])",
+    "description": "Minimize the total sugar intake from the syrups."
+  },
+  "constraints": [
+    {
+      "name": "throat_medicine_limit",
+      "expr_lhs": "medicine_throat['1'] * servings['1'] + medicine_throat['2'] * servings['2']",
+      "sense": "<=",
+      "expr_rhs": "5",
+      "description": "The total medicine delivered to the throat should not exceed 5 units."
+    },
+    {
+      "name": "lungs_medicine_requirement",
+      "expr_lhs": "medicine_lungs['1'] * servings['1'] + medicine_lungs['2'] * servings['2']",
+      "sense": ">=",
+      "expr_rhs": "4",
+      "description": "The total medicine delivered to the lungs should be at least 4 units."
+    }
+  ],
+  "graph": null
+}

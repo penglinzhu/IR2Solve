@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_185",
+    "source": null,
+    "description": "Determine the minimum number of ships needed to transport at least 3000 containers, with constraints on ship capacities and the number of large ships relative to small ships.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SHIP_TYPES",
+      "elements": [
+        "large",
+        "small"
+      ],
+      "description": "Types of ships used by the company."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "SHIP_TYPES"
+      ],
+      "values": {
+        "large": 500,
+        "small": 200
+      },
+      "description": "Container capacity for each type of ship."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_ships",
+      "indices": [
+        "SHIP_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of ships of each type to be used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_ships",
+    "sense": "min",
+    "expr": "num_ships['large'] + num_ships['small']",
+    "description": "Minimize the total number of ships used."
+  },
+  "constraints": [
+    {
+      "name": "container_requirement",
+      "expr_lhs": "capacity['large'] * num_ships['large'] + capacity['small'] * num_ships['small']",
+      "sense": ">=",
+      "expr_rhs": "3000",
+      "description": "Ensure at least 3000 containers are transported."
+    },
+    {
+      "name": "large_vs_small_ships",
+      "expr_lhs": "num_ships['large']",
+      "sense": "<=",
+      "expr_rhs": "num_ships['small']",
+      "description": "The number of large ships cannot exceed the number of small ships."
+    }
+  ],
+  "graph": null
+}

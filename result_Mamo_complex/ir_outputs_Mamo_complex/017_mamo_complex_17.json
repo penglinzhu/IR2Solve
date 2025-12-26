@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_17",
+    "source": null,
+    "description": "Optimize the cost of meeting daily nutritional goals with a limited budget using four food items.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOOD_ITEMS",
+      "elements": [
+        "Eggs",
+        "Rice",
+        "Chicken",
+        "Broccoli"
+      ],
+      "description": "Different food items available for consumption."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOOD_ITEMS"
+      ],
+      "values": {
+        "Eggs": 6,
+        "Rice": 10,
+        "Chicken": 1,
+        "Broccoli": 7
+      },
+      "description": "Cost of each food item."
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "FOOD_ITEMS"
+      ],
+      "values": {
+        "Eggs": 4,
+        "Rice": 1,
+        "Chicken": 10,
+        "Broccoli": 8
+      },
+      "description": "Protein content in grams for each food item."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOOD_ITEMS"
+      ],
+      "values": {
+        "Eggs": 13,
+        "Rice": 13,
+        "Chicken": 29,
+        "Broccoli": 26
+      },
+      "description": "Carbohydrates content in grams for each food item."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOOD_ITEMS"
+      ],
+      "values": {
+        "Eggs": 238,
+        "Rice": 85,
+        "Chicken": 146,
+        "Broccoli": 139
+      },
+      "description": "Calories provided by each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOOD_ITEMS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food item to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[i] * x[i] for i in FOOD_ITEMS)",
+    "description": "Minimize the total cost of purchasing food items."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[i] * x[i] for i in FOOD_ITEMS)",
+      "sense": ">=",
+      "expr_rhs": "93",
+      "description": "Ensure at least 93 grams of protein are consumed."
+    },
+    {
+      "name": "carbohydrates_requirement",
+      "expr_lhs": "sum(carbohydrates[i] * x[i] for i in FOOD_ITEMS)",
+      "sense": ">=",
+      "expr_rhs": "165",
+      "description": "Ensure at least 165 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[i] * x[i] for i in FOOD_ITEMS)",
+      "sense": ">=",
+      "expr_rhs": "1553",
+      "description": "Ensure at least 1553 calories are consumed."
+    }
+  ],
+  "graph": null
+}

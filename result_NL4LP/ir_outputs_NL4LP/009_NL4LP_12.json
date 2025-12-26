@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_12",
+    "source": null,
+    "description": "Optimize the production of wooden elephants and tigers to maximize profit given material constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "elephant",
+        "tiger"
+      ],
+      "description": "Types of products made in the shop."
+    }
+  ],
+  "params": [
+    {
+      "name": "wood_requirement",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "elephant": 50,
+        "tiger": 40
+      },
+      "description": "Wood required per product in grams."
+    },
+    {
+      "name": "plastic_requirement",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "elephant": 20,
+        "tiger": 30
+      },
+      "description": "Plastic required per product in grams."
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "elephant": 5,
+        "tiger": 4
+      },
+      "description": "Profit per product sold in dollars."
+    },
+    {
+      "name": "wood_available",
+      "indices": [],
+      "values": 5000,
+      "description": "Total wood available in grams."
+    },
+    {
+      "name": "plastic_available",
+      "indices": [],
+      "values": 4000,
+      "description": "Total plastic available in grams."
+    }
+  ],
+  "vars": [
+    {
+      "name": "production",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each product to produce."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "sum(profit[p] * production[p] for p in PRODUCTS)",
+    "description": "Maximize total profit from selling products."
+  },
+  "constraints": [
+    {
+      "name": "wood_constraint",
+      "expr_lhs": "sum(wood_requirement[p] * production[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "wood_available",
+      "description": "Total wood used must not exceed available wood."
+    },
+    {
+      "name": "plastic_constraint",
+      "expr_lhs": "sum(plastic_requirement[p] * production[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "plastic_available",
+      "description": "Total plastic used must not exceed available plastic."
+    }
+  ],
+  "graph": null
+}

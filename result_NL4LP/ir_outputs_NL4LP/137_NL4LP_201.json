@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_201",
+    "source": null,
+    "description": "Determine the number of pills of supplements A and B to buy to meet daily iron and calcium requirements at minimum cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SUPPLEMENTS",
+      "elements": [
+        "A",
+        "B"
+      ],
+      "description": "Types of supplements available."
+    }
+  ],
+  "params": [
+    {
+      "name": "iron_content",
+      "indices": [
+        "SUPPLEMENTS"
+      ],
+      "values": {
+        "A": 5,
+        "B": 4
+      },
+      "description": "Iron content per pill of each supplement."
+    },
+    {
+      "name": "calcium_content",
+      "indices": [
+        "SUPPLEMENTS"
+      ],
+      "values": {
+        "A": 10,
+        "B": 15
+      },
+      "description": "Calcium content per pill of each supplement."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "SUPPLEMENTS"
+      ],
+      "values": {
+        "A": 2,
+        "B": 3
+      },
+      "description": "Cost per pill of each supplement."
+    }
+  ],
+  "vars": [
+    {
+      "name": "pills",
+      "indices": [
+        "SUPPLEMENTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of pills to buy for each supplement."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[s] * pills[s] for s in ['A', 'B'])",
+    "description": "Minimize the total cost of buying supplements."
+  },
+  "constraints": [
+    {
+      "name": "iron_requirement",
+      "expr_lhs": "5 * pills['A'] + 4 * pills['B']",
+      "sense": ">=",
+      "expr_rhs": "40",
+      "description": "Ensure at least 40 units of iron are obtained."
+    },
+    {
+      "name": "calcium_requirement",
+      "expr_lhs": "10 * pills['A'] + 15 * pills['B']",
+      "sense": ">=",
+      "expr_rhs": "50",
+      "description": "Ensure at least 50 units of calcium are obtained."
+    }
+  ],
+  "graph": null
+}

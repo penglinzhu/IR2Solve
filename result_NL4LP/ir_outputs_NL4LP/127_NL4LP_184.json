@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_184",
+    "source": null,
+    "description": "Optimize the number of carrier pigeons and owls used to maximize the total number of letters sent.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BIRDS",
+      "elements": [
+        "carrier_pigeon",
+        "owl"
+      ],
+      "description": "Types of birds used for sending letters."
+    }
+  ],
+  "params": [
+    {
+      "name": "letters_per_bird",
+      "indices": [
+        "BIRDS"
+      ],
+      "values": {
+        "carrier_pigeon": 2,
+        "owl": 5
+      },
+      "description": "Number of letters each type of bird can carry."
+    },
+    {
+      "name": "treats_per_bird",
+      "indices": [
+        "BIRDS"
+      ],
+      "values": {
+        "carrier_pigeon": 3,
+        "owl": 5
+      },
+      "description": "Number of treats required for each type of bird."
+    },
+    {
+      "name": "max_treats",
+      "indices": [],
+      "values": 1000,
+      "description": "Maximum number of treats available."
+    },
+    {
+      "name": "min_carrier_pigeons",
+      "indices": [],
+      "values": 20,
+      "description": "Minimum number of carrier pigeons that must be used."
+    },
+    {
+      "name": "max_owl_ratio",
+      "indices": [],
+      "values": 0.4,
+      "description": "Maximum ratio of birds that can be owls."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_birds",
+      "indices": [
+        "BIRDS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of bird used."
+    }
+  ],
+  "objective": {
+    "name": "max_total_letters",
+    "sense": "max",
+    "expr": "sum(num_birds[b] * letters_per_bird[b] for b in ['carrier_pigeon', 'owl'])",
+    "description": "Maximize the total number of letters that can be sent."
+  },
+  "constraints": [
+    {
+      "name": "treats_constraint",
+      "expr_lhs": "num_birds['carrier_pigeon'] * treats_per_bird['carrier_pigeon'] + num_birds['owl'] * treats_per_bird['owl']",
+      "sense": "<=",
+      "expr_rhs": "max_treats",
+      "description": "Total treats used by all birds must not exceed available treats."
+    },
+    {
+      "name": "min_carrier_pigeons_constraint",
+      "expr_lhs": "num_birds['carrier_pigeon']",
+      "sense": ">=",
+      "expr_rhs": "min_carrier_pigeons",
+      "description": "At least 20 carrier pigeons must be used."
+    },
+    {
+      "name": "max_owl_ratio_constraint",
+      "expr_lhs": "num_birds['owl']",
+      "sense": "<=",
+      "expr_rhs": "max_owl_ratio * (num_birds['carrier_pigeon'] + num_birds['owl'])",
+      "description": "At most 40% of the birds can be owls."
+    }
+  ],
+  "graph": null
+}

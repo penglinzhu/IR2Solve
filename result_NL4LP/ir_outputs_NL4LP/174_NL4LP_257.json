@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_257",
+    "source": null,
+    "description": "Optimize the scheduling of in-vivo and ex-vivo experiments to minimize radiation exposure.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "EXPERIMENTS",
+      "elements": [
+        "in_vivo",
+        "ex_vivo"
+      ],
+      "description": "Types of experiments to be scheduled."
+    }
+  ],
+  "params": [
+    {
+      "name": "prep_time",
+      "indices": [
+        "EXPERIMENTS"
+      ],
+      "values": {
+        "in_vivo": 30,
+        "ex_vivo": 45
+      },
+      "description": "Preparation time required for each type of experiment in minutes."
+    },
+    {
+      "name": "exec_time",
+      "indices": [
+        "EXPERIMENTS"
+      ],
+      "values": {
+        "in_vivo": 60,
+        "ex_vivo": 30
+      },
+      "description": "Execution time required for each type of experiment in minutes."
+    },
+    {
+      "name": "radiation",
+      "indices": [
+        "EXPERIMENTS"
+      ],
+      "values": {
+        "in_vivo": 2,
+        "ex_vivo": 3
+      },
+      "description": "Radiation units received from each type of experiment."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_experiments",
+      "indices": [
+        "EXPERIMENTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of experiment to be scheduled."
+    }
+  ],
+  "objective": {
+    "name": "min_total_radiation",
+    "sense": "min",
+    "expr": "sum(radiation[e] * num_experiments[e] for e in ['in_vivo', 'ex_vivo'])",
+    "description": "Minimize the total radiation received from all scheduled experiments."
+  },
+  "constraints": [
+    {
+      "name": "prep_time_constraint",
+      "expr_lhs": "prep_time['in_vivo'] * num_experiments['in_vivo'] + prep_time['ex_vivo'] * num_experiments['ex_vivo']",
+      "sense": "<=",
+      "expr_rhs": "400",
+      "description": "Total preparation time for all experiments must not exceed 400 minutes."
+    },
+    {
+      "name": "exec_time_constraint",
+      "expr_lhs": "exec_time['in_vivo'] * num_experiments['in_vivo'] + exec_time['ex_vivo'] * num_experiments['ex_vivo']",
+      "sense": "<=",
+      "expr_rhs": "500",
+      "description": "Total execution time for all experiments must not exceed 500 minutes."
+    }
+  ],
+  "graph": null
+}

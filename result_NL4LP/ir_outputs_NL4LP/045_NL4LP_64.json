@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_64",
+    "source": null,
+    "description": "Optimize the allocation of land to traditional and modern machines to maximize tea leaves picked.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MACHINES",
+      "elements": [
+        "traditional",
+        "modern"
+      ],
+      "description": "Types of machines available for picking tea leaves."
+    }
+  ],
+  "params": [
+    {
+      "name": "tea_leaves_per_acre",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "traditional": 30,
+        "modern": 40
+      },
+      "description": "Kilograms of tea leaves picked per acre by each machine."
+    },
+    {
+      "name": "waste_per_acre",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "traditional": 10,
+        "modern": 15
+      },
+      "description": "Kilograms of waste created per acre by each machine."
+    },
+    {
+      "name": "fuel_per_acre",
+      "indices": [
+        "MACHINES"
+      ],
+      "values": {
+        "traditional": 20,
+        "modern": 15
+      },
+      "description": "Liters of fuel required per acre by each machine."
+    },
+    {
+      "name": "total_land",
+      "indices": [],
+      "values": 500,
+      "description": "Total available land in acres."
+    },
+    {
+      "name": "total_fuel",
+      "indices": [],
+      "values": 9000,
+      "description": "Total available fuel in liters."
+    },
+    {
+      "name": "total_waste_capacity",
+      "indices": [],
+      "values": 6000,
+      "description": "Total waste capacity in kilograms."
+    }
+  ],
+  "vars": [
+    {
+      "name": "acres",
+      "indices": [
+        "MACHINES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of acres allocated to each machine."
+    }
+  ],
+  "objective": {
+    "name": "max_tea_leaves",
+    "sense": "max",
+    "expr": "sum(acres[m] * tea_leaves_per_acre[m] for m in ['traditional', 'modern'])",
+    "description": "Maximize the total amount of tea leaves picked."
+  },
+  "constraints": [
+    {
+      "name": "land_constraint",
+      "expr_lhs": "acres['traditional'] + acres['modern']",
+      "sense": "<=",
+      "expr_rhs": "total_land",
+      "description": "Total acres used cannot exceed available land."
+    },
+    {
+      "name": "fuel_constraint",
+      "expr_lhs": "acres['traditional'] * fuel_per_acre['traditional'] + acres['modern'] * fuel_per_acre['modern']",
+      "sense": "<=",
+      "expr_rhs": "total_fuel",
+      "description": "Total fuel used cannot exceed available fuel."
+    },
+    {
+      "name": "waste_constraint",
+      "expr_lhs": "acres['traditional'] * waste_per_acre['traditional'] + acres['modern'] * waste_per_acre['modern']",
+      "sense": "<=",
+      "expr_rhs": "total_waste_capacity",
+      "description": "Total waste produced cannot exceed waste capacity."
+    }
+  ],
+  "graph": null
+}

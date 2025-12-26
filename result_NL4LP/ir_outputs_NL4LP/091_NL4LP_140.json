@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_140",
+    "source": null,
+    "description": "Determine the number of ship and plane trips to minimize fuel consumption while meeting container transport and trip constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TRANSPORT_MODES",
+      "elements": [
+        "ship",
+        "plane"
+      ],
+      "description": "Modes of transportation available for goods."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "TRANSPORT_MODES"
+      ],
+      "values": {
+        "ship": 40,
+        "plane": 20
+      },
+      "description": "Container capacity for each mode of transport."
+    },
+    {
+      "name": "fuel_usage",
+      "indices": [
+        "TRANSPORT_MODES"
+      ],
+      "values": {
+        "ship": 500,
+        "plane": 300
+      },
+      "description": "Fuel usage per trip for each mode of transport."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "TRANSPORT_MODES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of trips made by each mode of transport."
+    }
+  ],
+  "objective": {
+    "name": "min_total_fuel",
+    "sense": "min",
+    "expr": "sum(fuel_usage[mode] * trips[mode] for mode in TRANSPORT_MODES)",
+    "description": "Minimize the total fuel consumption for all trips."
+  },
+  "constraints": [
+    {
+      "name": "min_containers",
+      "expr_lhs": "capacity['ship'] * trips['ship'] + capacity['plane'] * trips['plane']",
+      "sense": ">=",
+      "expr_rhs": "500",
+      "description": "Ensure at least 500 containers are transported."
+    },
+    {
+      "name": "max_plane_trips",
+      "expr_lhs": "trips['plane']",
+      "sense": "<=",
+      "expr_rhs": "10",
+      "description": "Limit the number of plane trips to at most 10."
+    },
+    {
+      "name": "min_ship_trip_ratio",
+      "expr_lhs": "trips['ship']",
+      "sense": ">=",
+      "expr_rhs": "0.5 * (trips['ship'] + trips['plane'])",
+      "description": "At least 50% of the trips must be made by ship."
+    }
+  ],
+  "graph": null
+}

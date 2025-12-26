@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_222",
+    "source": null,
+    "description": "Determine the optimal number of high-volume and low-volume pipes to minimize the total number of pipes while meeting gas demand and technician constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PIPE_TYPES",
+      "elements": [
+        "high",
+        "low"
+      ],
+      "description": "Types of pipes available for use."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "PIPE_TYPES"
+      ],
+      "values": {
+        "high": 10000,
+        "low": 5000
+      },
+      "description": "Capacity in US gallons for each type of pipe."
+    },
+    {
+      "name": "technicians_required",
+      "indices": [
+        "PIPE_TYPES"
+      ],
+      "values": {
+        "high": 12,
+        "low": 5
+      },
+      "description": "Number of technicians required to monitor each type of pipe."
+    },
+    {
+      "name": "total_technicians",
+      "indices": [],
+      "values": 160,
+      "description": "Total number of technicians available."
+    },
+    {
+      "name": "demand",
+      "indices": [],
+      "values": 150000,
+      "description": "Daily demand in US gallons that must be met."
+    },
+    {
+      "name": "max_high_volume_percentage",
+      "indices": [],
+      "values": 0.35,
+      "description": "Maximum percentage of pipes that can be high-volume."
+    },
+    {
+      "name": "min_low_volume_pipes",
+      "indices": [],
+      "values": 8,
+      "description": "Minimum number of low-volume pipes required."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_pipes",
+      "indices": [
+        "PIPE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of pipes of each type to be used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pipes",
+    "sense": "min",
+    "expr": "num_pipes['high'] + num_pipes['low']",
+    "description": "Minimize the total number of pipes used."
+  },
+  "constraints": [
+    {
+      "name": "demand_constraint",
+      "expr_lhs": "capacity['high'] * num_pipes['high'] + capacity['low'] * num_pipes['low']",
+      "sense": ">=",
+      "expr_rhs": "demand",
+      "description": "Ensure the total capacity meets the daily demand."
+    },
+    {
+      "name": "technician_constraint",
+      "expr_lhs": "technicians_required['high'] * num_pipes['high'] + technicians_required['low'] * num_pipes['low']",
+      "sense": "<=",
+      "expr_rhs": "total_technicians",
+      "description": "Ensure the total number of technicians required does not exceed available technicians."
+    },
+    {
+      "name": "high_volume_percentage_constraint",
+      "expr_lhs": "num_pipes['high']",
+      "sense": "<=",
+      "expr_rhs": "max_high_volume_percentage * (num_pipes['high'] + num_pipes['low'])",
+      "description": "Limit the percentage of high-volume pipes."
+    },
+    {
+      "name": "min_low_volume_pipes_constraint",
+      "expr_lhs": "num_pipes['low']",
+      "sense": ">=",
+      "expr_rhs": "min_low_volume_pipes",
+      "description": "Ensure at least the minimum number of low-volume pipes are used."
+    }
+  ],
+  "graph": null
+}

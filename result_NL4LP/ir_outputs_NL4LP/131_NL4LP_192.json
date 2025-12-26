@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_192",
+    "source": null,
+    "description": "Optimize the production of black and matcha milk tea to maximize profits given resource constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TEAS",
+      "elements": [
+        "black",
+        "matcha"
+      ],
+      "description": "Types of milk tea"
+    }
+  ],
+  "params": [
+    {
+      "name": "milk_usage",
+      "indices": [
+        "TEAS"
+      ],
+      "values": {
+        "black": 600,
+        "matcha": 525
+      },
+      "description": "Milk usage per bottle of each type of milk tea in grams"
+    },
+    {
+      "name": "honey_usage",
+      "indices": [
+        "TEAS"
+      ],
+      "values": {
+        "black": 10,
+        "matcha": 5
+      },
+      "description": "Honey usage per bottle of each type of milk tea in grams"
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "TEAS"
+      ],
+      "values": {
+        "black": 7.5,
+        "matcha": 5
+      },
+      "description": "Profit per bottle of each type of milk tea"
+    },
+    {
+      "name": "milk_stock",
+      "indices": [],
+      "values": 30000,
+      "description": "Total available milk in grams"
+    },
+    {
+      "name": "honey_stock",
+      "indices": [],
+      "values": 500,
+      "description": "Total available honey in grams"
+    }
+  ],
+  "vars": [
+    {
+      "name": "bottles",
+      "indices": [
+        "TEAS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of bottles produced for each type of milk tea"
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "sum(profit[t] * bottles[t] for t in ['black', 'matcha'])",
+    "description": "Maximize total profit from selling milk teas"
+  },
+  "constraints": [
+    {
+      "name": "milk_constraint",
+      "expr_lhs": "milk_usage['black'] * bottles['black'] + milk_usage['matcha'] * bottles['matcha']",
+      "sense": "<=",
+      "expr_rhs": "milk_stock",
+      "description": "Total milk usage must not exceed available stock"
+    },
+    {
+      "name": "honey_constraint",
+      "expr_lhs": "honey_usage['black'] * bottles['black'] + honey_usage['matcha'] * bottles['matcha']",
+      "sense": "<=",
+      "expr_rhs": "honey_stock",
+      "description": "Total honey usage must not exceed available stock"
+    }
+  ],
+  "graph": null
+}

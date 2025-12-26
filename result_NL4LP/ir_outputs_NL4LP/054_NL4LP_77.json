@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_77",
+    "source": null,
+    "description": "Optimize the production of glass and plastic bottles to maximize the total number of bottles given water constraints and customer preferences.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BOTTLE_TYPES",
+      "elements": [
+        "glass",
+        "plastic"
+      ],
+      "description": "Types of bottles produced by the company."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "BOTTLE_TYPES"
+      ],
+      "values": {
+        "glass": 500,
+        "plastic": 750
+      },
+      "description": "Capacity of each bottle type in ml."
+    },
+    {
+      "name": "total_water",
+      "indices": [],
+      "values": 250000,
+      "description": "Total available water in ml."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_bottles",
+      "indices": [
+        "BOTTLE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of bottles to produce for each type."
+    }
+  ],
+  "objective": {
+    "name": "max_total_bottles",
+    "sense": "max",
+    "expr": "num_bottles['glass'] + num_bottles['plastic']",
+    "description": "Maximize the total number of bottles produced."
+  },
+  "constraints": [
+    {
+      "name": "water_capacity_constraint",
+      "expr_lhs": "500 * num_bottles['glass'] + 750 * num_bottles['plastic']",
+      "sense": "<=",
+      "expr_rhs": "250000",
+      "description": "Total water used by all bottles must not exceed available water."
+    },
+    {
+      "name": "plastic_bottle_preference",
+      "expr_lhs": "num_bottles['plastic']",
+      "sense": ">=",
+      "expr_rhs": "3 * num_bottles['glass']",
+      "description": "The number of plastic bottles must be at least three times the number of glass bottles."
+    },
+    {
+      "name": "minimum_glass_bottles",
+      "expr_lhs": "num_bottles['glass']",
+      "sense": ">=",
+      "expr_rhs": "20",
+      "description": "There must be at least 20 glass bottles."
+    }
+  ],
+  "graph": null
+}

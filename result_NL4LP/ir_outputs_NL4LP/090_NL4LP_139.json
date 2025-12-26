@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_139",
+    "source": null,
+    "description": "Maximize the total amount of honey transported using small and large bottles with given constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BOTTLE_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of bottles available for transporting honey."
+    }
+  ],
+  "params": [
+    {
+      "name": "honey_capacity",
+      "indices": [
+        "BOTTLE_TYPES"
+      ],
+      "values": {
+        "small": 5,
+        "large": 20
+      },
+      "description": "Honey capacity of each type of bottle."
+    },
+    {
+      "name": "max_bottles",
+      "indices": [
+        "BOTTLE_TYPES"
+      ],
+      "values": {
+        "small": 300,
+        "large": 100
+      },
+      "description": "Maximum number of each type of bottle available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "BOTTLE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of bottle used."
+    }
+  ],
+  "objective": {
+    "name": "max_total_honey",
+    "sense": "max",
+    "expr": "5 * x['small'] + 20 * x['large']",
+    "description": "Maximize the total amount of honey transported."
+  },
+  "constraints": [
+    {
+      "name": "max_small_bottles",
+      "expr_lhs": "x['small']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "Cannot use more than 300 small bottles."
+    },
+    {
+      "name": "max_large_bottles",
+      "expr_lhs": "x['large']",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Cannot use more than 100 large bottles."
+    },
+    {
+      "name": "total_bottles_limit",
+      "expr_lhs": "x['small'] + x['large']",
+      "sense": "<=",
+      "expr_rhs": "200",
+      "description": "Cannot use more than 200 bottles in total."
+    },
+    {
+      "name": "min_large_bottles",
+      "expr_lhs": "x['large']",
+      "sense": ">=",
+      "expr_rhs": "50",
+      "description": "At least 50 large bottles must be used."
+    },
+    {
+      "name": "small_bottles_twice_large",
+      "expr_lhs": "x['small']",
+      "sense": ">=",
+      "expr_rhs": "2 * x['large']",
+      "description": "At least twice as many small bottles must be used than large bottles."
+    }
+  ],
+  "graph": null
+}

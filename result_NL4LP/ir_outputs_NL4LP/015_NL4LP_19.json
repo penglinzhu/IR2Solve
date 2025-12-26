@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_19",
+    "source": null,
+    "description": "Optimize the factory layout to maximize revenue from producing phones and laptops given space, cost, and labor constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "phones",
+        "laptops"
+      ],
+      "description": "Types of products produced in the factory."
+    }
+  ],
+  "params": [
+    {
+      "name": "labor_hours",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "phones": 2,
+        "laptops": 3
+      },
+      "description": "Labor hours required per sq. foot for each product."
+    },
+    {
+      "name": "cost_per_sqft",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "phones": 12,
+        "laptops": 15
+      },
+      "description": "Cost per sq. foot for each product."
+    },
+    {
+      "name": "revenue_per_sqft",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "phones": 50,
+        "laptops": 70
+      },
+      "description": "Revenue per sq. foot for each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "space",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Space allocated in sq. feet for each product."
+    }
+  ],
+  "objective": {
+    "name": "max_total_revenue",
+    "sense": "max",
+    "expr": "space['phones'] * revenue_per_sqft['phones'] + space['laptops'] * revenue_per_sqft['laptops']",
+    "description": "Maximize total revenue from phones and laptops."
+  },
+  "constraints": [
+    {
+      "name": "space_constraint",
+      "expr_lhs": "space['phones'] + space['laptops']",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Total space allocated cannot exceed 100 sq. feet."
+    },
+    {
+      "name": "cost_constraint",
+      "expr_lhs": "space['phones'] * cost_per_sqft['phones'] + space['laptops'] * cost_per_sqft['laptops']",
+      "sense": "<=",
+      "expr_rhs": "5000",
+      "description": "Total cost cannot exceed $5000."
+    },
+    {
+      "name": "labor_constraint",
+      "expr_lhs": "space['phones'] * labor_hours['phones'] + space['laptops'] * labor_hours['laptops']",
+      "sense": "<=",
+      "expr_rhs": "2000",
+      "description": "Total labor hours cannot exceed 2000 hours."
+    }
+  ],
+  "graph": null
+}

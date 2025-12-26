@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_18",
+    "source": null,
+    "description": "Optimize the production of candy mixes to maximize profit given candy availability.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MIXES",
+      "elements": [
+        "regular_mix",
+        "sour_surprise_mix"
+      ],
+      "description": "Types of candy mixes produced by the store."
+    }
+  ],
+  "params": [
+    {
+      "name": "profit",
+      "indices": [
+        "MIXES"
+      ],
+      "values": {
+        "regular_mix": 3,
+        "sour_surprise_mix": 5
+      },
+      "description": "Profit per kilogram of each candy mix."
+    },
+    {
+      "name": "regular_candy_usage",
+      "indices": [
+        "MIXES"
+      ],
+      "values": {
+        "regular_mix": 0.8,
+        "sour_surprise_mix": 0.1
+      },
+      "description": "Kilograms of regular candy used per kilogram of each mix."
+    },
+    {
+      "name": "sour_candy_usage",
+      "indices": [
+        "MIXES"
+      ],
+      "values": {
+        "regular_mix": 0.2,
+        "sour_surprise_mix": 0.9
+      },
+      "description": "Kilograms of sour candy used per kilogram of each mix."
+    },
+    {
+      "name": "available_regular_candy",
+      "indices": [],
+      "values": 80,
+      "description": "Total kilograms of regular candy available."
+    },
+    {
+      "name": "available_sour_candy",
+      "indices": [],
+      "values": 60,
+      "description": "Total kilograms of sour candy available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "kg_mix",
+      "indices": [
+        "MIXES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Kilograms of each candy mix to produce."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "sum(profit[mix] * kg_mix[mix] for mix in MIXES)",
+    "description": "Maximize the total profit from producing candy mixes."
+  },
+  "constraints": [
+    {
+      "name": "regular_candy_constraint",
+      "expr_lhs": "sum(regular_candy_usage[mix] * kg_mix[mix] for mix in MIXES)",
+      "sense": "<=",
+      "expr_rhs": "available_regular_candy",
+      "description": "Do not exceed the available regular candy."
+    },
+    {
+      "name": "sour_candy_constraint",
+      "expr_lhs": "sum(sour_candy_usage[mix] * kg_mix[mix] for mix in MIXES)",
+      "sense": "<=",
+      "expr_rhs": "available_sour_candy",
+      "description": "Do not exceed the available sour candy."
+    }
+  ],
+  "graph": null
+}

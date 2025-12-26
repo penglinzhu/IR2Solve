@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_96",
+    "source": null,
+    "description": "Minimize fat intake by choosing the number of fish and chicken meals while meeting protein and iron requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MEALS",
+      "elements": [
+        "fish",
+        "chicken"
+      ],
+      "description": "Types of meals available."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "MEALS"
+      ],
+      "values": {
+        "fish": 10,
+        "chicken": 15
+      },
+      "description": "Protein content per meal type."
+    },
+    {
+      "name": "iron",
+      "indices": [
+        "MEALS"
+      ],
+      "values": {
+        "fish": 12,
+        "chicken": 8
+      },
+      "description": "Iron content per meal type."
+    },
+    {
+      "name": "fat",
+      "indices": [
+        "MEALS"
+      ],
+      "values": {
+        "fish": 7,
+        "chicken": 10
+      },
+      "description": "Fat content per meal type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "meals",
+      "indices": [
+        "MEALS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of meals of each type to consume."
+    }
+  ],
+  "objective": {
+    "name": "min_total_fat",
+    "sense": "min",
+    "expr": "fat['fish'] * meals['fish'] + fat['chicken'] * meals['chicken']",
+    "description": "Minimize the total fat intake from meals."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "protein['fish'] * meals['fish'] + protein['chicken'] * meals['chicken']",
+      "sense": ">=",
+      "expr_rhs": "130",
+      "description": "Ensure at least 130 units of protein are consumed."
+    },
+    {
+      "name": "iron_requirement",
+      "expr_lhs": "iron['fish'] * meals['fish'] + iron['chicken'] * meals['chicken']",
+      "sense": ">=",
+      "expr_rhs": "120",
+      "description": "Ensure at least 120 units of iron are consumed."
+    },
+    {
+      "name": "chicken_twice_fish",
+      "expr_lhs": "meals['chicken']",
+      "sense": ">=",
+      "expr_rhs": "2 * meals['fish']",
+      "description": "Consume at least twice as many chicken meals as fish meals."
+    }
+  ],
+  "graph": null
+}

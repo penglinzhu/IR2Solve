@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_188",
+    "source": null,
+    "description": "Determine the minimum cost diet for workers to meet nutritional requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "hamburger",
+        "chicken_wrap"
+      ],
+      "description": "Types of food available for the diet."
+    },
+    {
+      "name": "NUTRIENTS",
+      "elements": [
+        "calories",
+        "protein",
+        "carbs"
+      ],
+      "description": "Nutritional components that need to be satisfied."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "hamburger": 6.5,
+        "chicken_wrap": 4.0
+      },
+      "description": "Cost of each type of food."
+    },
+    {
+      "name": "nutritional_content",
+      "indices": [
+        "FOODS",
+        "NUTRIENTS"
+      ],
+      "values": {
+        "hamburger": {
+          "calories": 800,
+          "protein": 19,
+          "carbs": 20
+        },
+        "chicken_wrap": {
+          "calories": 450,
+          "protein": 12,
+          "carbs": 10
+        }
+      },
+      "description": "Nutritional content of each type of food."
+    },
+    {
+      "name": "nutritional_requirements",
+      "indices": [
+        "NUTRIENTS"
+      ],
+      "values": {
+        "calories": 2200,
+        "protein": 50,
+        "carbs": 70
+      },
+      "description": "Minimum nutritional requirements for the diet."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of servings of each type of food."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in ['hamburger', 'chicken_wrap'])",
+    "description": "Minimize the total cost of the diet."
+  },
+  "constraints": [
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "800 * x['hamburger'] + 450 * x['chicken_wrap']",
+      "sense": ">=",
+      "expr_rhs": "2200",
+      "description": "Ensure at least 2200 calories are provided."
+    },
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "19 * x['hamburger'] + 12 * x['chicken_wrap']",
+      "sense": ">=",
+      "expr_rhs": "50",
+      "description": "Ensure at least 50 grams of protein are provided."
+    },
+    {
+      "name": "carbs_requirement",
+      "expr_lhs": "20 * x['hamburger'] + 10 * x['chicken_wrap']",
+      "sense": ">=",
+      "expr_rhs": "70",
+      "description": "Ensure at least 70 grams of carbs are provided."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_146",
+    "source": null,
+    "description": "Minimize the total number of containers and trucks needed to transport oil to the port under given constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VEHICLES",
+      "elements": [
+        "containers",
+        "trucks"
+      ],
+      "description": "Types of vehicles used for transporting oil."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "containers": 30,
+        "trucks": 40
+      },
+      "description": "Capacity of each vehicle type in units of oil."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "VEHICLES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of vehicle used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_vehicles",
+    "sense": "min",
+    "expr": "x['containers'] + x['trucks']",
+    "description": "Minimize the total number of containers and trucks used."
+  },
+  "constraints": [
+    {
+      "name": "oil_requirement",
+      "expr_lhs": "30 * x['containers'] + 40 * x['trucks']",
+      "sense": ">=",
+      "expr_rhs": "2000",
+      "description": "At least 2000 units of oil need to be sent to the port."
+    },
+    {
+      "name": "min_containers",
+      "expr_lhs": "x['containers']",
+      "sense": ">=",
+      "expr_rhs": "15",
+      "description": "At least 15 containers need to be used."
+    },
+    {
+      "name": "truck_container_ratio",
+      "expr_lhs": "x['trucks']",
+      "sense": "<=",
+      "expr_rhs": "0.5 * x['containers']",
+      "description": "The number of trucks used has to be at most half the number of containers used."
+    }
+  ],
+  "graph": null
+}

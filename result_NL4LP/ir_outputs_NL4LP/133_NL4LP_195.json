@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_195",
+    "source": null,
+    "description": "Optimize the number of plush toys and dolls to buy and sell to maximize profit under budget and sales constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "plush_toys",
+        "dolls"
+      ],
+      "description": "Types of products sold in the toy store."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "plush_toys": 3,
+        "dolls": 2
+      },
+      "description": "Cost to the store for each product."
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "plush_toys": 4,
+        "dolls": 2
+      },
+      "description": "Profit from selling each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each product to buy and sell."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "profit['plush_toys'] * x['plush_toys'] + profit['dolls'] * x['dolls']",
+    "description": "Maximize the total profit from selling plush toys and dolls."
+  },
+  "constraints": [
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "cost['plush_toys'] * x['plush_toys'] + cost['dolls'] * x['dolls']",
+      "sense": "<=",
+      "expr_rhs": "700",
+      "description": "Total cost of inventory must not exceed $700."
+    },
+    {
+      "name": "plush_toys_minimum_sales",
+      "expr_lhs": "x['plush_toys']",
+      "sense": ">=",
+      "expr_rhs": "90",
+      "description": "At least 90 plush toys are sold each month."
+    },
+    {
+      "name": "plush_toys_maximum_sales",
+      "expr_lhs": "x['plush_toys']",
+      "sense": "<=",
+      "expr_rhs": "190",
+      "description": "At most 190 plush toys are sold each month."
+    },
+    {
+      "name": "dolls_sales_limit",
+      "expr_lhs": "x['dolls']",
+      "sense": "<=",
+      "expr_rhs": "2 * x['plush_toys']",
+      "description": "The number of dolls sold is at most twice the number of plush toys sold."
+    }
+  ],
+  "graph": null
+}

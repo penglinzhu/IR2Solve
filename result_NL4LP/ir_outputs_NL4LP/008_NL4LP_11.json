@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_11",
+    "source": null,
+    "description": "Optimize the production of regular and tempered glass panes to maximize profit given machine time constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "GLASS_TYPES",
+      "elements": [
+        "regular",
+        "tempered"
+      ],
+      "description": "Types of glass panes produced by the factory."
+    },
+    {
+      "name": "MACHINES",
+      "elements": [
+        "heating",
+        "cooling"
+      ],
+      "description": "Machines used in the production process."
+    }
+  ],
+  "params": [
+    {
+      "name": "time_per_pane",
+      "indices": [
+        "GLASS_TYPES",
+        "MACHINES"
+      ],
+      "values": {
+        "regular": {
+          "heating": 3,
+          "cooling": 5
+        },
+        "tempered": {
+          "heating": 5,
+          "cooling": 8
+        }
+      },
+      "description": "Time required on each machine to produce one pane of each glass type."
+    },
+    {
+      "name": "profit_per_pane",
+      "indices": [
+        "GLASS_TYPES"
+      ],
+      "values": {
+        "regular": 8,
+        "tempered": 10
+      },
+      "description": "Profit earned from selling one pane of each glass type."
+    },
+    {
+      "name": "max_time_per_machine",
+      "indices": [],
+      "values": 300,
+      "description": "Maximum available time per machine per day."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "GLASS_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of panes to produce for each type of glass."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "8 * x['regular'] + 10 * x['tempered']",
+    "description": "Maximize the total profit from selling glass panes."
+  },
+  "constraints": [
+    {
+      "name": "heating_time_constraint",
+      "expr_lhs": "3 * x['regular'] + 5 * x['tempered']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "Total heating machine time must not exceed available time."
+    },
+    {
+      "name": "cooling_time_constraint",
+      "expr_lhs": "5 * x['regular'] + 8 * x['tempered']",
+      "sense": "<=",
+      "expr_rhs": "300",
+      "description": "Total cooling machine time must not exceed available time."
+    }
+  ],
+  "graph": null
+}

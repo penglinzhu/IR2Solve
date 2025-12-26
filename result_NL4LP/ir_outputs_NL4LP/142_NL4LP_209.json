@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_209",
+    "source": null,
+    "description": "Optimize the production quantities of full-weighted and semi-weighted keyboards to maximize total revenue.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "KEYBOARD_TYPES",
+      "elements": [
+        "full-weighted",
+        "semi-weighted"
+      ],
+      "description": "Types of keyboards produced by the company."
+    }
+  ],
+  "params": [
+    {
+      "name": "price",
+      "indices": [
+        "KEYBOARD_TYPES"
+      ],
+      "values": {
+        "full-weighted": 2800,
+        "semi-weighted": 2400
+      },
+      "description": "Selling price of each type of keyboard."
+    },
+    {
+      "name": "chip_requirement",
+      "indices": [
+        "KEYBOARD_TYPES"
+      ],
+      "values": {
+        "full-weighted": 20,
+        "semi-weighted": 15
+      },
+      "description": "Number of oscillator chips required for each type of keyboard."
+    },
+    {
+      "name": "production_time",
+      "indices": [
+        "KEYBOARD_TYPES"
+      ],
+      "values": {
+        "full-weighted": 1.2,
+        "semi-weighted": 1.2
+      },
+      "description": "Production time in hours required for each type of keyboard."
+    },
+    {
+      "name": "total_chips",
+      "indices": [],
+      "values": 3500,
+      "description": "Total number of oscillator chips available per day."
+    },
+    {
+      "name": "total_hours",
+      "indices": [],
+      "values": 6,
+      "description": "Total working hours available per day."
+    }
+  ],
+  "vars": [
+    {
+      "name": "production_quantity",
+      "indices": [
+        "KEYBOARD_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of keyboards to produce for each type."
+    }
+  ],
+  "objective": {
+    "name": "max_total_revenue",
+    "sense": "max",
+    "expr": "sum(production_quantity[k] * price[k] for k in KEYBOARD_TYPES)",
+    "description": "Maximize the total revenue from selling the keyboards."
+  },
+  "constraints": [
+    {
+      "name": "chip_constraint",
+      "expr_lhs": "production_quantity['full-weighted'] * chip_requirement['full-weighted'] + production_quantity['semi-weighted'] * chip_requirement['semi-weighted']",
+      "sense": "<=",
+      "expr_rhs": "total_chips",
+      "description": "Total oscillator chips used must not exceed available chips."
+    },
+    {
+      "name": "time_constraint",
+      "expr_lhs": "production_quantity['full-weighted'] * production_time['full-weighted'] + production_quantity['semi-weighted'] * production_time['semi-weighted']",
+      "sense": "<=",
+      "expr_rhs": "total_hours",
+      "description": "Total production time must not exceed available working hours."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_23",
+    "source": null,
+    "description": "Determine the minimum cost of producing a plant growth compound by mixing fertilizers C and Y to meet nitrous oxide and vitamin mix requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FERTILIZERS",
+      "elements": [
+        "C",
+        "Y"
+      ],
+      "description": "Types of fertilizers used in the compound."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FERTILIZERS"
+      ],
+      "values": {
+        "C": 2,
+        "Y": 3
+      },
+      "description": "Cost per kg of each fertilizer."
+    },
+    {
+      "name": "nitrous_oxide_content",
+      "indices": [
+        "FERTILIZERS"
+      ],
+      "values": {
+        "C": 1.5,
+        "Y": 5
+      },
+      "description": "Units of nitrous oxide per kg of each fertilizer."
+    },
+    {
+      "name": "vitamin_mix_content",
+      "indices": [
+        "FERTILIZERS"
+      ],
+      "values": {
+        "C": 3,
+        "Y": 1
+      },
+      "description": "Units of vitamin mix per kg of each fertilizer."
+    },
+    {
+      "name": "nitrous_oxide_requirement",
+      "indices": [],
+      "values": 5,
+      "description": "Minimum units of nitrous oxide required in the compound."
+    },
+    {
+      "name": "vitamin_mix_requirement",
+      "indices": [],
+      "values": 8,
+      "description": "Minimum units of vitamin mix required in the compound."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FERTILIZERS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of each fertilizer used in kg."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FERTILIZERS)",
+    "description": "Minimize the total cost of the fertilizers used."
+  },
+  "constraints": [
+    {
+      "name": "nitrous_oxide_requirement",
+      "expr_lhs": "sum(nitrous_oxide_content[f] * x[f] for f in FERTILIZERS)",
+      "sense": ">=",
+      "expr_rhs": "nitrous_oxide_requirement",
+      "description": "Ensure the compound contains at least the required units of nitrous oxide."
+    },
+    {
+      "name": "vitamin_mix_requirement",
+      "expr_lhs": "sum(vitamin_mix_content[f] * x[f] for f in FERTILIZERS)",
+      "sense": ">=",
+      "expr_rhs": "vitamin_mix_requirement",
+      "description": "Ensure the compound contains at least the required units of vitamin mix."
+    }
+  ],
+  "graph": null
+}

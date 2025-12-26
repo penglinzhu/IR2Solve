@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_17",
+    "source": null,
+    "description": "Optimize the inventory of phones and laptops to maximize profit while considering space and budget constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "phone",
+        "laptop"
+      ],
+      "description": "Types of products available in the store."
+    }
+  ],
+  "params": [
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "phone": 120,
+        "laptop": 40
+      },
+      "description": "Profit earned from each product."
+    },
+    {
+      "name": "space",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "phone": 1,
+        "laptop": 4
+      },
+      "description": "Floor space required for each product."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "phone": 400,
+        "laptop": 100
+      },
+      "description": "Cost to purchase each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "inventory",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each product to keep in inventory."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "sum(profit[p] * inventory[p] for p in PRODUCTS)",
+    "description": "Maximize the total profit from selling phones and laptops."
+  },
+  "constraints": [
+    {
+      "name": "floor_space_constraint",
+      "expr_lhs": "sum(space[p] * inventory[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "400",
+      "description": "Total floor space used by inventory must not exceed available space."
+    },
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "sum(cost[p] * inventory[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "6000",
+      "description": "Total cost of inventory must not exceed the budget."
+    },
+    {
+      "name": "laptop_ratio_constraint",
+      "expr_lhs": "inventory['laptop']",
+      "sense": ">=",
+      "expr_rhs": "0.8 * (inventory['phone'] + inventory['laptop'])",
+      "description": "At least 80% of all appliances in stock must be laptops."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,6 @@
+====== SUMMARY ======
+Total instances: 178
+Solved (got ObjVal): 169
+Correct (ObjVal ≈ objective): 165
+Accuracy over all instances: 165/178 = 0.927
+Solved ratio: 169/178 = 0.949

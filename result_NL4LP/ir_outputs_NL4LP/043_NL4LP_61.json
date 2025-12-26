@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_61",
+    "source": null,
+    "description": "Determine the number of small and large branches to build to minimize the total number of branches while meeting customer service and teller constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "BRANCH_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of branches that can be built"
+    }
+  ],
+  "params": [
+    {
+      "name": "customers_per_branch",
+      "indices": [
+        "BRANCH_TYPES"
+      ],
+      "values": {
+        "small": 50,
+        "large": 100
+      },
+      "description": "Number of customers each branch type can serve per day"
+    },
+    {
+      "name": "tellers_per_branch",
+      "indices": [
+        "BRANCH_TYPES"
+      ],
+      "values": {
+        "small": 10,
+        "large": 15
+      },
+      "description": "Number of tellers required for each branch type"
+    },
+    {
+      "name": "total_tellers_available",
+      "indices": [],
+      "values": 200,
+      "description": "Total number of bank tellers available"
+    },
+    {
+      "name": "total_customers_needed",
+      "indices": [],
+      "values": 1200,
+      "description": "Total number of customers that need to be served per day"
+    }
+  ],
+  "vars": [
+    {
+      "name": "branches",
+      "indices": [
+        "BRANCH_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of branches to build of each type"
+    }
+  ],
+  "objective": {
+    "name": "min_total_branches",
+    "sense": "min",
+    "expr": "branches['small'] + branches['large']",
+    "description": "Minimize the total number of branches built"
+  },
+  "constraints": [
+    {
+      "name": "teller_constraint",
+      "expr_lhs": "10 * branches['small'] + 15 * branches['large']",
+      "sense": "<=",
+      "expr_rhs": "200",
+      "description": "Total number of tellers used by branches must not exceed available tellers"
+    },
+    {
+      "name": "customer_service_constraint",
+      "expr_lhs": "50 * branches['small'] + 100 * branches['large']",
+      "sense": ">=",
+      "expr_rhs": "1200",
+      "description": "Total number of customers served by branches must meet or exceed the required number"
+    }
+  ],
+  "graph": null
+}

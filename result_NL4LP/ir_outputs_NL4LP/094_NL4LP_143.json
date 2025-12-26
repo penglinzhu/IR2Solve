@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_143",
+    "source": null,
+    "description": "Optimize the number of small and large teams to maximize the amount of lawn that can be mowed.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TEAM_TYPES",
+      "elements": [
+        "small",
+        "large"
+      ],
+      "description": "Types of teams available for lawn mowing."
+    }
+  ],
+  "params": [
+    {
+      "name": "employees_required",
+      "indices": [
+        "TEAM_TYPES"
+      ],
+      "values": {
+        "small": 3,
+        "large": 5
+      },
+      "description": "Number of employees required for each team type."
+    },
+    {
+      "name": "lawn_mowed",
+      "indices": [
+        "TEAM_TYPES"
+      ],
+      "values": {
+        "small": 50,
+        "large": 80
+      },
+      "description": "Square feet of lawn mowed by each team type."
+    },
+    {
+      "name": "total_employees",
+      "indices": [],
+      "values": 150,
+      "description": "Total number of employees available."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_teams",
+      "indices": [
+        "TEAM_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of teams of each type to be used."
+    }
+  ],
+  "objective": {
+    "name": "max_lawn_mowed",
+    "sense": "max",
+    "expr": "num_teams['small'] * lawn_mowed['small'] + num_teams['large'] * lawn_mowed['large']",
+    "description": "Maximize the total amount of lawn that can be mowed."
+  },
+  "constraints": [
+    {
+      "name": "employee_limit",
+      "expr_lhs": "num_teams['small'] * employees_required['small'] + num_teams['large'] * employees_required['large']",
+      "sense": "<=",
+      "expr_rhs": "total_employees",
+      "description": "The total number of employees used by all teams cannot exceed the available employees."
+    },
+    {
+      "name": "small_teams_minimum",
+      "expr_lhs": "num_teams['small']",
+      "sense": ">=",
+      "expr_rhs": "10",
+      "description": "There must be at least 10 small teams."
+    },
+    {
+      "name": "large_teams_minimum",
+      "expr_lhs": "num_teams['large']",
+      "sense": ">=",
+      "expr_rhs": "6",
+      "description": "There must be at least 6 large teams."
+    },
+    {
+      "name": "small_large_team_ratio",
+      "expr_lhs": "num_teams['small']",
+      "sense": ">=",
+      "expr_rhs": "3 * num_teams['large']",
+      "description": "The number of small teams must be at least 3 times the number of large teams."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_123",
+    "source": null,
+    "description": "Maximize the total amount of sugar consumed by eating slices of cheesecake and caramel cake under calorie and preference constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CAKES",
+      "elements": [
+        "cheesecake",
+        "caramel_cake"
+      ],
+      "description": "Types of cakes available for consumption."
+    }
+  ],
+  "params": [
+    {
+      "name": "calories",
+      "indices": [
+        "CAKES"
+      ],
+      "values": {
+        "cheesecake": 200,
+        "caramel_cake": 250
+      },
+      "description": "Calories per slice for each type of cake."
+    },
+    {
+      "name": "sugar",
+      "indices": [
+        "CAKES"
+      ],
+      "values": {
+        "cheesecake": 40,
+        "caramel_cake": 50
+      },
+      "description": "Grams of sugar per slice for each type of cake."
+    }
+  ],
+  "vars": [
+    {
+      "name": "slices",
+      "indices": [
+        "CAKES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of slices to eat for each type of cake."
+    }
+  ],
+  "objective": {
+    "name": "max_total_sugar",
+    "sense": "max",
+    "expr": "slices['cheesecake'] * sugar['cheesecake'] + slices['caramel_cake'] * sugar['caramel_cake']",
+    "description": "Maximize the total amount of sugar consumed."
+  },
+  "constraints": [
+    {
+      "name": "calorie_limit",
+      "expr_lhs": "slices['cheesecake'] * calories['cheesecake'] + slices['caramel_cake'] * calories['caramel_cake']",
+      "sense": "<=",
+      "expr_rhs": "10000",
+      "description": "Total calorie intake must not exceed 10000 calories."
+    },
+    {
+      "name": "cheesecake_preference",
+      "expr_lhs": "slices['cheesecake']",
+      "sense": ">=",
+      "expr_rhs": "3 * slices['caramel_cake']",
+      "description": "At least 3 times as many slices of cheesecake as caramel cake must be eaten."
+    },
+    {
+      "name": "min_caramel_cake",
+      "expr_lhs": "slices['caramel_cake']",
+      "sense": ">=",
+      "expr_rhs": "3",
+      "description": "At least 3 slices of caramel cake must be eaten."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_171",
+    "source": null,
+    "description": "Minimize the total time needed to transport at least 300 fish using helicopters and cars with constraints on the number of trips.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MODES",
+      "elements": [
+        "helicopter",
+        "car"
+      ],
+      "description": "Modes of transportation available for fish."
+    }
+  ],
+  "params": [
+    {
+      "name": "fish_per_trip",
+      "indices": [
+        "MODES"
+      ],
+      "values": {
+        "helicopter": 30,
+        "car": 20
+      },
+      "description": "Number of fish each mode can transport per trip."
+    },
+    {
+      "name": "time_per_trip",
+      "indices": [
+        "MODES"
+      ],
+      "values": {
+        "helicopter": 40,
+        "car": 30
+      },
+      "description": "Time in minutes each trip takes for each mode."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "MODES"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of trips taken by each mode."
+    }
+  ],
+  "objective": {
+    "name": "min_total_time",
+    "sense": "min",
+    "expr": "sum(trips[m] * time_per_trip[m] for m in MODES)",
+    "description": "Minimize the total time needed for all trips."
+  },
+  "constraints": [
+    {
+      "name": "fish_requirement",
+      "expr_lhs": "sum(trips[m] * fish_per_trip[m] for m in MODES)",
+      "sense": ">=",
+      "expr_rhs": "300",
+      "description": "At least 300 fish need to be transported."
+    },
+    {
+      "name": "helicopter_trip_limit",
+      "expr_lhs": "trips['helicopter']",
+      "sense": "<=",
+      "expr_rhs": "5",
+      "description": "At most 5 helicopter trips can be made."
+    },
+    {
+      "name": "car_trip_minimum",
+      "expr_lhs": "trips['car']",
+      "sense": ">=",
+      "expr_rhs": "0.6 * (trips['helicopter'] + trips['car'])",
+      "description": "At least 60% of the trips should be by car."
+    }
+  ],
+  "graph": null
+}

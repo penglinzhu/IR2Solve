@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_126",
+    "source": null,
+    "description": "Determine the number of oranges and grapefruits to eat to meet vitamin requirements while minimizing sugar intake.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FRUITS",
+      "elements": [
+        "orange",
+        "grapefruit"
+      ],
+      "description": "Types of fruits available for consumption."
+    }
+  ],
+  "params": [
+    {
+      "name": "vitamin_c",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "orange": 5,
+        "grapefruit": 7
+      },
+      "description": "Units of vitamin C per fruit."
+    },
+    {
+      "name": "vitamin_a",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "orange": 3,
+        "grapefruit": 5
+      },
+      "description": "Units of vitamin A per fruit."
+    },
+    {
+      "name": "sugar",
+      "indices": [
+        "FRUITS"
+      ],
+      "values": {
+        "orange": 5,
+        "grapefruit": 6
+      },
+      "description": "Grams of sugar per fruit."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FRUITS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of fruit to eat."
+    }
+  ],
+  "objective": {
+    "name": "min_total_sugar",
+    "sense": "min",
+    "expr": "sugar['orange'] * x['orange'] + sugar['grapefruit'] * x['grapefruit']",
+    "description": "Minimize the total sugar intake from the fruits."
+  },
+  "constraints": [
+    {
+      "name": "vitamin_c_requirement",
+      "expr_lhs": "vitamin_c['orange'] * x['orange'] + vitamin_c['grapefruit'] * x['grapefruit']",
+      "sense": ">=",
+      "expr_rhs": "80",
+      "description": "Ensure at least 80 units of vitamin C are consumed."
+    },
+    {
+      "name": "vitamin_a_requirement",
+      "expr_lhs": "vitamin_a['orange'] * x['orange'] + vitamin_a['grapefruit'] * x['grapefruit']",
+      "sense": ">=",
+      "expr_rhs": "70",
+      "description": "Ensure at least 70 units of vitamin A are consumed."
+    },
+    {
+      "name": "preference_for_oranges",
+      "expr_lhs": "x['orange']",
+      "sense": ">=",
+      "expr_rhs": "2 * x['grapefruit']",
+      "description": "The number of oranges must be at least twice the number of grapefruits."
+    }
+  ],
+  "graph": null
+}

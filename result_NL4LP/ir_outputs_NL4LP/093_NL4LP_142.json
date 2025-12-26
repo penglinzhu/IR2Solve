@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_142",
+    "source": null,
+    "description": "Optimize the number of old and new vans used to minimize pollution while meeting soda delivery requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VAN_TYPES",
+      "elements": [
+        "old",
+        "new"
+      ],
+      "description": "Types of vans available for transporting soda bottles."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "VAN_TYPES"
+      ],
+      "values": {
+        "old": 100,
+        "new": 80
+      },
+      "description": "Capacity of each van type in terms of soda bottles."
+    },
+    {
+      "name": "pollution",
+      "indices": [
+        "VAN_TYPES"
+      ],
+      "values": {
+        "old": 50,
+        "new": 30
+      },
+      "description": "Pollution produced by each van type."
+    }
+  ],
+  "vars": [
+    {
+      "name": "vans",
+      "indices": [
+        "VAN_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of vans of each type to be used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_pollution",
+    "sense": "min",
+    "expr": "pollution['old'] * vans['old'] + pollution['new'] * vans['new']",
+    "description": "Minimize the total pollution produced by the vans."
+  },
+  "constraints": [
+    {
+      "name": "bottle_requirement",
+      "expr_lhs": "capacity['old'] * vans['old'] + capacity['new'] * vans['new']",
+      "sense": ">=",
+      "expr_rhs": "5000",
+      "description": "Ensure at least 5000 bottles are delivered."
+    },
+    {
+      "name": "new_van_limit",
+      "expr_lhs": "vans['new']",
+      "sense": "<=",
+      "expr_rhs": "30",
+      "description": "Limit the number of new vans to at most 30."
+    }
+  ],
+  "graph": null
+}

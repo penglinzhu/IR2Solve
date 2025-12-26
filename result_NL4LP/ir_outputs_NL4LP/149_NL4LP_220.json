@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_220",
+    "source": null,
+    "description": "Optimize the number of games to maximize customer attraction while considering prize costs and game type constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "GAMES",
+      "elements": [
+        "throwing",
+        "climbing"
+      ],
+      "description": "Types of games available in the amusement park."
+    }
+  ],
+  "params": [
+    {
+      "name": "customers_per_hour",
+      "indices": [
+        "GAMES"
+      ],
+      "values": {
+        "throwing": 15,
+        "climbing": 8
+      },
+      "description": "Number of customers attracted per hour by each type of game."
+    },
+    {
+      "name": "cost_per_hour",
+      "indices": [
+        "GAMES"
+      ],
+      "values": {
+        "throwing": 2,
+        "climbing": 3
+      },
+      "description": "Cost in prizes per hour for each type of game."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_games",
+      "indices": [
+        "GAMES"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of each type of game in the amusement park."
+    }
+  ],
+  "objective": {
+    "name": "max_total_customers",
+    "sense": "max",
+    "expr": "15 * num_games['throwing'] + 8 * num_games['climbing']",
+    "description": "Maximize the total number of customers attracted every hour."
+  },
+  "constraints": [
+    {
+      "name": "prize_cost_limit",
+      "expr_lhs": "2 * num_games['throwing'] + 3 * num_games['climbing']",
+      "sense": "<=",
+      "expr_rhs": "100",
+      "description": "Total prize cost per hour must not exceed $100."
+    },
+    {
+      "name": "throwing_games_dominance",
+      "expr_lhs": "num_games['throwing']",
+      "sense": ">=",
+      "expr_rhs": "2 * num_games['climbing']",
+      "description": "There must be at least twice as many throwing games as climbing games."
+    },
+    {
+      "name": "minimum_climbing_games",
+      "expr_lhs": "num_games['climbing']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "There must be at least 5 climbing games."
+    }
+  ],
+  "graph": null
+}

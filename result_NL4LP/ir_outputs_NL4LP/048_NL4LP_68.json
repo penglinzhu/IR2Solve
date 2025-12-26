@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_68",
+    "source": null,
+    "description": "Optimize the production of chocolate and peanut butter crepes to minimize crepe mix usage.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CREPES",
+      "elements": [
+        "chocolate",
+        "peanut_butter"
+      ],
+      "description": "Types of crepes"
+    }
+  ],
+  "params": [
+    {
+      "name": "chocolate_spread_requirement",
+      "indices": [
+        "CREPES"
+      ],
+      "values": {
+        "chocolate": 3,
+        "peanut_butter": 0
+      },
+      "description": "Units of chocolate spread required per crepe"
+    },
+    {
+      "name": "peanut_butter_spread_requirement",
+      "indices": [
+        "CREPES"
+      ],
+      "values": {
+        "chocolate": 0,
+        "peanut_butter": 4
+      },
+      "description": "Units of peanut butter spread required per crepe"
+    },
+    {
+      "name": "crepe_mix_requirement",
+      "indices": [
+        "CREPES"
+      ],
+      "values": {
+        "chocolate": 6,
+        "peanut_butter": 7
+      },
+      "description": "Units of crepe mix required per crepe"
+    },
+    {
+      "name": "available_chocolate_spread",
+      "indices": [],
+      "values": 400,
+      "description": "Total available units of chocolate spread"
+    },
+    {
+      "name": "available_peanut_butter_spread",
+      "indices": [],
+      "values": 450,
+      "description": "Total available units of peanut butter spread"
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_crepes",
+      "indices": [
+        "CREPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of crepes to make"
+    }
+  ],
+  "objective": {
+    "name": "min_total_crepe_mix",
+    "sense": "min",
+    "expr": "num_crepes['chocolate'] * crepe_mix_requirement['chocolate'] + num_crepes['peanut_butter'] * crepe_mix_requirement['peanut_butter']",
+    "description": "Minimize the total amount of crepe mix used"
+  },
+  "constraints": [
+    {
+      "name": "chocolate_spread_limit",
+      "expr_lhs": "num_crepes['chocolate'] * chocolate_spread_requirement['chocolate']",
+      "sense": "<=",
+      "expr_rhs": "available_chocolate_spread",
+      "description": "Limit on chocolate spread usage"
+    },
+    {
+      "name": "peanut_butter_spread_limit",
+      "expr_lhs": "num_crepes['peanut_butter'] * peanut_butter_spread_requirement['peanut_butter']",
+      "sense": "<=",
+      "expr_rhs": "available_peanut_butter_spread",
+      "description": "Limit on peanut butter spread usage"
+    },
+    {
+      "name": "peanut_butter_more_than_chocolate",
+      "expr_lhs": "num_crepes['peanut_butter']",
+      "sense": ">=",
+      "expr_rhs": "num_crepes['chocolate'] + 1",
+      "description": "Peanut butter crepes must exceed chocolate crepes"
+    },
+    {
+      "name": "at_least_25_percent_chocolate",
+      "expr_lhs": "num_crepes['chocolate']",
+      "sense": ">=",
+      "expr_rhs": "0.25 * (num_crepes['chocolate'] + num_crepes['peanut_butter'])",
+      "description": "At least 25% of crepes must be chocolate"
+    }
+  ],
+  "graph": null
+}

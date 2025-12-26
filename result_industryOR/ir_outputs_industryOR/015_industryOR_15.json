@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "problem_id": "industryOR_15",
+    "source": null,
+    "description": "Determine the minimum number of courses a master's student should take to meet category and prerequisite requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "COURSES",
+      "elements": [
+        "calculus",
+        "operations_research",
+        "data_structures",
+        "management_statistics",
+        "computer_simulation",
+        "computer_programming",
+        "forecasting"
+      ],
+      "description": "List of available courses."
+    }
+  ],
+  "params": [],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "COURSES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if a course is taken (1) or not (0)."
+    }
+  ],
+  "objective": {
+    "name": "min_total_courses",
+    "sense": "min",
+    "expr": "x['calculus'] + x['operations_research'] + x['data_structures'] + x['management_statistics'] + x['computer_simulation'] + x['computer_programming'] + x['forecasting']",
+    "description": "Minimize the total number of courses taken."
+  },
+  "constraints": [
+    {
+      "name": "math_courses",
+      "expr_lhs": "x['calculus'] + x['operations_research'] + x['data_structures'] + x['management_statistics'] + x['forecasting']",
+      "sense": ">=",
+      "expr_rhs": "2",
+      "description": "At least two math courses must be taken."
+    },
+    {
+      "name": "operations_research_courses",
+      "expr_lhs": "x['operations_research'] + x['management_statistics'] + x['computer_simulation'] + x['forecasting']",
+      "sense": ">=",
+      "expr_rhs": "2",
+      "description": "At least two operations research courses must be taken."
+    },
+    {
+      "name": "computer_courses",
+      "expr_lhs": "x['data_structures'] + x['computer_simulation'] + x['computer_programming']",
+      "sense": ">=",
+      "expr_rhs": "2",
+      "description": "At least two computer courses must be taken."
+    },
+    {
+      "name": "prerequisite_computer_simulation",
+      "expr_lhs": "x['computer_simulation']",
+      "sense": "<=",
+      "expr_rhs": "x['computer_programming']",
+      "description": "Computer simulation can only be taken if computer programming is taken."
+    },
+    {
+      "name": "prerequisite_data_structures",
+      "expr_lhs": "x['data_structures']",
+      "sense": "<=",
+      "expr_rhs": "x['computer_programming']",
+      "description": "Data structures can only be taken if computer programming is taken."
+    },
+    {
+      "name": "prerequisite_management_statistics",
+      "expr_lhs": "x['management_statistics']",
+      "sense": "<=",
+      "expr_rhs": "x['calculus']",
+      "description": "Management statistics can only be taken if calculus is taken."
+    },
+    {
+      "name": "prerequisite_forecasting",
+      "expr_lhs": "x['forecasting']",
+      "sense": "<=",
+      "expr_rhs": "x['management_statistics']",
+      "description": "Forecasting can only be taken if management statistics is taken."
+    }
+  ],
+  "graph": null
+}

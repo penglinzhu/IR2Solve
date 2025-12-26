@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_226",
+    "source": null,
+    "description": "Optimize the number of pop and R&B concerts to minimize the total number of concerts while meeting audience and practice constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CONCERT_TYPES",
+      "elements": [
+        "pop",
+        "R&B"
+      ],
+      "description": "Types of concerts the singer can hold."
+    }
+  ],
+  "params": [
+    {
+      "name": "audience",
+      "indices": [
+        "CONCERT_TYPES"
+      ],
+      "values": {
+        "pop": 100,
+        "R&B": 240
+      },
+      "description": "Audience members brought in by each type of concert."
+    },
+    {
+      "name": "practice_days",
+      "indices": [
+        "CONCERT_TYPES"
+      ],
+      "values": {
+        "pop": 2,
+        "R&B": 4
+      },
+      "description": "Days of practice required for each type of concert."
+    },
+    {
+      "name": "max_audience",
+      "indices": [],
+      "values": 10000,
+      "description": "Minimum audience members required."
+    },
+    {
+      "name": "max_practice_days",
+      "indices": [],
+      "values": 180,
+      "description": "Maximum practice days available."
+    },
+    {
+      "name": "max_R&B_ratio",
+      "indices": [],
+      "values": 0.4,
+      "description": "Maximum ratio of R&B concerts."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_concerts",
+      "indices": [
+        "CONCERT_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of concerts of each type to be held."
+    }
+  ],
+  "objective": {
+    "name": "min_total_concerts",
+    "sense": "min",
+    "expr": "num_concerts['pop'] + num_concerts['R&B']",
+    "description": "Minimize the total number of concerts."
+  },
+  "constraints": [
+    {
+      "name": "audience_requirement",
+      "expr_lhs": "100 * num_concerts['pop'] + 240 * num_concerts['R&B']",
+      "sense": ">=",
+      "expr_rhs": "10000",
+      "description": "Ensure at least 10000 audience members are brought in."
+    },
+    {
+      "name": "practice_days_limit",
+      "expr_lhs": "2 * num_concerts['pop'] + 4 * num_concerts['R&B']",
+      "sense": "<=",
+      "expr_rhs": "180",
+      "description": "Ensure practice days do not exceed 180."
+    },
+    {
+      "name": "R&B_concert_limit",
+      "expr_lhs": "num_concerts['R&B']",
+      "sense": "<=",
+      "expr_rhs": "0.4 * (num_concerts['pop'] + num_concerts['R&B'])",
+      "description": "Ensure no more than 40% of concerts are R&B."
+    }
+  ],
+  "graph": null
+}

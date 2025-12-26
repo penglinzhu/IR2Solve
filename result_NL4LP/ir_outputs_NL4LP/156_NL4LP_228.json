@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_228",
+    "source": null,
+    "description": "Determine the number of limousines and buses needed to transport at least 400 people, with at least 70% of the vehicles being limousines, to minimize the total number of vehicles used.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VEHICLES",
+      "elements": [
+        "limousine",
+        "bus"
+      ],
+      "description": "Types of vehicles available for transportation"
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "limousine": 12,
+        "bus": 18
+      },
+      "description": "Capacity of each type of vehicle"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "VEHICLES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of vehicle used"
+    }
+  ],
+  "objective": {
+    "name": "min_total_vehicles",
+    "sense": "min",
+    "expr": "x['limousine'] + x['bus']",
+    "description": "Minimize the total number of vehicles used"
+  },
+  "constraints": [
+    {
+      "name": "min_people_transport",
+      "expr_lhs": "12 * x['limousine'] + 18 * x['bus']",
+      "sense": ">=",
+      "expr_rhs": "400",
+      "description": "Ensure at least 400 people are transported"
+    },
+    {
+      "name": "min_limousine_percentage",
+      "expr_lhs": "x['limousine']",
+      "sense": ">=",
+      "expr_rhs": "0.7 * (x['limousine'] + x['bus'])",
+      "description": "At least 70% of the vehicles must be limousines"
+    }
+  ],
+  "graph": null
+}

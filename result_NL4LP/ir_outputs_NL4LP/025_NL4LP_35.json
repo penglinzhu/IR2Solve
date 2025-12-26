@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_35",
+    "source": null,
+    "description": "Determine the number of servings of vegetables and fruits to minimize cost while meeting nutritional requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "vegetables",
+        "fruits"
+      ],
+      "description": "Types of food available."
+    }
+  ],
+  "params": [
+    {
+      "name": "vitamins",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "vegetables": 2,
+        "fruits": 4
+      },
+      "description": "Units of vitamins per serving of each food."
+    },
+    {
+      "name": "minerals",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "vegetables": 3,
+        "fruits": 1
+      },
+      "description": "Units of minerals per serving of each food."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "vegetables": 3,
+        "fruits": 5
+      },
+      "description": "Cost per serving of each food."
+    }
+  ],
+  "vars": [
+    {
+      "name": "servings",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * servings[f] for f in ['vegetables', 'fruits'])",
+    "description": "Minimize the total cost of servings."
+  },
+  "constraints": [
+    {
+      "name": "vitamin_requirement",
+      "expr_lhs": "2 * servings['vegetables'] + 4 * servings['fruits']",
+      "sense": ">=",
+      "expr_rhs": "20",
+      "description": "Ensure at least 20 units of vitamins are consumed."
+    },
+    {
+      "name": "mineral_requirement",
+      "expr_lhs": "3 * servings['vegetables'] + 1 * servings['fruits']",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "Ensure at least 30 units of minerals are consumed."
+    }
+  ],
+  "graph": null
+}

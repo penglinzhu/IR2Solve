@@ -3,7 +3,7 @@
 # 读取方式：
 # - description.txt -> question_text
 # - solution.json["objective"] -> ground truth
-# 流程：NL -> (dynamic system prompt templating) -> IR -> Gurobi，记录每题求解结果到 CSV
+
 
 from __future__ import annotations
 
@@ -23,13 +23,19 @@ from gm4opt_pipeline import (
 # ========== 配置区域 ==========
 
 # 数据集根目录：包含若干子文件夹（每个子文件夹是一道题）
-NL4LP_ROOT_DIR = "data/NL4LP"  
+NL4LP_ROOT_DIR = "data/NL4LP"
+
+# 结果根目录
+RESULT_DIR = "result_NL4LP"
 
 # IR JSON 输出目录
-IR_OUTPUT_DIR = "ir_outputs_NL4LP"
+IR_OUTPUT_DIR = os.path.join(RESULT_DIR, "ir_outputs_NL4LP")
 
 # 结果日志文件（CSV）
-RESULT_CSV_PATH = "NL4LP_results.csv"
+RESULT_CSV_PATH = os.path.join(RESULT_DIR, "NL4LP_results.csv")
+
+# Summary 输出
+SUMMARY_TXT_PATH = os.path.join(RESULT_DIR, "NL4LP_summary.txt")
 
 # 使用的 LLM 模型名称
 LLM_MODEL_NAME = "gpt-4o"
@@ -148,7 +154,7 @@ def solve_one_instance(
             res.ir_dict["meta"] = {}
         res.ir_dict["meta"]["problem_id"] = instance_id
 
-        # 1) 保存 IR JSON 到本地
+        # 1) 保存 IR JSON 到本地（路径已改到 RESULT_DIR 下）
         ensure_dir(IR_OUTPUT_DIR)
         safe_problem_id = "".join(
             c if c.isalnum() or c in "-_." else "_" for c in instance_id
@@ -187,7 +193,8 @@ def solve_one_instance(
 # ========== 主函数 ==========
 
 def main():
-    ensure_dir(os.path.dirname(RESULT_CSV_PATH) or ".")
+    # 确保结果目录存在
+    ensure_dir(RESULT_DIR)
     ensure_dir(IR_OUTPUT_DIR)
 
     client = OpenAI()
@@ -275,16 +282,22 @@ def main():
                 f"correct={row['correct']}, error={row['error']}"
             )
 
-    print("\n====== SUMMARY ======")
-    print(f"Total instances: {total}")
-    print(f"Solved (got ObjVal): {solved}")
-    print(f"Correct (ObjVal ≈ objective): {correct_cnt}")
+    # ====== SUMMARY（同时写入 txt）======
+    summary_lines = []
+    summary_lines.append("====== SUMMARY ======")
+    summary_lines.append(f"Total instances: {total}")
+    summary_lines.append(f"Solved (got ObjVal): {solved}")
+    summary_lines.append(f"Correct (ObjVal ≈ objective): {correct_cnt}")
     if total > 0:
-        print(
-            f"Accuracy over all instances: {correct_cnt}/{total} "
-            f"= {correct_cnt / total:.3f}"
+        summary_lines.append(
+            f"Accuracy over all instances: {correct_cnt}/{total} = {correct_cnt / total:.3f}"
         )
-        print(f"Solved ratio: {solved}/{total} = {solved / total:.3f}")
+        summary_lines.append(f"Solved ratio: {solved}/{total} = {solved / total:.3f}")
+
+    print("\n" + "\n".join(summary_lines))
+
+    with open(SUMMARY_TXT_PATH, "w", encoding="utf-8") as f_sum:
+        f_sum.write("\n".join(summary_lines) + "\n")
 
 
 if __name__ == "__main__":

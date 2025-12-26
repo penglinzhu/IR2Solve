@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_16",
+    "source": null,
+    "description": "Optimize the production of model trains and planes to maximize profit given resource constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MODELS",
+      "elements": [
+        "train",
+        "plane"
+      ],
+      "description": "Types of models: train and plane"
+    }
+  ],
+  "params": [
+    {
+      "name": "wood_requirement",
+      "indices": [
+        "MODELS"
+      ],
+      "values": {
+        "train": 3,
+        "plane": 4
+      },
+      "description": "Wood required per model type"
+    },
+    {
+      "name": "paint_requirement",
+      "indices": [
+        "MODELS"
+      ],
+      "values": {
+        "train": 3,
+        "plane": 2
+      },
+      "description": "Paint required per model type"
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "MODELS"
+      ],
+      "values": {
+        "train": 8,
+        "plane": 10
+      },
+      "description": "Profit per model type"
+    },
+    {
+      "name": "wood_available",
+      "indices": [],
+      "values": 120,
+      "description": "Total available wood units"
+    },
+    {
+      "name": "paint_available",
+      "indices": [],
+      "values": 90,
+      "description": "Total available paint units"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "MODELS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each model type to produce"
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "8 * x['train'] + 10 * x['plane']",
+    "description": "Maximize total profit from model trains and planes"
+  },
+  "constraints": [
+    {
+      "name": "wood_constraint",
+      "expr_lhs": "3 * x['train'] + 4 * x['plane']",
+      "sense": "<=",
+      "expr_rhs": "120",
+      "description": "Wood usage must not exceed available wood"
+    },
+    {
+      "name": "paint_constraint",
+      "expr_lhs": "3 * x['train'] + 2 * x['plane']",
+      "sense": "<=",
+      "expr_rhs": "90",
+      "description": "Paint usage must not exceed available paint"
+    }
+  ],
+  "graph": null
+}

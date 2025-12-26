@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_18",
+    "source": null,
+    "description": "Determine the most cost-effective way to meet nutritional requirements using four food options.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Chicken",
+        "Cheese",
+        "Rice",
+        "Beans"
+      ],
+      "description": "Different food options available for meal planning."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 16,
+        "Cheese": 10,
+        "Rice": 12,
+        "Beans": 13
+      },
+      "description": "Protein content in grams per unit of each food."
+    },
+    {
+      "name": "carbs",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 22,
+        "Cheese": 4,
+        "Rice": 21,
+        "Beans": 14
+      },
+      "description": "Carbohydrate content in grams per unit of each food."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 292,
+        "Cheese": 82,
+        "Rice": 207,
+        "Beans": 81
+      },
+      "description": "Caloric content per unit of each food."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 5,
+        "Cheese": 9,
+        "Rice": 2,
+        "Beans": 1
+      },
+      "description": "Cost per unit of each food."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each food to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of purchasing the foods."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "94",
+      "description": "Ensure at least 94 grams of protein are consumed."
+    },
+    {
+      "name": "carbs_requirement",
+      "expr_lhs": "sum(carbs[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "191",
+      "description": "Ensure at least 191 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "2271",
+      "description": "Ensure at least 2271 calories are consumed."
+    }
+  ],
+  "graph": null
+}

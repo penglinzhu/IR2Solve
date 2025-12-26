@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_89",
+    "source": null,
+    "description": "Determine the number of pills to minimize discharge while meeting medication requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PILLS",
+      "elements": [
+        "1",
+        "2"
+      ],
+      "description": "Types of pills available for the patient."
+    }
+  ],
+  "params": [
+    {
+      "name": "pain_medication",
+      "indices": [
+        "PILLS"
+      ],
+      "values": {
+        "1": 0.2,
+        "2": 0.6
+      },
+      "description": "Units of pain medication provided per pill."
+    },
+    {
+      "name": "anxiety_medication",
+      "indices": [
+        "PILLS"
+      ],
+      "values": {
+        "1": 0.3,
+        "2": 0.2
+      },
+      "description": "Units of anxiety medication provided per pill."
+    },
+    {
+      "name": "discharge",
+      "indices": [
+        "PILLS"
+      ],
+      "values": {
+        "1": 0.3,
+        "2": 0.1
+      },
+      "description": "Units of discharge caused per pill."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PILLS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of pills of each type to be given to the patient."
+    }
+  ],
+  "objective": {
+    "name": "min_total_discharge",
+    "sense": "min",
+    "expr": "sum(discharge[p] * x[p] for p in PILLS)",
+    "description": "Minimize the total discharge caused by the pills."
+  },
+  "constraints": [
+    {
+      "name": "pain_medication_limit",
+      "expr_lhs": "sum(pain_medication[p] * x[p] for p in PILLS)",
+      "sense": "<=",
+      "expr_rhs": "6",
+      "description": "Total pain medication provided must not exceed 6 units."
+    },
+    {
+      "name": "anxiety_medication_requirement",
+      "expr_lhs": "sum(anxiety_medication[p] * x[p] for p in PILLS)",
+      "sense": ">=",
+      "expr_rhs": "3",
+      "description": "Total anxiety medication provided must be at least 3 units."
+    }
+  ],
+  "graph": null
+}

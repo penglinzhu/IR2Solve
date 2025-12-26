@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_9",
+    "source": null,
+    "description": "Optimize the selection of food items to meet dietary requirements at the lowest cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Steak",
+        "Rice",
+        "Chicken",
+        "Iceberg Lettuce",
+        "Almonds"
+      ],
+      "description": "Available food items to choose from."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 20,
+        "Rice": 6,
+        "Chicken": 17,
+        "Iceberg Lettuce": 1,
+        "Almonds": 10
+      },
+      "description": "Protein content in grams per serving of each food item."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 12,
+        "Rice": 29,
+        "Chicken": 26,
+        "Iceberg Lettuce": 8,
+        "Almonds": 2
+      },
+      "description": "Carbohydrate content in grams per serving of each food item."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 167,
+        "Rice": 275,
+        "Chicken": 112,
+        "Iceberg Lettuce": 148,
+        "Almonds": 286
+      },
+      "description": "Caloric content per serving of each food item."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 7,
+        "Rice": 8,
+        "Chicken": 2,
+        "Iceberg Lettuce": 8,
+        "Almonds": 2
+      },
+      "description": "Cost per serving of each food item."
+    },
+    {
+      "name": "protein_requirement",
+      "indices": [],
+      "values": 83,
+      "description": "Minimum protein requirement in grams."
+    },
+    {
+      "name": "carbohydrate_requirement",
+      "indices": [],
+      "values": 128,
+      "description": "Minimum carbohydrate requirement in grams."
+    },
+    {
+      "name": "calorie_requirement",
+      "indices": [],
+      "values": 1686,
+      "description": "Minimum calorie requirement."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food item."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of the selected food items."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "protein_requirement",
+      "description": "Ensure the total protein meets the minimum requirement."
+    },
+    {
+      "name": "carbohydrate_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "carbohydrate_requirement",
+      "description": "Ensure the total carbohydrates meet the minimum requirement."
+    },
+    {
+      "name": "calorie_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "calorie_requirement",
+      "description": "Ensure the total calories meet the minimum requirement."
+    }
+  ],
+  "graph": null
+}

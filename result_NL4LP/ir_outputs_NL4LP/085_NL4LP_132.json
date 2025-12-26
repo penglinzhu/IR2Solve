@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_132",
+    "source": null,
+    "description": "Optimize the production of large and small pills to minimize filler usage while meeting ingredient and demand constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PILLS",
+      "elements": [
+        "large",
+        "small"
+      ],
+      "description": "Types of pills produced in the lab"
+    }
+  ],
+  "params": [
+    {
+      "name": "ingredient_requirement",
+      "indices": [
+        "PILLS"
+      ],
+      "values": {
+        "large": 3,
+        "small": 2
+      },
+      "description": "Units of medicinal ingredients required per pill type"
+    },
+    {
+      "name": "filler_requirement",
+      "indices": [
+        "PILLS"
+      ],
+      "values": {
+        "large": 2,
+        "small": 1
+      },
+      "description": "Units of filler required per pill type"
+    },
+    {
+      "name": "total_ingredients",
+      "indices": [],
+      "values": 1000,
+      "description": "Total units of medicinal ingredients available"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "PILLS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of pill to produce"
+    }
+  ],
+  "objective": {
+    "name": "min_total_filler",
+    "sense": "min",
+    "expr": "x['large'] * filler_requirement['large'] + x['small'] * filler_requirement['small']",
+    "description": "Minimize the total amount of filler material used"
+  },
+  "constraints": [
+    {
+      "name": "ingredient_constraint",
+      "expr_lhs": "x['large'] * ingredient_requirement['large'] + x['small'] * ingredient_requirement['small']",
+      "sense": "<=",
+      "expr_rhs": "total_ingredients",
+      "description": "Total medicinal ingredients used cannot exceed available supply"
+    },
+    {
+      "name": "min_large_pills",
+      "expr_lhs": "x['large']",
+      "sense": ">=",
+      "expr_rhs": "100",
+      "description": "At least 100 large pills must be produced"
+    },
+    {
+      "name": "min_small_pills_percentage",
+      "expr_lhs": "x['small']",
+      "sense": ">=",
+      "expr_rhs": "0.6 * (x['large'] + x['small'])",
+      "description": "At least 60% of the total pills must be small"
+    }
+  ],
+  "graph": null
+}

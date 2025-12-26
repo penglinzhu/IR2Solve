@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_161",
+    "source": null,
+    "description": "Determine the number of bus and car trips needed to transport 1200 chickens while minimizing total time.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "VEHICLES",
+      "elements": [
+        "bus",
+        "car"
+      ],
+      "description": "Types of vehicles available for transporting chickens."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "bus": 100,
+        "car": 40
+      },
+      "description": "Capacity of each vehicle type in terms of number of chickens."
+    },
+    {
+      "name": "time_per_trip",
+      "indices": [
+        "VEHICLES"
+      ],
+      "values": {
+        "bus": 2.0,
+        "car": 1.5
+      },
+      "description": "Time taken per trip by each vehicle type in hours."
+    },
+    {
+      "name": "total_chickens",
+      "indices": [],
+      "values": 1200,
+      "description": "Total number of chickens to be transported."
+    },
+    {
+      "name": "max_bus_trips",
+      "indices": [],
+      "values": 10,
+      "description": "Maximum number of bus trips allowed."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "VEHICLES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of trips for each vehicle type."
+    }
+  ],
+  "objective": {
+    "name": "min_total_time",
+    "sense": "min",
+    "expr": "sum(trips[v] * time_per_trip[v] for v in ['bus', 'car'])",
+    "description": "Minimize the total time needed to transport all chickens."
+  },
+  "constraints": [
+    {
+      "name": "chicken_transportation_requirement",
+      "expr_lhs": "trips['bus'] * capacity['bus'] + trips['car'] * capacity['car']",
+      "sense": ">=",
+      "expr_rhs": "total_chickens",
+      "description": "Ensure all chickens are transported."
+    },
+    {
+      "name": "max_bus_trips_constraint",
+      "expr_lhs": "trips['bus']",
+      "sense": "<=",
+      "expr_rhs": "max_bus_trips",
+      "description": "Limit the number of bus trips to the maximum allowed."
+    },
+    {
+      "name": "min_car_trip_percentage",
+      "expr_lhs": "trips['car']",
+      "sense": ">=",
+      "expr_rhs": "0.6 * (trips['bus'] + trips['car'])",
+      "description": "At least 60% of the trips must be by car."
+    }
+  ],
+  "graph": null
+}

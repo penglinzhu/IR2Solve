@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_175",
+    "source": null,
+    "description": "Optimize the number of cows and elephants used to transport bricks with constraints on their numbers and carrying capacity.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "ANIMALS",
+      "elements": [
+        "cows",
+        "elephants"
+      ],
+      "description": "Types of animals used for transporting bricks."
+    }
+  ],
+  "params": [
+    {
+      "name": "carrying_capacity",
+      "indices": [
+        "ANIMALS"
+      ],
+      "values": {
+        "cows": 20,
+        "elephants": 50
+      },
+      "description": "Carrying capacity of each type of animal in bricks."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_animals",
+      "indices": [
+        "ANIMALS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of animal used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_animals",
+    "sense": "min",
+    "expr": "num_animals['cows'] + num_animals['elephants']",
+    "description": "Minimize the total number of animals used."
+  },
+  "constraints": [
+    {
+      "name": "transport_capacity",
+      "expr_lhs": "carrying_capacity['cows'] * num_animals['cows'] + carrying_capacity['elephants'] * num_animals['elephants']",
+      "sense": ">=",
+      "expr_rhs": "1000",
+      "description": "Ensure at least 1000 bricks are transported."
+    },
+    {
+      "name": "elephant_cow_ratio_max",
+      "expr_lhs": "num_animals['elephants']",
+      "sense": "<=",
+      "expr_rhs": "num_animals['cows']",
+      "description": "The number of elephants cannot exceed the number of cows."
+    },
+    {
+      "name": "cow_elephant_ratio_max",
+      "expr_lhs": "num_animals['cows']",
+      "sense": "<=",
+      "expr_rhs": "2 * num_animals['elephants']",
+      "description": "There can be at most twice the number of cows as elephants."
+    }
+  ],
+  "graph": null
+}

@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_41",
+    "source": null,
+    "description": "Determine the optimal number of dine-in places and food-trucks to open to minimize the total number of stores while meeting sandwich production and employee constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "STORE_TYPES",
+      "elements": [
+        "dine_in",
+        "food_truck"
+      ],
+      "description": "Types of stores the company can open."
+    }
+  ],
+  "params": [
+    {
+      "name": "sandwich_capacity",
+      "indices": [
+        "STORE_TYPES"
+      ],
+      "values": {
+        "dine_in": 100,
+        "food_truck": 50
+      },
+      "description": "Number of sandwiches each type of store can make per day."
+    },
+    {
+      "name": "employee_requirement",
+      "indices": [
+        "STORE_TYPES"
+      ],
+      "values": {
+        "dine_in": 8,
+        "food_truck": 3
+      },
+      "description": "Number of employees required to operate each type of store."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_stores",
+      "indices": [
+        "STORE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of store to open."
+    }
+  ],
+  "objective": {
+    "name": "min_total_stores",
+    "sense": "min",
+    "expr": "num_stores['dine_in'] + num_stores['food_truck']",
+    "description": "Minimize the total number of stores opened."
+  },
+  "constraints": [
+    {
+      "name": "sandwich_production_requirement",
+      "expr_lhs": "100 * num_stores['dine_in'] + 50 * num_stores['food_truck']",
+      "sense": ">=",
+      "expr_rhs": "500",
+      "description": "Ensure at least 500 sandwiches are made per day."
+    },
+    {
+      "name": "employee_availability",
+      "expr_lhs": "8 * num_stores['dine_in'] + 3 * num_stores['food_truck']",
+      "sense": "<=",
+      "expr_rhs": "35",
+      "description": "Ensure the total number of employees does not exceed 35."
+    }
+  ],
+  "graph": null
+}

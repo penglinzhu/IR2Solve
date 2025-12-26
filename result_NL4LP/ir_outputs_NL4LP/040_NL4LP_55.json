@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_55",
+    "source": null,
+    "description": "Optimize the production of almond and pistachio croissants to minimize total production time given resource constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CROISSANTS",
+      "elements": [
+        "almond",
+        "pistachio"
+      ],
+      "description": "Types of croissants produced by the bakery."
+    }
+  ],
+  "params": [
+    {
+      "name": "butter_requirement",
+      "indices": [
+        "CROISSANTS"
+      ],
+      "values": {
+        "almond": 5,
+        "pistachio": 3
+      },
+      "description": "Butter required per croissant type."
+    },
+    {
+      "name": "flour_requirement",
+      "indices": [
+        "CROISSANTS"
+      ],
+      "values": {
+        "almond": 8,
+        "pistachio": 6
+      },
+      "description": "Flour required per croissant type."
+    },
+    {
+      "name": "time_per_croissant",
+      "indices": [
+        "CROISSANTS"
+      ],
+      "values": {
+        "almond": 12,
+        "pistachio": 10
+      },
+      "description": "Time required to make each type of croissant."
+    },
+    {
+      "name": "available_butter",
+      "indices": [],
+      "values": 600,
+      "description": "Total available units of butter."
+    },
+    {
+      "name": "available_flour",
+      "indices": [],
+      "values": 800,
+      "description": "Total available units of flour."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CROISSANTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of croissant to produce."
+    }
+  ],
+  "objective": {
+    "name": "min_total_production_time",
+    "sense": "min",
+    "expr": "x['almond'] * time_per_croissant['almond'] + x['pistachio'] * time_per_croissant['pistachio']",
+    "description": "Minimize the total production time for all croissants."
+  },
+  "constraints": [
+    {
+      "name": "butter_constraint",
+      "expr_lhs": "x['almond'] * butter_requirement['almond'] + x['pistachio'] * butter_requirement['pistachio']",
+      "sense": "<=",
+      "expr_rhs": "available_butter",
+      "description": "Total butter used must not exceed available butter."
+    },
+    {
+      "name": "flour_constraint",
+      "expr_lhs": "x['almond'] * flour_requirement['almond'] + x['pistachio'] * flour_requirement['pistachio']",
+      "sense": "<=",
+      "expr_rhs": "available_flour",
+      "description": "Total flour used must not exceed available flour."
+    },
+    {
+      "name": "popularity_constraint",
+      "expr_lhs": "x['almond']",
+      "sense": ">=",
+      "expr_rhs": "3 * x['pistachio']",
+      "description": "At least three times as many almond croissants should be made as pistachio croissants."
+    }
+  ],
+  "graph": null
+}

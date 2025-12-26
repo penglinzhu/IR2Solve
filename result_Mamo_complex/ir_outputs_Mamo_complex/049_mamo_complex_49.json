@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_49",
+    "source": null,
+    "description": "Determine the minimum travel cost for a salesperson to visit each of five cities exactly once and return to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "description": "Set of cities numbered from 1 to 5."
+    }
+  ],
+  "params": [
+    {
+      "name": "travel_cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "1": {
+          "2": 73,
+          "3": 39,
+          "4": 79,
+          "5": 38
+        },
+        "2": {
+          "1": 73,
+          "3": 30,
+          "4": 46,
+          "5": 29
+        },
+        "3": {
+          "1": 39,
+          "2": 30,
+          "4": 88,
+          "5": 57
+        },
+        "4": {
+          "1": 79,
+          "2": 46,
+          "3": 88,
+          "5": 59
+        },
+        "5": {
+          "1": 38,
+          "2": 29,
+          "3": 57,
+          "4": 59
+        }
+      },
+      "description": "Travel costs between each pair of cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if the route between two cities is taken."
+    }
+  ],
+  "objective": {
+    "name": "min_total_travel_cost",
+    "sense": "min",
+    "expr": "sum(travel_cost[i][j] * x[i][j] for i in CITIES for j in CITIES if i != j)",
+    "description": "Minimize the total travel cost for the salesperson's tour."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once_1",
+      "expr_lhs": "sum(x['1'][j] for j in CITIES if j != '1')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city 1 is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_2",
+      "expr_lhs": "sum(x['2'][j] for j in CITIES if j != '2')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city 2 is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_3",
+      "expr_lhs": "sum(x['3'][j] for j in CITIES if j != '3')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city 3 is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_4",
+      "expr_lhs": "sum(x['4'][j] for j in CITIES if j != '4')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city 4 is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_5",
+      "expr_lhs": "sum(x['5'][j] for j in CITIES if j != '5')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city 5 is visited exactly once."
+    },
+    {
+      "name": "leave_each_city_once_1",
+      "expr_lhs": "sum(x[i]['1'] for i in CITIES if i != '1')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves city 1."
+    },
+    {
+      "name": "leave_each_city_once_2",
+      "expr_lhs": "sum(x[i]['2'] for i in CITIES if i != '2')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves city 2."
+    },
+    {
+      "name": "leave_each_city_once_3",
+      "expr_lhs": "sum(x[i]['3'] for i in CITIES if i != '3')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves city 3."
+    },
+    {
+      "name": "leave_each_city_once_4",
+      "expr_lhs": "sum(x[i]['4'] for i in CITIES if i != '4')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves city 4."
+    },
+    {
+      "name": "leave_each_city_once_5",
+      "expr_lhs": "sum(x[i]['5'] for i in CITIES if i != '5')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves city 5."
+    }
+  ],
+  "graph": null
+}

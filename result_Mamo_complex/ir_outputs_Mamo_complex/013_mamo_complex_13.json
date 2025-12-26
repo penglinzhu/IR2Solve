@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_13",
+    "source": null,
+    "description": "Optimize the selection of food items to meet nutritional requirements at minimum cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Eggs",
+        "Grains",
+        "Berries",
+        "Nuts",
+        "Salmon",
+        "Vegetables",
+        "Rice",
+        "Meat"
+      ],
+      "description": "Available food items"
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Eggs": 4,
+        "Grains": 3,
+        "Berries": 2,
+        "Nuts": 4,
+        "Salmon": 9,
+        "Vegetables": 3,
+        "Rice": 6,
+        "Meat": 6
+      },
+      "description": "Cost of each food item"
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Eggs": 2,
+        "Grains": 7,
+        "Berries": 6,
+        "Nuts": 16,
+        "Salmon": 20,
+        "Vegetables": 6,
+        "Rice": 6,
+        "Meat": 5
+      },
+      "description": "Protein content of each food item"
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Eggs": 4,
+        "Grains": 9,
+        "Berries": 18,
+        "Nuts": 3,
+        "Salmon": 11,
+        "Vegetables": 27,
+        "Rice": 30,
+        "Meat": 1
+      },
+      "description": "Carbohydrate content of each food item"
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Eggs": 282,
+        "Grains": 104,
+        "Berries": 71,
+        "Nuts": 116,
+        "Salmon": 175,
+        "Vegetables": 132,
+        "Rice": 251,
+        "Meat": 74
+      },
+      "description": "Caloric content of each food item"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food item"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of selected food items"
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "84",
+      "description": "Ensure at least 84 grams of protein"
+    },
+    {
+      "name": "carbohydrates_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "195",
+      "description": "Ensure at least 195 grams of carbohydrates"
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "1941",
+      "description": "Ensure at least 1941 calories"
+    }
+  ],
+  "graph": null
+}

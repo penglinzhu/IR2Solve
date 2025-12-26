@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_47",
+    "source": null,
+    "description": "Determine the number of glass and plastic jars to fill to maximize the total number of bottles filled given honey volume and jar constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "JARS",
+      "elements": [
+        "glass",
+        "plastic"
+      ],
+      "description": "Types of jars available for filling."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "JARS"
+      ],
+      "values": {
+        "glass": 250,
+        "plastic": 300
+      },
+      "description": "Capacity of each type of jar in ml."
+    },
+    {
+      "name": "total_honey",
+      "indices": [],
+      "values": 20000,
+      "description": "Total amount of honey available in ml."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_jars",
+      "indices": [
+        "JARS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of jars to fill for each type."
+    }
+  ],
+  "objective": {
+    "name": "max_total_jars",
+    "sense": "max",
+    "expr": "num_jars['glass'] + num_jars['plastic']",
+    "description": "Maximize the total number of jars filled."
+  },
+  "constraints": [
+    {
+      "name": "honey_capacity_constraint",
+      "expr_lhs": "250 * num_jars['glass'] + 300 * num_jars['plastic']",
+      "sense": "<=",
+      "expr_rhs": "20000",
+      "description": "Total honey used must not exceed available honey."
+    },
+    {
+      "name": "plastic_to_glass_ratio",
+      "expr_lhs": "num_jars['plastic']",
+      "sense": ">=",
+      "expr_rhs": "2 * num_jars['glass']",
+      "description": "At least twice as many plastic jars as glass jars must be filled."
+    },
+    {
+      "name": "minimum_glass_jars",
+      "expr_lhs": "num_jars['glass']",
+      "sense": ">=",
+      "expr_rhs": "20",
+      "description": "At least 20 glass jars must be filled."
+    }
+  ],
+  "graph": null
+}

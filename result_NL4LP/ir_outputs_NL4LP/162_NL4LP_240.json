@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_240",
+    "source": null,
+    "description": "Optimize the number of trips for transporting candles using freight and air.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MODES",
+      "elements": [
+        "freight",
+        "air"
+      ],
+      "description": "Transportation modes available for moving candles."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "MODES"
+      ],
+      "values": {
+        "freight": 5,
+        "air": 3
+      },
+      "description": "Capacity in tons per trip for each transportation mode."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "MODES"
+      ],
+      "values": {
+        "freight": 300,
+        "air": 550
+      },
+      "description": "Cost per trip for each transportation mode."
+    }
+  ],
+  "vars": [
+    {
+      "name": "trips",
+      "indices": [
+        "MODES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of trips scheduled for each transportation mode."
+    }
+  ],
+  "objective": {
+    "name": "min_total_trips",
+    "sense": "min",
+    "expr": "trips['freight'] + trips['air']",
+    "description": "Minimize the total number of trips."
+  },
+  "constraints": [
+    {
+      "name": "total_tons_requirement",
+      "expr_lhs": "capacity['freight'] * trips['freight'] + capacity['air'] * trips['air']",
+      "sense": ">=",
+      "expr_rhs": "200",
+      "description": "Ensure at least 200 tons of candles are transported."
+    },
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "cost['freight'] * trips['freight'] + cost['air'] * trips['air']",
+      "sense": "<=",
+      "expr_rhs": "20000",
+      "description": "Ensure the total cost does not exceed the budget of $20000."
+    },
+    {
+      "name": "air_transport_requirement",
+      "expr_lhs": "capacity['air'] * trips['air']",
+      "sense": ">=",
+      "expr_rhs": "0.3 * 200",
+      "description": "At least 30% of the total tons must be transported by air."
+    },
+    {
+      "name": "minimum_freight_trips",
+      "expr_lhs": "trips['freight']",
+      "sense": ">=",
+      "expr_rhs": "5",
+      "description": "At least 5 trips must be made using freight."
+    }
+  ],
+  "graph": null
+}

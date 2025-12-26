@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_30",
+    "source": null,
+    "description": "Optimize the weekly production of hardwood and vinyl planks to maximize profit while meeting demand and production constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "hardwood",
+        "vinyl"
+      ],
+      "description": "Types of flooring products."
+    }
+  ],
+  "params": [
+    {
+      "name": "demand",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "hardwood": 20000,
+        "vinyl": 10000
+      },
+      "description": "Minimum demand for each product in square feet."
+    },
+    {
+      "name": "capacity",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "hardwood": 50000,
+        "vinyl": 30000
+      },
+      "description": "Maximum production capacity for each product in square feet."
+    },
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "hardwood": 2.5,
+        "vinyl": 3.0
+      },
+      "description": "Profit per square foot for each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "production",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Production quantity for each product in square feet."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "production['hardwood'] * profit['hardwood'] + production['vinyl'] * profit['vinyl']",
+    "description": "Maximize total profit from the production of hardwood and vinyl planks."
+  },
+  "constraints": [
+    {
+      "name": "demand_hardwood",
+      "expr_lhs": "production['hardwood']",
+      "sense": ">=",
+      "expr_rhs": "demand['hardwood']",
+      "description": "Meet the minimum demand for hardwood."
+    },
+    {
+      "name": "demand_vinyl",
+      "expr_lhs": "production['vinyl']",
+      "sense": ">=",
+      "expr_rhs": "demand['vinyl']",
+      "description": "Meet the minimum demand for vinyl."
+    },
+    {
+      "name": "total_shipping",
+      "expr_lhs": "production['hardwood'] + production['vinyl']",
+      "sense": ">=",
+      "expr_rhs": "60000",
+      "description": "Meet the total shipping requirement."
+    },
+    {
+      "name": "capacity_hardwood",
+      "expr_lhs": "production['hardwood']",
+      "sense": "<=",
+      "expr_rhs": "capacity['hardwood']",
+      "description": "Do not exceed the production capacity for hardwood."
+    },
+    {
+      "name": "capacity_vinyl",
+      "expr_lhs": "production['vinyl']",
+      "sense": "<=",
+      "expr_rhs": "capacity['vinyl']",
+      "description": "Do not exceed the production capacity for vinyl."
+    }
+  ],
+  "graph": null
+}

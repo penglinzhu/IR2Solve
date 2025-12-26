@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_6",
+    "source": null,
+    "description": "Maximize profit from producing chairs and dressers given resource constraints.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "chair",
+        "dresser"
+      ],
+      "description": "Types of products produced by Elm Furniture"
+    }
+  ],
+  "params": [
+    {
+      "name": "profit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "chair": 43,
+        "dresser": 52
+      },
+      "description": "Profit per unit of each product"
+    },
+    {
+      "name": "stain_requirement",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "chair": 1.4,
+        "dresser": 1.1
+      },
+      "description": "Gallons of stain required per unit of each product"
+    },
+    {
+      "name": "wood_requirement",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "chair": 2,
+        "dresser": 3
+      },
+      "description": "Lengths of oak wood required per unit of each product"
+    },
+    {
+      "name": "stain_available",
+      "indices": [],
+      "values": 17,
+      "description": "Total gallons of stain available per week"
+    },
+    {
+      "name": "wood_available",
+      "indices": [],
+      "values": 11,
+      "description": "Total lengths of oak wood available per week"
+    }
+  ],
+  "vars": [
+    {
+      "name": "production",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units produced for each product"
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "sum(profit[p] * production[p] for p in PRODUCTS)",
+    "description": "Maximize total profit from producing chairs and dressers"
+  },
+  "constraints": [
+    {
+      "name": "stain_constraint",
+      "expr_lhs": "1.4 * production['chair'] + 1.1 * production['dresser']",
+      "sense": "<=",
+      "expr_rhs": "17",
+      "description": "Total stain used cannot exceed available stain"
+    },
+    {
+      "name": "wood_constraint",
+      "expr_lhs": "2 * production['chair'] + 3 * production['dresser']",
+      "sense": "<=",
+      "expr_rhs": "11",
+      "description": "Total wood used cannot exceed available wood"
+    }
+  ],
+  "graph": null
+}

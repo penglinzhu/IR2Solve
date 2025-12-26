@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "problem_id": "NL4LP_221",
+    "source": null,
+    "description": "Determine the optimal number of circular and rectangular tables to maximize the number of catered guests at a science fair.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "TABLE_TYPES",
+      "elements": [
+        "circular",
+        "rectangular"
+      ],
+      "description": "Types of tables available for the science fair."
+    }
+  ],
+  "params": [
+    {
+      "name": "poster_boards",
+      "indices": [
+        "TABLE_TYPES"
+      ],
+      "values": {
+        "circular": 4,
+        "rectangular": 4
+      },
+      "description": "Number of poster boards that can fit around each type of table."
+    },
+    {
+      "name": "participants",
+      "indices": [
+        "TABLE_TYPES"
+      ],
+      "values": {
+        "circular": 5,
+        "rectangular": 4
+      },
+      "description": "Number of participants that can fit around each type of table."
+    },
+    {
+      "name": "guests",
+      "indices": [
+        "TABLE_TYPES"
+      ],
+      "values": {
+        "circular": 8,
+        "rectangular": 12
+      },
+      "description": "Number of guests catered by each type of table."
+    },
+    {
+      "name": "space",
+      "indices": [
+        "TABLE_TYPES"
+      ],
+      "values": {
+        "circular": 15,
+        "rectangular": 20
+      },
+      "description": "Space taken by each type of table."
+    }
+  ],
+  "vars": [
+    {
+      "name": "num_tables",
+      "indices": [
+        "TABLE_TYPES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of each type of table to set up."
+    }
+  ],
+  "objective": {
+    "name": "max_catered_guests",
+    "sense": "max",
+    "expr": "num_tables['circular'] * guests['circular'] + num_tables['rectangular'] * guests['rectangular']",
+    "description": "Maximize the number of guests catered by the tables."
+  },
+  "constraints": [
+    {
+      "name": "participant_requirement",
+      "expr_lhs": "num_tables['circular'] * participants['circular'] + num_tables['rectangular'] * participants['rectangular']",
+      "sense": ">=",
+      "expr_rhs": "500",
+      "description": "Ensure at least 500 participants can fit around the tables."
+    },
+    {
+      "name": "poster_board_requirement",
+      "expr_lhs": "num_tables['circular'] * poster_boards['circular'] + num_tables['rectangular'] * poster_boards['rectangular']",
+      "sense": ">=",
+      "expr_rhs": "300",
+      "description": "Ensure at least 300 poster boards can fit around the tables."
+    },
+    {
+      "name": "space_limit",
+      "expr_lhs": "num_tables['circular'] * space['circular'] + num_tables['rectangular'] * space['rectangular']",
+      "sense": "<=",
+      "expr_rhs": "1900",
+      "description": "Ensure the total space used by the tables does not exceed 1900 units."
+    }
+  ],
+  "graph": null
+}
