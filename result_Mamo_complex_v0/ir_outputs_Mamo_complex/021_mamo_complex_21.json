@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_21",
+    "source": null,
+    "description": "Determine the least expensive way to meet nutritional needs using six food items.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Chicken",
+        "Rice",
+        "Eggs",
+        "Broccoli",
+        "Lentils",
+        "Apples"
+      ],
+      "description": "Different food items available for the meal plan."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 18,
+        "Rice": 14,
+        "Eggs": 18,
+        "Broccoli": 7,
+        "Lentils": 15,
+        "Apples": 8
+      },
+      "description": "Protein content per unit of each food item."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 5,
+        "Rice": 13,
+        "Eggs": 4,
+        "Broccoli": 15,
+        "Lentils": 17,
+        "Apples": 13
+      },
+      "description": "Carbohydrate content per unit of each food item."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 202,
+        "Rice": 234,
+        "Eggs": 220,
+        "Broccoli": 247,
+        "Lentils": 88,
+        "Apples": 77
+      },
+      "description": "Calorie content per unit of each food item."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 1,
+        "Rice": 7,
+        "Eggs": 4,
+        "Broccoli": 3,
+        "Lentils": 1,
+        "Apples": 2
+      },
+      "description": "Cost per unit of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each food item to include in the meal plan."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of the meal plan."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "70",
+      "description": "Ensure at least 70 grams of protein are included in the meal plan."
+    },
+    {
+      "name": "carbohydrate_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "187",
+      "description": "Ensure at least 187 grams of carbohydrates are included in the meal plan."
+    },
+    {
+      "name": "calorie_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "2181",
+      "description": "Ensure at least 2181 calories are included in the meal plan."
+    }
+  ],
+  "graph": null
+}

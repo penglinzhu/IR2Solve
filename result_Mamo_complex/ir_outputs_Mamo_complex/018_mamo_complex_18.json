@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_18",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Determine the most cost-effective way to meet nutritional requirements using four food options.",
     "sense": "min",
     "version": 1
@@ -30,7 +30,7 @@
         "Rice": 12,
         "Beans": 13
       },
-      "description": "Protein content in grams per unit of each food."
+      "description": "Protein content in grams for each food option."
     },
     {
       "name": "carbs",
@@ -43,7 +43,7 @@
         "Rice": 21,
         "Beans": 14
       },
-      "description": "Carbohydrate content in grams per unit of each food."
+      "description": "Carbohydrates content in grams for each food option."
     },
     {
       "name": "calories",
@@ -56,7 +56,7 @@
         "Rice": 207,
         "Beans": 81
       },
-      "description": "Caloric content per unit of each food."
+      "description": "Calories provided by each food option."
     },
     {
       "name": "cost",
@@ -69,7 +69,7 @@
         "Rice": 2,
         "Beans": 1
       },
-      "description": "Cost per unit of each food."
+      "description": "Cost in dollars for each food option."
     }
   ],
   "vars": [
@@ -81,14 +81,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units of each food to purchase."
+      "description": "Number of servings of each food option to include in the meal plan."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of purchasing the foods."
+    "description": "Minimize the total cost of the food servings to meet nutritional requirements."
   },
   "constraints": [
     {

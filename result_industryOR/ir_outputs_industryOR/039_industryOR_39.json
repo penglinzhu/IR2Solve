@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "industryOR_39",
-    "source": null,
+    "source": "IndustryOR",
     "description": "Determine the minimum number of drivers and crew members required for a bus route over different shifts.",
     "sense": "min",
     "version": 1
@@ -17,7 +17,7 @@
         "5",
         "6"
       ],
-      "description": "Shifts during which drivers and crew members are required."
+      "description": "Different time periods for bus route shifts."
     }
   ],
   "params": [
@@ -52,48 +52,48 @@
   "objective": {
     "name": "min_total_staff",
     "sense": "min",
-    "expr": "x['1'] + x['2'] + x['3'] + x['4'] + x['5'] + x['6']",
+    "expr": "sum(x[s] for s in ['1', '2', '3', '4', '5', '6'])",
     "description": "Minimize the total number of drivers and crew members assigned."
   },
   "constraints": [
     {
       "name": "shift_1_requirement",
-      "expr_lhs": "x['1']",
+      "expr_lhs": "x['1'] + x['6']",
       "sense": ">=",
       "expr_rhs": "required['1']",
       "description": "Ensure enough staff for shift 1."
     },
     {
       "name": "shift_2_requirement",
-      "expr_lhs": "x['2']",
+      "expr_lhs": "x['1'] + x['2']",
       "sense": ">=",
       "expr_rhs": "required['2']",
       "description": "Ensure enough staff for shift 2."
     },
     {
       "name": "shift_3_requirement",
-      "expr_lhs": "x['3']",
+      "expr_lhs": "x['2'] + x['3']",
       "sense": ">=",
       "expr_rhs": "required['3']",
       "description": "Ensure enough staff for shift 3."
     },
     {
       "name": "shift_4_requirement",
-      "expr_lhs": "x['4']",
+      "expr_lhs": "x['3'] + x['4']",
       "sense": ">=",
       "expr_rhs": "required['4']",
       "description": "Ensure enough staff for shift 4."
     },
     {
       "name": "shift_5_requirement",
-      "expr_lhs": "x['5']",
+      "expr_lhs": "x['4'] + x['5']",
       "sense": ">=",
       "expr_rhs": "required['5']",
       "description": "Ensure enough staff for shift 5."
     },
     {
       "name": "shift_6_requirement",
-      "expr_lhs": "x['6']",
+      "expr_lhs": "x['5'] + x['6']",
       "sense": ">=",
       "expr_rhs": "required['6']",
       "description": "Ensure enough staff for shift 6."

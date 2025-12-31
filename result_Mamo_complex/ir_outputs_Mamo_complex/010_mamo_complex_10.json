@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_10",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize meal planning to meet nutritional needs at minimum cost.",
     "sense": "min",
     "version": 1
@@ -32,7 +32,7 @@
         "Beans": 10,
         "Cheese": 4
       },
-      "description": "Protein content per serving of each food."
+      "description": "Protein content per food option in grams."
     },
     {
       "name": "carbohydrates",
@@ -46,7 +46,7 @@
         "Beans": 27,
         "Cheese": 18
       },
-      "description": "Carbohydrate content per serving of each food."
+      "description": "Carbohydrate content per food option in grams."
     },
     {
       "name": "calories",
@@ -60,7 +60,7 @@
         "Beans": 259,
         "Cheese": 199
       },
-      "description": "Calorie content per serving of each food."
+      "description": "Calorie content per food option."
     },
     {
       "name": "cost",
@@ -74,7 +74,7 @@
         "Beans": 9,
         "Cheese": 7
       },
-      "description": "Cost per serving of each food."
+      "description": "Cost per food option in dollars."
     }
   ],
   "vars": [
@@ -86,7 +86,7 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food."
+      "description": "Number of servings of each food option."
     }
   ],
   "objective": {
@@ -104,14 +104,14 @@
       "description": "Ensure at least 60 grams of protein."
     },
     {
-      "name": "carbohydrate_requirement",
+      "name": "carbohydrates_requirement",
       "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "146",
       "description": "Ensure at least 146 grams of carbohydrates."
     },
     {
-      "name": "calorie_requirement",
+      "name": "calories_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "1727",

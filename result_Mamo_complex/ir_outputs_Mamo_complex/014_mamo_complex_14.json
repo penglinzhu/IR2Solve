@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_14",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the daily meal plan for a professional athlete to minimize cost while meeting nutritional requirements.",
     "sense": "min",
     "version": 1
@@ -106,21 +106,21 @@
       "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "60",
-      "description": "Ensure at least 60 grams of protein are consumed."
+      "description": "Ensure at least 60 grams of protein are included in the meal plan."
     },
     {
       "name": "carbohydrate_requirement",
       "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "122",
-      "description": "Ensure at least 122 grams of carbohydrates are consumed."
+      "description": "Ensure at least 122 grams of carbohydrates are included in the meal plan."
     },
     {
       "name": "calorie_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "2028",
-      "description": "Ensure at least 2028 calories are consumed."
+      "description": "Ensure at least 2028 calories are included in the meal plan."
     }
   ],
   "graph": null

@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "problem_id": "tour_guide_bus_tour",
+    "source": null,
+    "description": "Minimize the total travel cost for a bus tour visiting each city exactly once and returning to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "description": "The cities to be visited in the tour."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "E": {
+          "F": 37,
+          "G": 72,
+          "H": 66,
+          "I": 33
+        },
+        "F": {
+          "E": 37,
+          "G": 26,
+          "H": 56,
+          "I": 100
+        },
+        "G": {
+          "E": 72,
+          "F": 26,
+          "H": 49,
+          "I": 32
+        },
+        "H": {
+          "E": 66,
+          "F": 56,
+          "G": 49,
+          "I": 13
+        },
+        "I": {
+          "E": 33,
+          "F": 100,
+          "G": 32,
+          "H": 13
+        }
+      },
+      "description": "Travel costs between cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if the tour goes from city i to city j."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[i][j] * x[i][j] for i in CITIES for j in CITIES)",
+    "description": "Minimize the total travel cost of the tour."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once",
+      "expr_lhs": "sum(x[i][j] for j in CITIES)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Each city must be departed from exactly once.",
+      "indices": [
+        "CITIES"
+      ]
+    },
+    {
+      "name": "arrive_at_each_city_once",
+      "expr_lhs": "sum(x[j][i] for j in CITIES)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Each city must be arrived at exactly once.",
+      "indices": [
+        "CITIES"
+      ]
+    }
+  ],
+  "graph": null
+}

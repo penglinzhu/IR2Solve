@@ -1,0 +1,306 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_41",
+    "source": null,
+    "description": "Determine the minimum travel cost for a salesperson to visit each of five cities exactly once and return to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "description": "Set of cities the salesperson needs to visit."
+    }
+  ],
+  "params": [
+    {
+      "name": "travel_cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "1": {
+          "2": 28,
+          "3": 89,
+          "4": 59,
+          "5": 41
+        },
+        "2": {
+          "1": 28,
+          "3": 85,
+          "4": 12,
+          "5": 68
+        },
+        "3": {
+          "1": 89,
+          "2": 85,
+          "4": 22,
+          "5": 70
+        },
+        "4": {
+          "1": 59,
+          "2": 12,
+          "3": 22,
+          "5": 48
+        },
+        "5": {
+          "1": 41,
+          "2": 68,
+          "3": 70,
+          "4": 48
+        }
+      },
+      "description": "Cost of travel between each pair of cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if the salesperson travels from city i to city j."
+    },
+    {
+      "name": "u",
+      "indices": [
+        "CITIES"
+      ],
+      "vartype": "integer",
+      "lb": 1.0,
+      "ub": 5.0,
+      "description": "Helper variable for subtour elimination, representing the order of visiting cities."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(travel_cost[i][j] * x[i][j] for i in CITIES for j in CITIES if i != j)",
+    "description": "Minimize the total travel cost for the salesperson's tour."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once_1",
+      "expr_lhs": "sum(x['1'][j] for j in CITIES if j != '1')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city 1 exactly once."
+    },
+    {
+      "name": "visit_each_city_once_2",
+      "expr_lhs": "sum(x['2'][j] for j in CITIES if j != '2')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city 2 exactly once."
+    },
+    {
+      "name": "visit_each_city_once_3",
+      "expr_lhs": "sum(x['3'][j] for j in CITIES if j != '3')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city 3 exactly once."
+    },
+    {
+      "name": "visit_each_city_once_4",
+      "expr_lhs": "sum(x['4'][j] for j in CITIES if j != '4')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city 4 exactly once."
+    },
+    {
+      "name": "visit_each_city_once_5",
+      "expr_lhs": "sum(x['5'][j] for j in CITIES if j != '5')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city 5 exactly once."
+    },
+    {
+      "name": "enter_each_city_once_1",
+      "expr_lhs": "sum(x[i]['1'] for i in CITIES if i != '1')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city 1 exactly once."
+    },
+    {
+      "name": "enter_each_city_once_2",
+      "expr_lhs": "sum(x[i]['2'] for i in CITIES if i != '2')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city 2 exactly once."
+    },
+    {
+      "name": "enter_each_city_once_3",
+      "expr_lhs": "sum(x[i]['3'] for i in CITIES if i != '3')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city 3 exactly once."
+    },
+    {
+      "name": "enter_each_city_once_4",
+      "expr_lhs": "sum(x[i]['4'] for i in CITIES if i != '4')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city 4 exactly once."
+    },
+    {
+      "name": "enter_each_city_once_5",
+      "expr_lhs": "sum(x[i]['5'] for i in CITIES if i != '5')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city 5 exactly once."
+    },
+    {
+      "name": "subtour_elimination_1_2",
+      "expr_lhs": "u['1'] - u['2'] + 5 * x['1']['2']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 1 and city 2."
+    },
+    {
+      "name": "subtour_elimination_1_3",
+      "expr_lhs": "u['1'] - u['3'] + 5 * x['1']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 1 and city 3."
+    },
+    {
+      "name": "subtour_elimination_1_4",
+      "expr_lhs": "u['1'] - u['4'] + 5 * x['1']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 1 and city 4."
+    },
+    {
+      "name": "subtour_elimination_1_5",
+      "expr_lhs": "u['1'] - u['5'] + 5 * x['1']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 1 and city 5."
+    },
+    {
+      "name": "subtour_elimination_2_1",
+      "expr_lhs": "u['2'] - u['1'] + 5 * x['2']['1']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 2 and city 1."
+    },
+    {
+      "name": "subtour_elimination_2_3",
+      "expr_lhs": "u['2'] - u['3'] + 5 * x['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 2 and city 3."
+    },
+    {
+      "name": "subtour_elimination_2_4",
+      "expr_lhs": "u['2'] - u['4'] + 5 * x['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 2 and city 4."
+    },
+    {
+      "name": "subtour_elimination_2_5",
+      "expr_lhs": "u['2'] - u['5'] + 5 * x['2']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 2 and city 5."
+    },
+    {
+      "name": "subtour_elimination_3_1",
+      "expr_lhs": "u['3'] - u['1'] + 5 * x['3']['1']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 3 and city 1."
+    },
+    {
+      "name": "subtour_elimination_3_2",
+      "expr_lhs": "u['3'] - u['2'] + 5 * x['3']['2']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 3 and city 2."
+    },
+    {
+      "name": "subtour_elimination_3_4",
+      "expr_lhs": "u['3'] - u['4'] + 5 * x['3']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 3 and city 4."
+    },
+    {
+      "name": "subtour_elimination_3_5",
+      "expr_lhs": "u['3'] - u['5'] + 5 * x['3']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 3 and city 5."
+    },
+    {
+      "name": "subtour_elimination_4_1",
+      "expr_lhs": "u['4'] - u['1'] + 5 * x['4']['1']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 4 and city 1."
+    },
+    {
+      "name": "subtour_elimination_4_2",
+      "expr_lhs": "u['4'] - u['2'] + 5 * x['4']['2']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 4 and city 2."
+    },
+    {
+      "name": "subtour_elimination_4_3",
+      "expr_lhs": "u['4'] - u['3'] + 5 * x['4']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 4 and city 3."
+    },
+    {
+      "name": "subtour_elimination_4_5",
+      "expr_lhs": "u['4'] - u['5'] + 5 * x['4']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 4 and city 5."
+    },
+    {
+      "name": "subtour_elimination_5_1",
+      "expr_lhs": "u['5'] - u['1'] + 5 * x['5']['1']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 5 and city 1."
+    },
+    {
+      "name": "subtour_elimination_5_2",
+      "expr_lhs": "u['5'] - u['2'] + 5 * x['5']['2']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 5 and city 2."
+    },
+    {
+      "name": "subtour_elimination_5_3",
+      "expr_lhs": "u['5'] - u['3'] + 5 * x['5']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 5 and city 3."
+    },
+    {
+      "name": "subtour_elimination_5_4",
+      "expr_lhs": "u['5'] - u['4'] + 5 * x['5']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint between city 5 and city 4."
+    }
+  ],
+  "graph": null
+}

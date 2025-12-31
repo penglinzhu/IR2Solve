@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "problem_id": "wool_company_nutrition",
+    "source": null,
+    "description": "Determine the minimum cost of feeding sheep with grains to meet nutrient requirements.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "GRAINS",
+      "elements": [
+        "1",
+        "2",
+        "3"
+      ],
+      "description": "Different types of grains available for feeding."
+    },
+    {
+      "name": "NUTRIENTS",
+      "elements": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "Nutrients required by the sheep."
+    }
+  ],
+  "params": [
+    {
+      "name": "nutrient_content",
+      "indices": [
+        "GRAINS",
+        "NUTRIENTS"
+      ],
+      "values": {
+        "1": {
+          "A": 20,
+          "B": 10,
+          "C": 50,
+          "D": 6
+        },
+        "2": {
+          "A": 30,
+          "B": 10,
+          "C": 30,
+          "D": 2.5
+        },
+        "3": {
+          "A": 70,
+          "B": 0,
+          "C": 0,
+          "D": 10
+        }
+      },
+      "description": "Nutrient content per pound of each grain."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "GRAINS"
+      ],
+      "values": {
+        "1": 41,
+        "2": 36,
+        "3": 96
+      },
+      "description": "Cost in cents per pound of each grain."
+    },
+    {
+      "name": "min_requirement",
+      "indices": [
+        "NUTRIENTS"
+      ],
+      "values": {
+        "A": 110,
+        "B": 18,
+        "C": 90,
+        "D": 14
+      },
+      "description": "Minimum daily requirement of each nutrient."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "GRAINS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of each grain to feed the sheep in pounds."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[g] * x[g] for g in GRAINS)",
+    "description": "Minimize the total cost of feeding the sheep."
+  },
+  "constraints": [
+    {
+      "name": "nutrient_A_requirement",
+      "expr_lhs": "sum(nutrient_content[g]['A'] * x[g] for g in GRAINS)",
+      "sense": ">=",
+      "expr_rhs": "min_requirement['A']",
+      "description": "Ensure minimum requirement of nutrient A is met."
+    },
+    {
+      "name": "nutrient_B_requirement",
+      "expr_lhs": "sum(nutrient_content[g]['B'] * x[g] for g in GRAINS)",
+      "sense": ">=",
+      "expr_rhs": "min_requirement['B']",
+      "description": "Ensure minimum requirement of nutrient B is met."
+    },
+    {
+      "name": "nutrient_C_requirement",
+      "expr_lhs": "sum(nutrient_content[g]['C'] * x[g] for g in GRAINS)",
+      "sense": ">=",
+      "expr_rhs": "min_requirement['C']",
+      "description": "Ensure minimum requirement of nutrient C is met."
+    },
+    {
+      "name": "nutrient_D_requirement",
+      "expr_lhs": "sum(nutrient_content[g]['D'] * x[g] for g in GRAINS)",
+      "sense": ">=",
+      "expr_rhs": "min_requirement['D']",
+      "description": "Ensure minimum requirement of nutrient D is met."
+    }
+  ],
+  "graph": null
+}

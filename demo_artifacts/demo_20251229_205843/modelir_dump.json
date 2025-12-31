@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "problem_id": "zhang_family_trip",
+    "source": null,
+    "description": "Determine which children the Zhang family should take on their trip to minimize the total cost while satisfying various constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CHILDREN",
+      "elements": [
+        "Harry",
+        "Hermione",
+        "Ron",
+        "Fred",
+        "George",
+        "Ginny"
+      ],
+      "description": "The children in the Zhang family."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "CHILDREN"
+      ],
+      "values": {
+        "Harry": 1200,
+        "Hermione": 1650,
+        "Ron": 750,
+        "Fred": 800,
+        "George": 800,
+        "Ginny": 1500
+      },
+      "description": "The cost of taking each child."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CHILDREN"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating whether each child is taken (1) or not (0)."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[c] * x[c] for c in ['Harry', 'Hermione', 'Ron', 'Fred', 'George', 'Ginny'])",
+    "description": "Minimize the total cost of taking the children."
+  },
+  "constraints": [
+    {
+      "name": "max_4_children",
+      "expr_lhs": "sum(x[c] for c in ['Harry', 'Hermione', 'Ron', 'Fred', 'George', 'Ginny'])",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "The couple can take a maximum of 4 children."
+    },
+    {
+      "name": "take_ginny",
+      "expr_lhs": "x['Ginny']",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ginny is the youngest, so the Zhang family will definitely take her."
+    },
+    {
+      "name": "no_harry_fred",
+      "expr_lhs": "x['Harry'] + x['Fred']",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "If the couple takes Harry, they will not take Fred."
+    },
+    {
+      "name": "no_harry_george",
+      "expr_lhs": "x['Harry'] + x['George']",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "If the couple takes Harry, they will not take George."
+    },
+    {
+      "name": "george_fred",
+      "expr_lhs": "x['George'] - x['Fred']",
+      "sense": "<=",
+      "expr_rhs": "0",
+      "description": "If they take George, they must also take Fred."
+    },
+    {
+      "name": "george_hermione",
+      "expr_lhs": "x['George'] - x['Hermione']",
+      "sense": "<=",
+      "expr_rhs": "0",
+      "description": "If they take George, they must also take Hermione."
+    },
+    {
+      "name": "at_least_3_children",
+      "expr_lhs": "sum(x[c] for c in ['Harry', 'Hermione', 'Ron', 'Fred', 'George', 'Ginny'])",
+      "sense": ">=",
+      "expr_rhs": "3",
+      "description": "The Zhang family has decided to take at least three children."
+    }
+  ]
+}

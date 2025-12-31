@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "industryOR_33",
-    "source": null,
+    "source": "IndustryOR",
     "description": "Optimize the allocation of land for growing different fruits to maximize profit.",
     "sense": "max",
     "version": 1
@@ -45,7 +45,7 @@
       "indices": [
         "FRUITS"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
       "description": "Acres of land allocated to each type of fruit."
@@ -62,18 +62,18 @@
     }
   ],
   "objective": {
-    "name": "max_profit",
+    "name": "max_total_profit",
     "sense": "max",
-    "expr": "sum(profit[f] * land[f] for f in FRUITS)",
+    "expr": "sum(profit[f] * land[f] for f in ['apples', 'pears', 'oranges', 'lemons'])",
     "description": "Maximize the total profit from growing fruits."
   },
   "constraints": [
     {
       "name": "total_land_constraint",
-      "expr_lhs": "sum(land[f] for f in FRUITS)",
+      "expr_lhs": "sum(land[f] for f in ['apples', 'pears', 'oranges', 'lemons'])",
       "sense": "<=",
       "expr_rhs": "total_land",
-      "description": "Total land used cannot exceed available land."
+      "description": "Total land used must not exceed available land."
     },
     {
       "name": "apples_pears_constraint",
@@ -98,10 +98,10 @@
     },
     {
       "name": "max_two_fruits_constraint",
-      "expr_lhs": "sum(grow[f] for f in FRUITS)",
+      "expr_lhs": "sum(grow[f] for f in ['apples', 'pears', 'oranges', 'lemons'])",
       "sense": "<=",
       "expr_rhs": "2",
-      "description": "No more than two types of fruits can be grown."
+      "description": "No more than two types of fruit can be grown."
     },
     {
       "name": "apples_grow_constraint",

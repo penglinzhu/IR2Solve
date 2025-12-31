@@ -1,0 +1,14 @@
+Imagine we're managing a telecommunications network that spans 6 key points, from a primary data center (Point 0) to a major user hub (Point 5). These points are interconnected by data lines, each with a specific capacity for data transfer.
+
+Here are the capacities of each data line, indicating the maximum amount of data (in Gigabytes per second) that can flow from one point to another:
+
+- From Point 0 (Data Center): Can send data to Point 1 (14 GB/s), Point 2 (9 GB/s), Point 3 (8 GB/s), Point 4 (7 GB/s), and Point 5 (8 GB/s).
+- From Point 1: Can send data to Point 0 (4 GB/s), Point 2 (9 GB/s), Point 3 (10 GB/s), and Point 5 (12 GB/s).
+- From Point 2: Can send data to Point 0 (4 GB/s), Point 1 (12 GB/s), Point 3 (13 GB/s), Point 4 (20 GB/s), and Point 5 (16 GB/s).
+- From Point 3: Can send data to Point 0 (10 GB/s), Point 1 (8 GB/s), Point 2 (12 GB/s), and Point 5 (18 GB/s).
+- From Point 4: Can send data to Point 0 (3 GB/s), Point 1 (13 GB/s), Point 2 (11 GB/s), Point 3 (20 GB/s), and Point 5 (2 GB/s).
+- From Point 5 (User Hub): Can send data back to Point 0 (17 GB/s), Point 1 (4 GB/s), Point 2 (8 GB/s), Point 3 (2 GB/s), and Point 4 (12 GB/s).
+
+In this network, a capacity of "0" means there is no direct data line between those two points.
+
+The objective is to find out the maximum amount of data that can be transferred from Point 0 (Data Center) to Point 5 (User Hub) per second, while making sure that the data transfer through each line does not exceed its capacity. What is the maximum amount of data that can be sent from the data center to the user hub per second in Gigabytes?

@@ -1,0 +1,587 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_57",
+    "source": null,
+    "description": "Calculate the maximum amount of electricity that can be transmitted from Station 0 (source) to Station 7 (destination) in a network of 8 stations with given transmission line capacities.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "STATIONS",
+      "elements": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "description": "Set of power stations in the network."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "STATIONS",
+        "STATIONS"
+      ],
+      "values": {
+        "0": {
+          "1": 9,
+          "2": 6,
+          "3": 1,
+          "4": 8,
+          "5": 14,
+          "6": 1,
+          "7": 17
+        },
+        "1": {
+          "0": 1,
+          "2": 6,
+          "3": 14,
+          "4": 16,
+          "5": 8,
+          "6": 19,
+          "7": 15
+        },
+        "2": {
+          "0": 4,
+          "1": 7,
+          "3": 9,
+          "4": 1,
+          "5": 2,
+          "6": 9,
+          "7": 4
+        },
+        "3": {
+          "0": 11,
+          "1": 5,
+          "2": 14,
+          "4": 17,
+          "5": 6,
+          "6": 20,
+          "7": 13
+        },
+        "4": {
+          "0": 8,
+          "1": 5,
+          "2": 20,
+          "3": 0,
+          "5": 16,
+          "6": 5,
+          "7": 5
+        },
+        "5": {
+          "0": 15,
+          "1": 18,
+          "2": 9,
+          "3": 1,
+          "4": 19,
+          "6": 16,
+          "7": 0
+        },
+        "6": {
+          "0": 20,
+          "1": 15,
+          "2": 1,
+          "3": 0,
+          "4": 11,
+          "5": 6,
+          "7": 19
+        },
+        "7": {
+          "0": 4,
+          "1": 18,
+          "2": 10,
+          "3": 2,
+          "4": 1,
+          "5": 20,
+          "6": 14
+        }
+      },
+      "description": "Capacity of transmission lines between stations in megawatts."
+    }
+  ],
+  "vars": [
+    {
+      "name": "flow",
+      "indices": [
+        "STATIONS",
+        "STATIONS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Flow of electricity between stations in megawatts."
+    },
+    {
+      "name": "F",
+      "indices": [],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Total flow of electricity from source to destination in megawatts."
+    }
+  ],
+  "objective": {
+    "name": "max_total_flow",
+    "sense": "max",
+    "expr": "F",
+    "description": "Maximize the total flow of electricity from Station 0 to Station 7."
+  },
+  "constraints": [
+    {
+      "name": "source_flow_balance",
+      "expr_lhs": "flow['0']['1'] + flow['0']['2'] + flow['0']['3'] + flow['0']['4'] + flow['0']['5'] + flow['0']['6'] + flow['0']['7']",
+      "sense": "==",
+      "expr_rhs": "F",
+      "description": "Flow balance at the source station (Station 0)."
+    },
+    {
+      "name": "sink_flow_balance",
+      "expr_lhs": "flow['0']['7'] + flow['1']['7'] + flow['2']['7'] + flow['3']['7'] + flow['4']['7'] + flow['5']['7'] + flow['6']['7']",
+      "sense": "==",
+      "expr_rhs": "F",
+      "description": "Flow balance at the sink station (Station 7)."
+    },
+    {
+      "name": "flow_conservation_1",
+      "expr_lhs": "flow['0']['1'] + flow['2']['1'] + flow['3']['1'] + flow['4']['1'] + flow['5']['1'] + flow['6']['1'] + flow['7']['1']",
+      "sense": "==",
+      "expr_rhs": "flow['1']['0'] + flow['1']['2'] + flow['1']['3'] + flow['1']['4'] + flow['1']['5'] + flow['1']['6'] + flow['1']['7']",
+      "description": "Flow conservation at intermediate station 1."
+    },
+    {
+      "name": "flow_conservation_2",
+      "expr_lhs": "flow['0']['2'] + flow['1']['2'] + flow['3']['2'] + flow['4']['2'] + flow['5']['2'] + flow['6']['2'] + flow['7']['2']",
+      "sense": "==",
+      "expr_rhs": "flow['2']['0'] + flow['2']['1'] + flow['2']['3'] + flow['2']['4'] + flow['2']['5'] + flow['2']['6'] + flow['2']['7']",
+      "description": "Flow conservation at intermediate station 2."
+    },
+    {
+      "name": "flow_conservation_3",
+      "expr_lhs": "flow['0']['3'] + flow['1']['3'] + flow['2']['3'] + flow['4']['3'] + flow['5']['3'] + flow['6']['3'] + flow['7']['3']",
+      "sense": "==",
+      "expr_rhs": "flow['3']['0'] + flow['3']['1'] + flow['3']['2'] + flow['3']['4'] + flow['3']['5'] + flow['3']['6'] + flow['3']['7']",
+      "description": "Flow conservation at intermediate station 3."
+    },
+    {
+      "name": "flow_conservation_4",
+      "expr_lhs": "flow['0']['4'] + flow['1']['4'] + flow['2']['4'] + flow['3']['4'] + flow['5']['4'] + flow['6']['4'] + flow['7']['4']",
+      "sense": "==",
+      "expr_rhs": "flow['4']['0'] + flow['4']['1'] + flow['4']['2'] + flow['4']['3'] + flow['4']['5'] + flow['4']['6'] + flow['4']['7']",
+      "description": "Flow conservation at intermediate station 4."
+    },
+    {
+      "name": "flow_conservation_5",
+      "expr_lhs": "flow['0']['5'] + flow['1']['5'] + flow['2']['5'] + flow['3']['5'] + flow['4']['5'] + flow['6']['5'] + flow['7']['5']",
+      "sense": "==",
+      "expr_rhs": "flow['5']['0'] + flow['5']['1'] + flow['5']['2'] + flow['5']['3'] + flow['5']['4'] + flow['5']['6'] + flow['5']['7']",
+      "description": "Flow conservation at intermediate station 5."
+    },
+    {
+      "name": "flow_conservation_6",
+      "expr_lhs": "flow['0']['6'] + flow['1']['6'] + flow['2']['6'] + flow['3']['6'] + flow['4']['6'] + flow['5']['6'] + flow['7']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['6']['0'] + flow['6']['1'] + flow['6']['2'] + flow['6']['3'] + flow['6']['4'] + flow['6']['5'] + flow['6']['7']",
+      "description": "Flow conservation at intermediate station 6."
+    },
+    {
+      "name": "capacity_0_1",
+      "expr_lhs": "flow['0']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['1']",
+      "description": "Capacity constraint for flow from station 0 to station 1."
+    },
+    {
+      "name": "capacity_0_2",
+      "expr_lhs": "flow['0']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['2']",
+      "description": "Capacity constraint for flow from station 0 to station 2."
+    },
+    {
+      "name": "capacity_0_3",
+      "expr_lhs": "flow['0']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['3']",
+      "description": "Capacity constraint for flow from station 0 to station 3."
+    },
+    {
+      "name": "capacity_0_4",
+      "expr_lhs": "flow['0']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['4']",
+      "description": "Capacity constraint for flow from station 0 to station 4."
+    },
+    {
+      "name": "capacity_0_5",
+      "expr_lhs": "flow['0']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['5']",
+      "description": "Capacity constraint for flow from station 0 to station 5."
+    },
+    {
+      "name": "capacity_0_6",
+      "expr_lhs": "flow['0']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['6']",
+      "description": "Capacity constraint for flow from station 0 to station 6."
+    },
+    {
+      "name": "capacity_0_7",
+      "expr_lhs": "flow['0']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['7']",
+      "description": "Capacity constraint for flow from station 0 to station 7."
+    },
+    {
+      "name": "capacity_1_0",
+      "expr_lhs": "flow['1']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['0']",
+      "description": "Capacity constraint for flow from station 1 to station 0."
+    },
+    {
+      "name": "capacity_1_2",
+      "expr_lhs": "flow['1']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['2']",
+      "description": "Capacity constraint for flow from station 1 to station 2."
+    },
+    {
+      "name": "capacity_1_3",
+      "expr_lhs": "flow['1']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['3']",
+      "description": "Capacity constraint for flow from station 1 to station 3."
+    },
+    {
+      "name": "capacity_1_4",
+      "expr_lhs": "flow['1']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['4']",
+      "description": "Capacity constraint for flow from station 1 to station 4."
+    },
+    {
+      "name": "capacity_1_5",
+      "expr_lhs": "flow['1']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['5']",
+      "description": "Capacity constraint for flow from station 1 to station 5."
+    },
+    {
+      "name": "capacity_1_6",
+      "expr_lhs": "flow['1']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['6']",
+      "description": "Capacity constraint for flow from station 1 to station 6."
+    },
+    {
+      "name": "capacity_1_7",
+      "expr_lhs": "flow['1']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['7']",
+      "description": "Capacity constraint for flow from station 1 to station 7."
+    },
+    {
+      "name": "capacity_2_0",
+      "expr_lhs": "flow['2']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['0']",
+      "description": "Capacity constraint for flow from station 2 to station 0."
+    },
+    {
+      "name": "capacity_2_1",
+      "expr_lhs": "flow['2']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['1']",
+      "description": "Capacity constraint for flow from station 2 to station 1."
+    },
+    {
+      "name": "capacity_2_3",
+      "expr_lhs": "flow['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['3']",
+      "description": "Capacity constraint for flow from station 2 to station 3."
+    },
+    {
+      "name": "capacity_2_4",
+      "expr_lhs": "flow['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['4']",
+      "description": "Capacity constraint for flow from station 2 to station 4."
+    },
+    {
+      "name": "capacity_2_5",
+      "expr_lhs": "flow['2']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['5']",
+      "description": "Capacity constraint for flow from station 2 to station 5."
+    },
+    {
+      "name": "capacity_2_6",
+      "expr_lhs": "flow['2']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['6']",
+      "description": "Capacity constraint for flow from station 2 to station 6."
+    },
+    {
+      "name": "capacity_2_7",
+      "expr_lhs": "flow['2']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['7']",
+      "description": "Capacity constraint for flow from station 2 to station 7."
+    },
+    {
+      "name": "capacity_3_0",
+      "expr_lhs": "flow['3']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['0']",
+      "description": "Capacity constraint for flow from station 3 to station 0."
+    },
+    {
+      "name": "capacity_3_1",
+      "expr_lhs": "flow['3']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['1']",
+      "description": "Capacity constraint for flow from station 3 to station 1."
+    },
+    {
+      "name": "capacity_3_2",
+      "expr_lhs": "flow['3']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['2']",
+      "description": "Capacity constraint for flow from station 3 to station 2."
+    },
+    {
+      "name": "capacity_3_4",
+      "expr_lhs": "flow['3']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['4']",
+      "description": "Capacity constraint for flow from station 3 to station 4."
+    },
+    {
+      "name": "capacity_3_5",
+      "expr_lhs": "flow['3']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['5']",
+      "description": "Capacity constraint for flow from station 3 to station 5."
+    },
+    {
+      "name": "capacity_3_6",
+      "expr_lhs": "flow['3']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['6']",
+      "description": "Capacity constraint for flow from station 3 to station 6."
+    },
+    {
+      "name": "capacity_3_7",
+      "expr_lhs": "flow['3']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['7']",
+      "description": "Capacity constraint for flow from station 3 to station 7."
+    },
+    {
+      "name": "capacity_4_0",
+      "expr_lhs": "flow['4']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['0']",
+      "description": "Capacity constraint for flow from station 4 to station 0."
+    },
+    {
+      "name": "capacity_4_1",
+      "expr_lhs": "flow['4']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['1']",
+      "description": "Capacity constraint for flow from station 4 to station 1."
+    },
+    {
+      "name": "capacity_4_2",
+      "expr_lhs": "flow['4']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['2']",
+      "description": "Capacity constraint for flow from station 4 to station 2."
+    },
+    {
+      "name": "capacity_4_3",
+      "expr_lhs": "flow['4']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['3']",
+      "description": "Capacity constraint for flow from station 4 to station 3."
+    },
+    {
+      "name": "capacity_4_5",
+      "expr_lhs": "flow['4']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['5']",
+      "description": "Capacity constraint for flow from station 4 to station 5."
+    },
+    {
+      "name": "capacity_4_6",
+      "expr_lhs": "flow['4']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['6']",
+      "description": "Capacity constraint for flow from station 4 to station 6."
+    },
+    {
+      "name": "capacity_4_7",
+      "expr_lhs": "flow['4']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['7']",
+      "description": "Capacity constraint for flow from station 4 to station 7."
+    },
+    {
+      "name": "capacity_5_0",
+      "expr_lhs": "flow['5']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['0']",
+      "description": "Capacity constraint for flow from station 5 to station 0."
+    },
+    {
+      "name": "capacity_5_1",
+      "expr_lhs": "flow['5']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['1']",
+      "description": "Capacity constraint for flow from station 5 to station 1."
+    },
+    {
+      "name": "capacity_5_2",
+      "expr_lhs": "flow['5']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['2']",
+      "description": "Capacity constraint for flow from station 5 to station 2."
+    },
+    {
+      "name": "capacity_5_3",
+      "expr_lhs": "flow['5']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['3']",
+      "description": "Capacity constraint for flow from station 5 to station 3."
+    },
+    {
+      "name": "capacity_5_4",
+      "expr_lhs": "flow['5']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['4']",
+      "description": "Capacity constraint for flow from station 5 to station 4."
+    },
+    {
+      "name": "capacity_5_6",
+      "expr_lhs": "flow['5']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['6']",
+      "description": "Capacity constraint for flow from station 5 to station 6."
+    },
+    {
+      "name": "capacity_5_7",
+      "expr_lhs": "flow['5']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['7']",
+      "description": "Capacity constraint for flow from station 5 to station 7."
+    },
+    {
+      "name": "capacity_6_0",
+      "expr_lhs": "flow['6']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['0']",
+      "description": "Capacity constraint for flow from station 6 to station 0."
+    },
+    {
+      "name": "capacity_6_1",
+      "expr_lhs": "flow['6']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['1']",
+      "description": "Capacity constraint for flow from station 6 to station 1."
+    },
+    {
+      "name": "capacity_6_2",
+      "expr_lhs": "flow['6']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['2']",
+      "description": "Capacity constraint for flow from station 6 to station 2."
+    },
+    {
+      "name": "capacity_6_3",
+      "expr_lhs": "flow['6']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['3']",
+      "description": "Capacity constraint for flow from station 6 to station 3."
+    },
+    {
+      "name": "capacity_6_4",
+      "expr_lhs": "flow['6']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['4']",
+      "description": "Capacity constraint for flow from station 6 to station 4."
+    },
+    {
+      "name": "capacity_6_5",
+      "expr_lhs": "flow['6']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['5']",
+      "description": "Capacity constraint for flow from station 6 to station 5."
+    },
+    {
+      "name": "capacity_6_7",
+      "expr_lhs": "flow['6']['7']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['7']",
+      "description": "Capacity constraint for flow from station 6 to station 7."
+    },
+    {
+      "name": "capacity_7_0",
+      "expr_lhs": "flow['7']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['0']",
+      "description": "Capacity constraint for flow from station 7 to station 0."
+    },
+    {
+      "name": "capacity_7_1",
+      "expr_lhs": "flow['7']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['1']",
+      "description": "Capacity constraint for flow from station 7 to station 1."
+    },
+    {
+      "name": "capacity_7_2",
+      "expr_lhs": "flow['7']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['2']",
+      "description": "Capacity constraint for flow from station 7 to station 2."
+    },
+    {
+      "name": "capacity_7_3",
+      "expr_lhs": "flow['7']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['3']",
+      "description": "Capacity constraint for flow from station 7 to station 3."
+    },
+    {
+      "name": "capacity_7_4",
+      "expr_lhs": "flow['7']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['4']",
+      "description": "Capacity constraint for flow from station 7 to station 4."
+    },
+    {
+      "name": "capacity_7_5",
+      "expr_lhs": "flow['7']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['5']",
+      "description": "Capacity constraint for flow from station 7 to station 5."
+    },
+    {
+      "name": "capacity_7_6",
+      "expr_lhs": "flow['7']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['7']['6']",
+      "description": "Capacity constraint for flow from station 7 to station 6."
+    }
+  ],
+  "graph": null
+}

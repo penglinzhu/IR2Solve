@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_6",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the selection of food items to meet nutritional needs at minimum cost.",
     "sense": "min",
     "version": 1
@@ -86,14 +86,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food item"
+      "description": "Number of units of each food item to purchase"
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of selected food items"
+    "description": "Minimize the total cost of purchasing food items"
   },
   "constraints": [
     {
@@ -101,21 +101,21 @@
       "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "74",
-      "description": "Ensure at least 74 grams of protein"
+      "description": "Ensure at least 74 grams of protein are consumed"
     },
     {
       "name": "carbohydrates_requirement",
       "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "102",
-      "description": "Ensure at least 102 grams of carbohydrates"
+      "description": "Ensure at least 102 grams of carbohydrates are consumed"
     },
     {
       "name": "calories_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "1564",
-      "description": "Ensure at least 1564 calories"
+      "description": "Ensure at least 1564 calories are consumed"
     }
   ],
   "graph": null

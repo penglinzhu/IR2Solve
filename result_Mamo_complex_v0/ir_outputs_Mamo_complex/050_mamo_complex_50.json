@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_50",
+    "source": null,
+    "description": "Minimize the total travel cost for a salesperson visiting each city exactly once and returning to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The set of cities the salesperson must visit."
+    }
+  ],
+  "params": [
+    {
+      "name": "travel_cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "A": {
+          "B": 61,
+          "C": 65,
+          "D": 63
+        },
+        "B": {
+          "A": 61,
+          "C": 94,
+          "D": 31
+        },
+        "C": {
+          "A": 65,
+          "B": 94,
+          "D": 19
+        },
+        "D": {
+          "A": 63,
+          "B": 31,
+          "C": 19
+        }
+      },
+      "description": "The travel cost between each pair of cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if the salesperson travels from city i to city j."
+    }
+  ],
+  "objective": {
+    "name": "min_total_travel_cost",
+    "sense": "min",
+    "expr": "sum(travel_cost[i][j] * x[i][j] for i in CITIES for j in CITIES if i != j)",
+    "description": "Minimize the total travel cost for the salesperson's tour."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once_A",
+      "expr_lhs": "sum(x['A'][j] for j in CITIES if j != 'A')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city A exactly once."
+    },
+    {
+      "name": "visit_each_city_once_B",
+      "expr_lhs": "sum(x['B'][j] for j in CITIES if j != 'B')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city B exactly once."
+    },
+    {
+      "name": "visit_each_city_once_C",
+      "expr_lhs": "sum(x['C'][j] for j in CITIES if j != 'C')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city C exactly once."
+    },
+    {
+      "name": "visit_each_city_once_D",
+      "expr_lhs": "sum(x['D'][j] for j in CITIES if j != 'D')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson leaves city D exactly once."
+    },
+    {
+      "name": "enter_each_city_once_A",
+      "expr_lhs": "sum(x[i]['A'] for i in CITIES if i != 'A')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city A exactly once."
+    },
+    {
+      "name": "enter_each_city_once_B",
+      "expr_lhs": "sum(x[i]['B'] for i in CITIES if i != 'B')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city B exactly once."
+    },
+    {
+      "name": "enter_each_city_once_C",
+      "expr_lhs": "sum(x[i]['C'] for i in CITIES if i != 'C')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city C exactly once."
+    },
+    {
+      "name": "enter_each_city_once_D",
+      "expr_lhs": "sum(x[i]['D'] for i in CITIES if i != 'D')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesperson enters city D exactly once."
+    }
+  ],
+  "graph": null
+}

@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "industryOR_18",
-    "source": null,
+    "source": "IndustryOR",
     "description": "Determine the minimum number of drivers and crew members required for a bus route with specific time period requirements.",
     "sense": "min",
     "version": 1
@@ -52,27 +52,27 @@
   "objective": {
     "name": "min_total_staff",
     "sense": "min",
-    "expr": "sum(x[s] for s in SHIFTS)",
+    "expr": "sum(x[s] for s in ['1', '2', '3', '4', '5', '6'])",
     "description": "Minimize the total number of drivers and crew members."
   },
   "constraints": [
     {
       "name": "shift_1_requirement",
-      "expr_lhs": "x['1'] + x['4'] + x['5']",
+      "expr_lhs": "x['1'] + x['6']",
       "sense": ">=",
       "expr_rhs": "required['1']",
       "description": "Meet the requirement for shift 1."
     },
     {
       "name": "shift_2_requirement",
-      "expr_lhs": "x['1'] + x['2'] + x['5']",
+      "expr_lhs": "x['1'] + x['2']",
       "sense": ">=",
       "expr_rhs": "required['2']",
       "description": "Meet the requirement for shift 2."
     },
     {
       "name": "shift_3_requirement",
-      "expr_lhs": "x['2'] + x['3'] + x['6']",
+      "expr_lhs": "x['2'] + x['3']",
       "sense": ">=",
       "expr_rhs": "required['3']",
       "description": "Meet the requirement for shift 3."

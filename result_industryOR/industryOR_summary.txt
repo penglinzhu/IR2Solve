@@ -1,6 +1,6 @@
 ====== SUMMARY ======
 Total instances: 42
-Solved (got ObjVal): 34
-Correct (ObjVal ≈ en_answer): 26
-Accuracy over all instances: 26/42 = 0.619
-Solved ratio: 34/42 = 0.810
+Solved (got ObjVal): 35
+Correct (ObjVal ≈ en_answer): 27
+Accuracy over all instances: 27/42 = 0.643
+Solved ratio: 35/42 = 0.833

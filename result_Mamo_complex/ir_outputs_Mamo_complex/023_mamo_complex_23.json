@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_23",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the selection of food items to meet nutritional requirements at minimum cost.",
     "sense": "min",
     "version": 1
@@ -38,7 +38,7 @@
         "Beef": 6,
         "Broccoli": 17
       },
-      "description": "Protein content in grams per unit of each food item."
+      "description": "Protein content in grams for each food item."
     },
     {
       "name": "carbohydrates",
@@ -55,7 +55,7 @@
         "Beef": 24,
         "Broccoli": 9
       },
-      "description": "Carbohydrate content in grams per unit of each food item."
+      "description": "Carbohydrate content in grams for each food item."
     },
     {
       "name": "calories",
@@ -72,7 +72,7 @@
         "Beef": 167,
         "Broccoli": 192
       },
-      "description": "Caloric content per unit of each food item."
+      "description": "Caloric content for each food item."
     },
     {
       "name": "cost",
@@ -89,7 +89,7 @@
         "Beef": 9,
         "Broccoli": 3
       },
-      "description": "Cost in dollars per unit of each food item."
+      "description": "Cost of each food item in dollars."
     }
   ],
   "vars": [

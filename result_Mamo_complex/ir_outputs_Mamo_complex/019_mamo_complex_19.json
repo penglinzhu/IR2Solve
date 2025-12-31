@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_19",
-    "source": null,
-    "description": "Determine the minimum cost to satisfy nutritional needs using six food options.",
+    "source": "Mamo_complex_lp",
+    "description": "Determine the minimum cost to meet nutritional targets using six food options.",
     "sense": "min",
     "version": 1
   },
@@ -34,7 +34,7 @@
         "Almonds": 2,
         "Salmon": 19
       },
-      "description": "Protein content per unit of each food"
+      "description": "Protein content per food option in grams"
     },
     {
       "name": "carbs",
@@ -49,7 +49,7 @@
         "Almonds": 11,
         "Salmon": 20
       },
-      "description": "Carbohydrate content per unit of each food"
+      "description": "Carbohydrate content per food option in grams"
     },
     {
       "name": "calories",
@@ -64,7 +64,7 @@
         "Almonds": 51,
         "Salmon": 238
       },
-      "description": "Calorie content per unit of each food"
+      "description": "Calorie content per food option"
     },
     {
       "name": "cost",
@@ -79,7 +79,7 @@
         "Almonds": 4,
         "Salmon": 10
       },
-      "description": "Cost per unit of each food"
+      "description": "Cost per food option in dollars"
     }
   ],
   "vars": [
@@ -91,14 +91,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units of each food to purchase"
+      "description": "Number of servings of each food option"
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of purchasing food"
+    "description": "Minimize the total cost of food servings"
   },
   "constraints": [
     {

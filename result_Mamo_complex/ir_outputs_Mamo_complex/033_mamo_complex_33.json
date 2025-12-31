@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_33",
-    "source": null,
-    "description": "Optimize daily nutritional intake to meet requirements at minimum cost using available food items.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize daily nutritional intake to meet requirements at minimum cost.",
     "sense": "min",
     "version": 1
   },
@@ -49,7 +49,7 @@
         "Almonds": 9,
         "Salmon": 20
       },
-      "description": "Protein content in grams for each food item."
+      "description": "Protein content of each food item in grams."
     },
     {
       "name": "carbs",
@@ -64,7 +64,7 @@
         "Almonds": 11,
         "Salmon": 19
       },
-      "description": "Carbohydrate content in grams for each food item."
+      "description": "Carbohydrate content of each food item in grams."
     },
     {
       "name": "calories",
@@ -79,7 +79,7 @@
         "Almonds": 279,
         "Salmon": 93
       },
-      "description": "Caloric content for each food item."
+      "description": "Caloric content of each food item."
     }
   ],
   "vars": [
@@ -91,33 +91,33 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food item to purchase."
+      "description": "Number of servings of each food item."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of purchasing food items."
+    "expr": "sum(cost[f] * x[f] for f in ['Chicken Breast', 'Brown Rice', 'Tofu', 'Spinach', 'Almonds', 'Salmon'])",
+    "description": "Minimize the total cost of food items to meet nutritional requirements."
   },
   "constraints": [
     {
       "name": "protein_requirement",
-      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(protein[f] * x[f] for f in ['Chicken Breast', 'Brown Rice', 'Tofu', 'Spinach', 'Almonds', 'Salmon'])",
       "sense": ">=",
       "expr_rhs": "78",
       "description": "Ensure at least 78 grams of protein are consumed."
     },
     {
       "name": "carbs_requirement",
-      "expr_lhs": "sum(carbs[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(carbs[f] * x[f] for f in ['Chicken Breast', 'Brown Rice', 'Tofu', 'Spinach', 'Almonds', 'Salmon'])",
       "sense": ">=",
       "expr_rhs": "140",
       "description": "Ensure at least 140 grams of carbohydrates are consumed."
     },
     {
       "name": "calories_requirement",
-      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(calories[f] * x[f] for f in ['Chicken Breast', 'Brown Rice', 'Tofu', 'Spinach', 'Almonds', 'Salmon'])",
       "sense": ">=",
       "expr_rhs": "1537",
       "description": "Ensure at least 1537 calories are consumed."

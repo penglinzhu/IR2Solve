@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "problem_id": "warehouse_rental_optimization",
+    "source": null,
+    "description": "Optimize warehouse rental contracts to minimize costs over 4 months.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "MONTHS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Months for which warehouse space is required."
+    },
+    {
+      "name": "PERIODS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Possible contract rental periods in months."
+    }
+  ],
+  "params": [
+    {
+      "name": "required_area",
+      "indices": [
+        "MONTHS"
+      ],
+      "values": {
+        "1": 1500,
+        "2": 1000,
+        "3": 2000,
+        "4": 1200
+      },
+      "description": "Required warehouse area for each month in m^2."
+    },
+    {
+      "name": "rental_fee",
+      "indices": [
+        "PERIODS"
+      ],
+      "values": {
+        "1": 28,
+        "2": 45,
+        "3": 60,
+        "4": 73
+      },
+      "description": "Rental fee per m^2 for each contract period."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "MONTHS",
+        "PERIODS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Area in m^2 rented with a contract starting in a given month for a given period."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(x[m][p] * rental_fee[p] for m in MONTHS for p in PERIODS)",
+    "description": "Minimize the total rental cost over all months and contract periods."
+  },
+  "constraints": [
+    {
+      "name": "satisfy_demand_month_1",
+      "expr_lhs": "x['1']['1'] + x['1']['2'] + x['1']['3'] + x['1']['4']",
+      "sense": ">=",
+      "expr_rhs": "required_area['1']",
+      "description": "Ensure enough area is rented to meet demand in month 1."
+    },
+    {
+      "name": "satisfy_demand_month_2",
+      "expr_lhs": "x['1']['2'] + x['1']['3'] + x['1']['4'] + x['2']['1'] + x['2']['2'] + x['2']['3'] + x['2']['4']",
+      "sense": ">=",
+      "expr_rhs": "required_area['2']",
+      "description": "Ensure enough area is rented to meet demand in month 2."
+    },
+    {
+      "name": "satisfy_demand_month_3",
+      "expr_lhs": "x['1']['3'] + x['1']['4'] + x['2']['2'] + x['2']['3'] + x['2']['4'] + x['3']['1'] + x['3']['2'] + x['3']['3'] + x['3']['4']",
+      "sense": ">=",
+      "expr_rhs": "required_area['3']",
+      "description": "Ensure enough area is rented to meet demand in month 3."
+    },
+    {
+      "name": "satisfy_demand_month_4",
+      "expr_lhs": "x['1']['4'] + x['2']['3'] + x['2']['4'] + x['3']['2'] + x['3']['3'] + x['3']['4'] + x['4']['1'] + x['4']['2'] + x['4']['3'] + x['4']['4']",
+      "sense": ">=",
+      "expr_rhs": "required_area['4']",
+      "description": "Ensure enough area is rented to meet demand in month 4."
+    }
+  ],
+  "graph": null
+}

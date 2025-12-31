@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "problem_id": "factory_production_plan",
+    "source": null,
+    "description": "Determine the optimal production plan to maximize profit for a factory producing three products using different equipment for two procedures.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "I",
+        "II",
+        "III"
+      ],
+      "description": "The products produced by the factory."
+    },
+    {
+      "name": "EQUIPMENT_A",
+      "elements": [
+        "A1",
+        "A2"
+      ],
+      "description": "Equipment types for procedure A."
+    },
+    {
+      "name": "EQUIPMENT_B",
+      "elements": [
+        "B1",
+        "B2",
+        "B3"
+      ],
+      "description": "Equipment types for procedure B."
+    }
+  ],
+  "params": [
+    {
+      "name": "processing_time_A",
+      "indices": [
+        "EQUIPMENT_A",
+        "PRODUCTS"
+      ],
+      "values": {
+        "A1": {
+          "I": 5,
+          "II": 10,
+          "III": null
+        },
+        "A2": {
+          "I": 7,
+          "II": 9,
+          "III": 12
+        }
+      },
+      "description": "Processing time for each product on equipment A."
+    },
+    {
+      "name": "processing_time_B",
+      "indices": [
+        "EQUIPMENT_B",
+        "PRODUCTS"
+      ],
+      "values": {
+        "B1": {
+          "I": 6,
+          "II": 8,
+          "III": null
+        },
+        "B2": {
+          "I": 4,
+          "II": null,
+          "III": 11
+        },
+        "B3": {
+          "I": 7,
+          "II": null,
+          "III": null
+        }
+      },
+      "description": "Processing time for each product on equipment B."
+    },
+    {
+      "name": "available_time_A",
+      "indices": [
+        "EQUIPMENT_A"
+      ],
+      "values": {
+        "A1": 6000,
+        "A2": 10000
+      },
+      "description": "Available operating time for equipment A."
+    },
+    {
+      "name": "available_time_B",
+      "indices": [
+        "EQUIPMENT_B"
+      ],
+      "values": {
+        "B1": 4000,
+        "B2": 7000,
+        "B3": 4000
+      },
+      "description": "Available operating time for equipment B."
+    },
+    {
+      "name": "equipment_cost_A",
+      "indices": [
+        "EQUIPMENT_A"
+      ],
+      "values": {
+        "A1": 300,
+        "A2": 321
+      },
+      "description": "Equipment cost at full load for equipment A."
+    },
+    {
+      "name": "equipment_cost_B",
+      "indices": [
+        "EQUIPMENT_B"
+      ],
+      "values": {
+        "B1": 250,
+        "B2": 783,
+        "B3": 200
+      },
+      "description": "Equipment cost at full load for equipment B."
+    },
+    {
+      "name": "raw_material_cost",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "I": 0.25,
+        "II": 0.35,
+        "III": 0.5
+      },
+      "description": "Raw material cost per unit for each product."
+    },
+    {
+      "name": "unit_price",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "I": 1.25,
+        "II": 2.0,
+        "III": 2.8
+      },
+      "description": "Selling price per unit for each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x_A",
+      "indices": [
+        "EQUIPMENT_A",
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each product processed on equipment A."
+    },
+    {
+      "name": "x_B",
+      "indices": [
+        "EQUIPMENT_B",
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each product processed on equipment B."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "sum((unit_price[p] - raw_material_cost[p]) * (sum(x_A[e][p] for e in EQUIPMENT_A if processing_time_A[e][p] is not None) + sum(x_B[e][p] for e in EQUIPMENT_B if processing_time_B[e][p] is not None)) - sum(equipment_cost_A[e] for e in EQUIPMENT_A) - sum(equipment_cost_B[e] for e in EQUIPMENT_B) for p in PRODUCTS)",
+    "description": "Maximize the profit from selling products after accounting for raw material and equipment costs."
+  },
+  "constraints": [
+    {
+      "name": "time_constraint_A1",
+      "expr_lhs": "sum(processing_time_A['A1'][p] * x_A['A1'][p] for p in PRODUCTS if processing_time_A['A1'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "available_time_A['A1']",
+      "description": "Ensure equipment A1 does not exceed available operating time."
+    },
+    {
+      "name": "time_constraint_A2",
+      "expr_lhs": "sum(processing_time_A['A2'][p] * x_A['A2'][p] for p in PRODUCTS if processing_time_A['A2'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "available_time_A['A2']",
+      "description": "Ensure equipment A2 does not exceed available operating time."
+    },
+    {
+      "name": "time_constraint_B1",
+      "expr_lhs": "sum(processing_time_B['B1'][p] * x_B['B1'][p] for p in PRODUCTS if processing_time_B['B1'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "available_time_B['B1']",
+      "description": "Ensure equipment B1 does not exceed available operating time."
+    },
+    {
+      "name": "time_constraint_B2",
+      "expr_lhs": "sum(processing_time_B['B2'][p] * x_B['B2'][p] for p in PRODUCTS if processing_time_B['B2'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "available_time_B['B2']",
+      "description": "Ensure equipment B2 does not exceed available operating time."
+    },
+    {
+      "name": "time_constraint_B3",
+      "expr_lhs": "sum(processing_time_B['B3'][p] * x_B['B3'][p] for p in PRODUCTS if processing_time_B['B3'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "available_time_B['B3']",
+      "description": "Ensure equipment B3 does not exceed available operating time."
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_48",
-    "source": null,
-    "description": "Optimize the travel route for a delivery driver to minimize total travel cost visiting each shop exactly once and returning to the start.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the travel route for a delivery driver to minimize total travel cost while visiting each shop exactly once and returning to the starting point.",
     "sense": "min",
     "version": 1
   },
@@ -72,23 +72,13 @@
       "lb": 0.0,
       "ub": 1.0,
       "description": "Binary variable indicating if the driver travels from one shop to another."
-    },
-    {
-      "name": "u",
-      "indices": [
-        "SHOPS"
-      ],
-      "vartype": "integer",
-      "lb": 0.0,
-      "ub": null,
-      "description": "Helper variable for subtour elimination."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(travel_cost[i][j] * x[i][j] for i in SHOPS for j in SHOPS if i != j)",
-    "description": "Minimize the total travel cost for the delivery route."
+    "description": "Minimize the total travel cost for the delivery driver."
   },
   "constraints": [
     {
@@ -127,67 +117,39 @@
       "description": "Ensure the driver leaves Shop5 exactly once."
     },
     {
-      "name": "enter_each_shop_once_Shop1",
+      "name": "return_to_start_Shop1",
       "expr_lhs": "sum(x[i]['Shop1'] for i in SHOPS if i != 'Shop1')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure the driver enters Shop1 exactly once."
+      "description": "Ensure the driver returns to Shop1 exactly once."
     },
     {
-      "name": "enter_each_shop_once_Shop2",
+      "name": "return_to_start_Shop2",
       "expr_lhs": "sum(x[i]['Shop2'] for i in SHOPS if i != 'Shop2')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure the driver enters Shop2 exactly once."
+      "description": "Ensure the driver returns to Shop2 exactly once."
     },
     {
-      "name": "enter_each_shop_once_Shop3",
+      "name": "return_to_start_Shop3",
       "expr_lhs": "sum(x[i]['Shop3'] for i in SHOPS if i != 'Shop3')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure the driver enters Shop3 exactly once."
+      "description": "Ensure the driver returns to Shop3 exactly once."
     },
     {
-      "name": "enter_each_shop_once_Shop4",
+      "name": "return_to_start_Shop4",
       "expr_lhs": "sum(x[i]['Shop4'] for i in SHOPS if i != 'Shop4')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure the driver enters Shop4 exactly once."
+      "description": "Ensure the driver returns to Shop4 exactly once."
     },
     {
-      "name": "enter_each_shop_once_Shop5",
+      "name": "return_to_start_Shop5",
       "expr_lhs": "sum(x[i]['Shop5'] for i in SHOPS if i != 'Shop5')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure the driver enters Shop5 exactly once."
-    },
-    {
-      "name": "subtour_elimination_Shop2",
-      "expr_lhs": "u['Shop1'] - u['Shop2'] + 5 * x['Shop1']['Shop2']",
-      "sense": "<=",
-      "expr_rhs": "4",
-      "description": "Subtour elimination constraint for Shop2."
-    },
-    {
-      "name": "subtour_elimination_Shop3",
-      "expr_lhs": "u['Shop1'] - u['Shop3'] + 5 * x['Shop1']['Shop3']",
-      "sense": "<=",
-      "expr_rhs": "4",
-      "description": "Subtour elimination constraint for Shop3."
-    },
-    {
-      "name": "subtour_elimination_Shop4",
-      "expr_lhs": "u['Shop1'] - u['Shop4'] + 5 * x['Shop1']['Shop4']",
-      "sense": "<=",
-      "expr_rhs": "4",
-      "description": "Subtour elimination constraint for Shop4."
-    },
-    {
-      "name": "subtour_elimination_Shop5",
-      "expr_lhs": "u['Shop1'] - u['Shop5'] + 5 * x['Shop1']['Shop5']",
-      "sense": "<=",
-      "expr_rhs": "4",
-      "description": "Subtour elimination constraint for Shop5."
+      "description": "Ensure the driver returns to Shop5 exactly once."
     }
   ],
   "graph": null

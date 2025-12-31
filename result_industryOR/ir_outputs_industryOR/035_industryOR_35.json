@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_35",
-    "source": null,
-    "description": "Optimize the production of commodities in Carelland to maximize exports and minimize imports.",
+    "source": "IndustryOR",
+    "description": "Maximize the gross domestic product of Carelland by optimizing the production of steel, engines, electronics, and plastics.",
     "sense": "max",
     "version": 1
   },
@@ -15,7 +15,7 @@
         "electronics",
         "plastics"
       ],
-      "description": "Types of commodities produced and exported by Carelland."
+      "description": "The commodities exported by Carelland."
     }
   ],
   "params": [
@@ -30,7 +30,41 @@
         "electronics": 300,
         "plastics": 1200
       },
-      "description": "Unit prices of commodities in Klunz."
+      "description": "Unit prices of commodities on the world market in Klunz."
+    },
+    {
+      "name": "production_requirements",
+      "indices": [
+        "COMMODITIES",
+        "COMMODITIES"
+      ],
+      "values": {
+        "steel": {
+          "engines": 0.02,
+          "plastics": 0.01,
+          "steel": 0,
+          "electronics": 0
+        },
+        "engines": {
+          "steel": 0.8,
+          "electronics": 0.15,
+          "plastics": 0.11,
+          "engines": 0
+        },
+        "electronics": {
+          "steel": 0.01,
+          "engines": 0.01,
+          "plastics": 0.05,
+          "electronics": 0
+        },
+        "plastics": {
+          "engines": 0.03,
+          "steel": 0.2,
+          "electronics": 0.05,
+          "plastics": 0
+        }
+      },
+      "description": "Units of other commodities required to produce one unit of each commodity."
     },
     {
       "name": "import_cost",
@@ -43,10 +77,10 @@
         "electronics": 50,
         "plastics": 300
       },
-      "description": "Import cost per unit of commodity in Klunz."
+      "description": "Cost of other imported goods required to produce one unit of each commodity in Klunz."
     },
     {
-      "name": "labor_months",
+      "name": "labor_requirements",
       "indices": [
         "COMMODITIES"
       ],
@@ -56,10 +90,10 @@
         "electronics": 6,
         "plastics": 24
       },
-      "description": "Labor required per unit of commodity in person-months."
+      "description": "Person-months of work required to produce one unit of each commodity."
     },
     {
-      "name": "production_limit",
+      "name": "production_limits",
       "indices": [
         "COMMODITIES"
       ],
@@ -82,10 +116,10 @@
       "indices": [
         "COMMODITIES"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Production quantity of each commodity."
+      "description": "Units of each commodity to produce."
     }
   ],
   "objective": {
@@ -97,23 +131,23 @@
   "constraints": [
     {
       "name": "labor_constraint",
-      "expr_lhs": "sum(production[c] * labor_months[c] for c in COMMODITIES)",
+      "expr_lhs": "sum(production[c] * labor_requirements[c] for c in COMMODITIES)",
       "sense": "<=",
       "expr_rhs": "total_labor",
       "description": "Total labor used must not exceed available labor."
     },
     {
-      "name": "production_limit_engines",
+      "name": "engines_production_limit",
       "expr_lhs": "production['engines']",
       "sense": "<=",
-      "expr_rhs": "production_limit['engines']",
+      "expr_rhs": "production_limits['engines']",
       "description": "Production of engines must not exceed its limit."
     },
     {
-      "name": "production_limit_plastics",
+      "name": "plastics_production_limit",
       "expr_lhs": "production['plastics']",
       "sense": "<=",
-      "expr_rhs": "production_limit['plastics']",
+      "expr_rhs": "production_limits['plastics']",
       "description": "Production of plastics must not exceed its limit."
     }
   ],

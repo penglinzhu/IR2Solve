@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_47",
+    "source": "Mamo_complex_lp",
+    "description": "Minimize the total delivery cost for visiting each city exactly once and returning to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "Alpha",
+        "Bravo",
+        "Charlie",
+        "Delta"
+      ],
+      "description": "The cities that need to be visited."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "Alpha": {
+          "Bravo": 41,
+          "Charlie": 55,
+          "Delta": 22
+        },
+        "Bravo": {
+          "Alpha": 41,
+          "Charlie": 47,
+          "Delta": 47
+        },
+        "Charlie": {
+          "Alpha": 55,
+          "Bravo": 47,
+          "Delta": 35
+        },
+        "Delta": {
+          "Alpha": 22,
+          "Bravo": 47,
+          "Charlie": 35
+        }
+      },
+      "description": "The delivery cost between each pair of cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if a route between two cities is used."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[i][j] * x[i][j] for i in CITIES for j in CITIES)",
+    "description": "Minimize the total delivery cost."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once_Alpha",
+      "expr_lhs": "sum(x['Alpha'][j] for j in CITIES if j != 'Alpha')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure Alpha is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_Bravo",
+      "expr_lhs": "sum(x['Bravo'][j] for j in CITIES if j != 'Bravo')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure Bravo is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_Charlie",
+      "expr_lhs": "sum(x['Charlie'][j] for j in CITIES if j != 'Charlie')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure Charlie is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_Delta",
+      "expr_lhs": "sum(x['Delta'][j] for j in CITIES if j != 'Delta')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure Delta is visited exactly once."
+    },
+    {
+      "name": "leave_each_city_once_Alpha",
+      "expr_lhs": "sum(x[i]['Alpha'] for i in CITIES if i != 'Alpha')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves Alpha."
+    },
+    {
+      "name": "leave_each_city_once_Bravo",
+      "expr_lhs": "sum(x[i]['Bravo'] for i in CITIES if i != 'Bravo')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves Bravo."
+    },
+    {
+      "name": "leave_each_city_once_Charlie",
+      "expr_lhs": "sum(x[i]['Charlie'] for i in CITIES if i != 'Charlie')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves Charlie."
+    },
+    {
+      "name": "leave_each_city_once_Delta",
+      "expr_lhs": "sum(x[i]['Delta'] for i in CITIES if i != 'Delta')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure exactly one route leaves Delta."
+    }
+  ],
+  "graph": null
+}

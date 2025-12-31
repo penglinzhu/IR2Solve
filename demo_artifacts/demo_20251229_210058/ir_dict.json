@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "problem_id": "li_family_investment",
+    "source": null,
+    "description": "The Li family plans to invest in commercial real estate properties to maximize their annual income within a budget constraint.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PROPERTIES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Set of properties available for investment."
+    }
+  ],
+  "params": [
+    {
+      "name": "income",
+      "indices": [
+        "PROPERTIES"
+      ],
+      "values": {
+        "1": 12500,
+        "2": 35000,
+        "3": 23000,
+        "4": 100000
+      },
+      "description": "Annual income from each property."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "PROPERTIES"
+      ],
+      "values": {
+        "1": 1.5,
+        "2": 2.1,
+        "3": 2.3,
+        "4": 4.2
+      },
+      "description": "Cost of each property in millions."
+    },
+    {
+      "name": "budget",
+      "indices": [],
+      "values": 7,
+      "description": "Total budget available for investment in millions."
+    }
+  ],
+  "vars": [
+    {
+      "name": "buy",
+      "indices": [
+        "PROPERTIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary decision variable indicating whether to buy a property."
+    }
+  ],
+  "objective": {
+    "name": "max_total_income",
+    "sense": "max",
+    "expr": "sum(income[p] * buy[p] for p in ['1', '2', '3', '4'])",
+    "description": "Maximize the total annual income from purchased properties."
+  },
+  "constraints": [
+    {
+      "name": "budget_constraint",
+      "expr_lhs": "sum(cost[p] * buy[p] for p in ['1', '2', '3', '4'])",
+      "sense": "<=",
+      "expr_rhs": "budget",
+      "description": "Total cost of purchased properties must not exceed the budget."
+    },
+    {
+      "name": "mutual_exclusivity_3_4",
+      "expr_lhs": "buy['3'] + buy['4']",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "Cannot purchase both Property 3 and Property 4."
+    }
+  ],
+  "graph": null
+}

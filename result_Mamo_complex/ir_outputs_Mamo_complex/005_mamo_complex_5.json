@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_5",
-    "source": null,
-    "description": "Optimize the daily diet to meet nutritional requirements at minimum cost.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the diet to meet nutritional requirements at minimum cost.",
     "sense": "min",
     "version": 1
   },
@@ -40,7 +40,7 @@
         "Cheese": 12,
         "Bread": 2
       },
-      "description": "Protein content per unit of each food item."
+      "description": "Protein content in grams per unit of each food."
     },
     {
       "name": "carbohydrates",
@@ -58,7 +58,7 @@
         "Cheese": 17,
         "Bread": 30
       },
-      "description": "Carbohydrate content per unit of each food item."
+      "description": "Carbohydrate content in grams per unit of each food."
     },
     {
       "name": "calories",
@@ -76,7 +76,7 @@
         "Cheese": 76,
         "Bread": 258
       },
-      "description": "Calorie content per unit of each food item."
+      "description": "Caloric content per unit of each food."
     },
     {
       "name": "cost",
@@ -94,7 +94,7 @@
         "Cheese": 9,
         "Bread": 4
       },
-      "description": "Cost per unit of each food item."
+      "description": "Cost per unit of each food."
     }
   ],
   "vars": [
@@ -106,14 +106,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units of each food item to purchase."
+      "description": "Number of units of each food to purchase."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of purchasing food items."
+    "description": "Minimize the total cost of purchasing the foods."
   },
   "constraints": [
     {

@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_8",
-    "source": null,
-    "description": "Optimize the selection of food items to meet daily nutritional needs at minimum cost.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize daily food selection to meet nutritional needs at minimum cost.",
     "sense": "min",
     "version": 1
   },
@@ -19,7 +19,7 @@
         "Bananas",
         "Quinoa"
       ],
-      "description": "Available food items"
+      "description": "Available food items."
     }
   ],
   "params": [
@@ -38,7 +38,7 @@
         "Bananas": 2,
         "Quinoa": 6
       },
-      "description": "Cost of each food item"
+      "description": "Cost of each food item."
     },
     {
       "name": "protein",
@@ -55,7 +55,7 @@
         "Bananas": 4,
         "Quinoa": 4
       },
-      "description": "Protein content of each food item (grams)"
+      "description": "Protein content of each food item (grams)."
     },
     {
       "name": "carbs",
@@ -72,7 +72,7 @@
         "Bananas": 16,
         "Quinoa": 20
       },
-      "description": "Carbohydrate content of each food item (grams)"
+      "description": "Carbohydrate content of each food item (grams)."
     },
     {
       "name": "calories",
@@ -89,7 +89,7 @@
         "Bananas": 255,
         "Quinoa": 205
       },
-      "description": "Caloric content of each food item"
+      "description": "Caloric content of each food item."
     }
   ],
   "vars": [
@@ -101,14 +101,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food item"
+      "description": "Number of servings of each food item."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of food items"
+    "description": "Minimize the total cost of food items."
   },
   "constraints": [
     {
@@ -116,21 +116,21 @@
       "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "91",
-      "description": "Meet the daily protein requirement"
+      "description": "Ensure at least 91 grams of protein."
     },
     {
       "name": "carbs_requirement",
       "expr_lhs": "sum(carbs[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "136",
-      "description": "Meet the daily carbohydrate requirement"
+      "description": "Ensure at least 136 grams of carbohydrates."
     },
     {
       "name": "calories_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "1563",
-      "description": "Meet the daily caloric requirement"
+      "description": "Ensure at least 1563 calories."
     }
   ],
   "graph": null

@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "problem_id": "logistics_redistribution",
+    "source": null,
+    "description": "Minimize the cost of redistributing supplies among distribution centers to meet their needs.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CENTERS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "description": "Set of distribution centers"
+    }
+  ],
+  "params": [
+    {
+      "name": "initial_supplies",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 97,
+        "2": 458,
+        "3": 473,
+        "4": 380,
+        "5": 34,
+        "6": 399,
+        "7": 163
+      },
+      "description": "Initial supplies at each distribution center"
+    },
+    {
+      "name": "needed_supplies",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 119,
+        "2": 275,
+        "3": 36,
+        "4": 459,
+        "5": 17,
+        "6": 128,
+        "7": 425
+      },
+      "description": "Supplies needed at each distribution center"
+    },
+    {
+      "name": "transfer_cost",
+      "indices": [
+        "CENTERS",
+        "CENTERS"
+      ],
+      "values": {
+        "1": {
+          "2": 41,
+          "3": 42,
+          "4": 31,
+          "5": 39,
+          "6": 2,
+          "7": 18
+        },
+        "2": {
+          "1": 48,
+          "3": 9,
+          "4": 22,
+          "5": 47,
+          "6": 29,
+          "7": 39
+        },
+        "3": {
+          "1": 36,
+          "2": 22,
+          "4": 29,
+          "5": 45,
+          "6": 33,
+          "7": 45
+        },
+        "4": {
+          "1": 19,
+          "2": 5,
+          "3": 10,
+          "5": 3,
+          "6": 42,
+          "7": 20
+        },
+        "5": {
+          "1": 13,
+          "2": 10,
+          "3": 21,
+          "4": 7,
+          "6": 35,
+          "7": 11
+        },
+        "6": {
+          "1": 5,
+          "2": 35,
+          "3": 29,
+          "4": 16,
+          "5": 40,
+          "7": 9
+        },
+        "7": {
+          "1": 7,
+          "2": 24,
+          "3": 26,
+          "4": 38,
+          "5": 33,
+          "6": 13
+        }
+      },
+      "description": "Cost to transfer supplies from one center to another"
+    }
+  ],
+  "vars": [
+    {
+      "name": "transfer",
+      "indices": [
+        "CENTERS",
+        "CENTERS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of supplies transferred from one center to another"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(transfer[i][j] * transfer_cost[i][j] for i in CENTERS for j in CENTERS if i != j)",
+    "description": "Minimize the total cost of transferring supplies"
+  },
+  "constraints": [
+    {
+      "name": "supply_balance_1",
+      "expr_lhs": "initial_supplies['1'] + sum(transfer[j]['1'] for j in CENTERS if j != '1') - sum(transfer['1'][j] for j in CENTERS if j != '1')",
+      "sense": "==",
+      "expr_rhs": "needed_supplies['1']",
+      "description": "Ensure center 1 meets its supply needs"
+    },
+    {
+      "name": "supply_balance_2",
+      "expr_lhs": "initial_supplies['2'] + sum(transfer[j]['2'] for j in CENTERS if j != '2') - sum(transfer['2'][j] for j in CENTERS if j != '2')",
+      "sense": "==",
+      "expr_rhs": "needed_supplies['2']",
+      "description": "Ensure center 2 meets its supply needs"
+    },
+    {
+      "name": "supply_balance_3",
+      "expr_lhs": "initial_supplies['3'] + sum(transfer[j]['3'] for j in CENTERS if j != '3') - sum(transfer['3'][j] for j in CENTERS if j != '3')",
+      "sense": "==",
+      "expr_rhs": "needed_supplies['3']",
+      "description": "Ensure center 3 meets its supply needs"
+    },
+    {
+      "name": "supply_balance_4",
+      "expr_lhs": "initial_supplies['4'] + sum(transfer[j]['4'] for j in CENTERS if j != '4') - sum(transfer['4'][j] for j in CENTERS if j != '4')",
+      "sense": "==",
+      "expr_rhs": "needed_supplies['4']",
+      "description": "Ensure center 4 meets its supply needs"
+    },
+    {
+      "name": "supply_balance_5",
+      "expr_lhs": "initial_supplies['5'] + sum(transfer[j]['5'] for j in CENTERS if j != '5') - sum(transfer['5'][j] for j in CENTERS if j != '5')",
+      "sense": "==",
+      "expr_rhs": "needed_supplies['5']",
+      "description": "Ensure center 5 meets its supply needs"
+    },
+    {
+      "name": "supply_balance_6",
+      "expr_lhs": "initial_supplies['6'] + sum(transfer[j]['6'] for j in CENTERS if j != '6') - sum(transfer['6'][j] for j in CENTERS if j != '6')",
+      "sense": "==",
+      "expr_rhs": "needed_supplies['6']",
+      "description": "Ensure center 6 meets its supply needs"
+    },
+    {
+      "name": "supply_balance_7",
+      "expr_lhs": "initial_supplies['7'] + sum(transfer[j]['7'] for j in CENTERS if j != '7') - sum(transfer['7'][j] for j in CENTERS if j != '7')",
+      "sense": "==",
+      "expr_rhs": "needed_supplies['7']",
+      "description": "Ensure center 7 meets its supply needs"
+    }
+  ]
+}

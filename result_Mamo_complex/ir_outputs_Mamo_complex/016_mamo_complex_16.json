@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_16",
-    "source": null,
-    "description": "Optimize the selection of food items to meet nutritional requirements at minimum cost.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the selection of food items to meet nutritional requirements at the least cost.",
     "sense": "min",
     "version": 1
   },
@@ -21,6 +21,20 @@
   ],
   "params": [
     {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Steak": 6,
+        "Apples": 1,
+        "Eggs": 1,
+        "Chicken": 3,
+        "Tofu": 1
+      },
+      "description": "Cost of each food item."
+    },
+    {
       "name": "protein",
       "indices": [
         "FOODS"
@@ -32,7 +46,7 @@
         "Chicken": 20,
         "Tofu": 8
       },
-      "description": "Protein content per unit of each food item."
+      "description": "Protein content of each food item in grams."
     },
     {
       "name": "carbohydrates",
@@ -46,7 +60,7 @@
         "Chicken": 6,
         "Tofu": 4
       },
-      "description": "Carbohydrate content per unit of each food item."
+      "description": "Carbohydrate content of each food item in grams."
     },
     {
       "name": "calories",
@@ -60,21 +74,7 @@
         "Chicken": 132,
         "Tofu": 75
       },
-      "description": "Calorie content per unit of each food item."
-    },
-    {
-      "name": "cost",
-      "indices": [
-        "FOODS"
-      ],
-      "values": {
-        "Steak": 6,
-        "Apples": 1,
-        "Eggs": 1,
-        "Chicken": 3,
-        "Tofu": 1
-      },
-      "description": "Cost per unit of each food item."
+      "description": "Caloric content of each food item."
     }
   ],
   "vars": [
@@ -86,33 +86,33 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units to purchase for each food item."
+      "description": "Number of servings of each food item."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of purchasing food items."
+    "expr": "sum(cost[f] * x[f] for f in ['Steak', 'Apples', 'Eggs', 'Chicken', 'Tofu'])",
+    "description": "Minimize the total cost of selected food items."
   },
   "constraints": [
     {
       "name": "protein_requirement",
-      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(protein[f] * x[f] for f in ['Steak', 'Apples', 'Eggs', 'Chicken', 'Tofu'])",
       "sense": ">=",
       "expr_rhs": "87",
       "description": "Ensure at least 87 grams of protein are consumed."
     },
     {
-      "name": "carbohydrate_requirement",
-      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "name": "carbohydrates_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in ['Steak', 'Apples', 'Eggs', 'Chicken', 'Tofu'])",
       "sense": ">=",
       "expr_rhs": "135",
       "description": "Ensure at least 135 grams of carbohydrates are consumed."
     },
     {
-      "name": "calorie_requirement",
-      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in ['Steak', 'Apples', 'Eggs', 'Chicken', 'Tofu'])",
       "sense": ">=",
       "expr_rhs": "1926",
       "description": "Ensure at least 1926 calories are consumed."

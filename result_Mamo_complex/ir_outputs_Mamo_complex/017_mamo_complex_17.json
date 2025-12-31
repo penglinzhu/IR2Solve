@@ -1,14 +1,14 @@
 {
   "meta": {
     "problem_id": "mamo_complex_17",
-    "source": null,
-    "description": "Optimize the cost of meeting daily nutritional goals with a limited budget using four food items.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the cost of meeting daily nutritional requirements using a selection of food items.",
     "sense": "min",
     "version": 1
   },
   "sets": [
     {
-      "name": "FOOD_ITEMS",
+      "name": "FOODS",
       "elements": [
         "Eggs",
         "Rice",
@@ -16,13 +16,22 @@
         "Broccoli"
       ],
       "description": "Different food items available for consumption."
+    },
+    {
+      "name": "NUTRIENTS",
+      "elements": [
+        "Protein",
+        "Carbohydrates",
+        "Calories"
+      ],
+      "description": "Nutritional components to be considered."
     }
   ],
   "params": [
     {
       "name": "cost",
       "indices": [
-        "FOOD_ITEMS"
+        "FOODS"
       ],
       "values": {
         "Eggs": 6,
@@ -33,84 +42,87 @@
       "description": "Cost of each food item."
     },
     {
-      "name": "protein",
+      "name": "nutrition",
       "indices": [
-        "FOOD_ITEMS"
+        "FOODS",
+        "NUTRIENTS"
       ],
       "values": {
-        "Eggs": 4,
-        "Rice": 1,
-        "Chicken": 10,
-        "Broccoli": 8
+        "Eggs": {
+          "Protein": 4,
+          "Carbohydrates": 13,
+          "Calories": 238
+        },
+        "Rice": {
+          "Protein": 1,
+          "Carbohydrates": 13,
+          "Calories": 85
+        },
+        "Chicken": {
+          "Protein": 10,
+          "Carbohydrates": 29,
+          "Calories": 146
+        },
+        "Broccoli": {
+          "Protein": 8,
+          "Carbohydrates": 26,
+          "Calories": 139
+        }
       },
-      "description": "Protein content in grams for each food item."
+      "description": "Nutritional content of each food item."
     },
     {
-      "name": "carbohydrates",
+      "name": "requirements",
       "indices": [
-        "FOOD_ITEMS"
+        "NUTRIENTS"
       ],
       "values": {
-        "Eggs": 13,
-        "Rice": 13,
-        "Chicken": 29,
-        "Broccoli": 26
+        "Protein": 93,
+        "Carbohydrates": 165,
+        "Calories": 1553
       },
-      "description": "Carbohydrates content in grams for each food item."
-    },
-    {
-      "name": "calories",
-      "indices": [
-        "FOOD_ITEMS"
-      ],
-      "values": {
-        "Eggs": 238,
-        "Rice": 85,
-        "Chicken": 146,
-        "Broccoli": 139
-      },
-      "description": "Calories provided by each food item."
+      "description": "Daily nutritional requirements."
     }
   ],
   "vars": [
     {
       "name": "x",
       "indices": [
-        "FOOD_ITEMS"
+        "FOODS"
       ],
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food item to purchase."
+      "description": "Number of units of each food item to consume."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(cost[i] * x[i] for i in FOOD_ITEMS)",
-    "description": "Minimize the total cost of purchasing food items."
+    "expr": "sum(cost[f] * x[f] for f in ['Eggs', 'Rice', 'Chicken', 'Broccoli'])",
+    "description": "Minimize the total cost of food items to meet nutritional requirements."
   },
   "constraints": [
     {
       "name": "protein_requirement",
-      "expr_lhs": "sum(protein[i] * x[i] for i in FOOD_ITEMS)",
+      "expr_lhs": "sum(nutrition[f]['Protein'] * x[f] for f in ['Eggs', 'Rice', 'Chicken', 'Broccoli'])",
       "sense": ">=",
-      "expr_rhs": "93",
-      "description": "Ensure at least 93 grams of protein are consumed."
+      "expr_rhs": "requirements['Protein']",
+      "description": "Ensure at least the required amount of protein is consumed."
     },
     {
       "name": "carbohydrates_requirement",
-      "expr_lhs": "sum(carbohydrates[i] * x[i] for i in FOOD_ITEMS)",
+      "expr_lhs": "sum(nutrition[f]['Carbohydrates'] * x[f] for f in ['Eggs', 'Rice', 'Chicken', 'Broccoli'])",
       "sense": ">=",
-      "expr_rhs": "165",
-      "description": "Ensure at least 165 grams of carbohydrates are consumed."
+      "expr_rhs": "requirements['Carbohydrates']",
+      "description": "Ensure at least the required amount of carbohydrates is consumed."
     },
     {
       "name": "calories_requirement",
-      "expr_lhs": "sum(calories[i] * x[i] for i in FOOD_ITEMS)",
+      "expr_lhs": "sum(nutrition[f]['Calories'] * x[f] for f in ['Eggs', 'Rice', 'Chicken', 'Broccoli'])",
       "sense": ">=",
-      "expr_rhs": "1553",
-      "description": "Ensure at least 1553 calories are consumed."
+      "expr_rhs": "requirements['Calories']",
+      "description": "Ensure at least the required amount of calories is consumed."
     }
   ],
   "graph": null

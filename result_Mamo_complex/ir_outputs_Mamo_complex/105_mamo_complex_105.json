@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_105",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Maximize the daily profit of a company producing two types of products with constraints on labor and raw materials.",
     "sense": "max",
     "version": 1
@@ -10,10 +10,10 @@
     {
       "name": "PRODUCTS",
       "elements": [
-        "product_1",
-        "product_2"
+        "1",
+        "2"
       ],
-      "description": "Types of products produced by the company."
+      "description": "Types of products produced by the company"
     }
   ],
   "params": [
@@ -23,10 +23,10 @@
         "PRODUCTS"
       ],
       "values": {
-        "product_1": 0.25,
-        "product_2": 0.3333
+        "1": 0.25,
+        "2": 0.3333333333333333
       },
-      "description": "Assembly time required for each product in hours."
+      "description": "Assembly time required for each product type in hours"
     },
     {
       "name": "testing_time",
@@ -34,10 +34,10 @@
         "PRODUCTS"
       ],
       "values": {
-        "product_1": 0.125,
-        "product_2": 0.3333
+        "1": 0.125,
+        "2": 0.3333333333333333
       },
-      "description": "Testing time required for each product in hours."
+      "description": "Testing time required for each product type in hours"
     },
     {
       "name": "raw_material_cost",
@@ -45,10 +45,10 @@
         "PRODUCTS"
       ],
       "values": {
-        "product_1": 1.2,
-        "product_2": 0.9
+        "1": 1.2,
+        "2": 0.9
       },
-      "description": "Cost of raw materials for each product."
+      "description": "Cost of raw materials for each product type in dollars"
     },
     {
       "name": "market_value",
@@ -56,46 +56,46 @@
         "PRODUCTS"
       ],
       "values": {
-        "product_1": 9,
-        "product_2": 8
+        "1": 9,
+        "2": 8
       },
-      "description": "Market value of each product."
+      "description": "Market value of each product type in dollars"
     },
     {
       "name": "max_assembly_hours",
       "indices": [],
       "values": 90,
-      "description": "Maximum regular assembly labor hours available per day."
+      "description": "Maximum regular assembly labor hours available per day"
     },
     {
       "name": "max_testing_hours",
       "indices": [],
       "values": 80,
-      "description": "Maximum testing labor hours available per day."
+      "description": "Maximum testing labor hours available per day"
     },
     {
       "name": "max_overtime_hours",
       "indices": [],
       "values": 50,
-      "description": "Maximum overtime assembly labor hours available per day."
+      "description": "Maximum overtime assembly labor hours available per day"
     },
     {
       "name": "overtime_cost",
       "indices": [],
       "values": 9,
-      "description": "Cost per hour of overtime assembly labor."
+      "description": "Cost of overtime assembly labor per hour"
     }
   ],
   "vars": [
     {
-      "name": "production_qty",
+      "name": "x",
       "indices": [
         "PRODUCTS"
       ],
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units produced for each product."
+      "description": "Number of products produced of each type"
     },
     {
       "name": "overtime_hours",
@@ -103,29 +103,29 @@
       "vartype": "continuous",
       "lb": 0.0,
       "ub": 50,
-      "description": "Number of overtime assembly labor hours used."
+      "description": "Overtime assembly labor hours used"
     }
   ],
   "objective": {
     "name": "max_daily_profit",
     "sense": "max",
-    "expr": "(market_value['product_1'] - raw_material_cost['product_1']) * production_qty['product_1'] + (market_value['product_2'] - raw_material_cost['product_2']) * production_qty['product_2'] - overtime_cost * overtime_hours",
-    "description": "Maximize the daily profit by considering the market value, raw material cost, and overtime cost."
+    "expr": "sum((market_value[p] - raw_material_cost[p]) * x[p] for p in PRODUCTS) - overtime_cost * overtime_hours",
+    "description": "Maximize the daily profit by considering market value, raw material cost, and overtime cost"
   },
   "constraints": [
     {
-      "name": "assembly_capacity",
-      "expr_lhs": "assembly_time['product_1'] * production_qty['product_1'] + assembly_time['product_2'] * production_qty['product_2']",
+      "name": "assembly_hours_constraint",
+      "expr_lhs": "sum(assembly_time[p] * x[p] for p in PRODUCTS) + overtime_hours",
       "sense": "<=",
-      "expr_rhs": "max_assembly_hours + overtime_hours",
-      "description": "Total assembly time used must not exceed the sum of regular and overtime hours."
+      "expr_rhs": "max_assembly_hours + max_overtime_hours",
+      "description": "Total assembly hours including overtime must not exceed the maximum available"
     },
     {
-      "name": "testing_capacity",
-      "expr_lhs": "testing_time['product_1'] * production_qty['product_1'] + testing_time['product_2'] * production_qty['product_2']",
+      "name": "testing_hours_constraint",
+      "expr_lhs": "sum(testing_time[p] * x[p] for p in PRODUCTS)",
       "sense": "<=",
       "expr_rhs": "max_testing_hours",
-      "description": "Total testing time used must not exceed the available testing hours."
+      "description": "Total testing hours must not exceed the maximum available"
     }
   ],
   "graph": null

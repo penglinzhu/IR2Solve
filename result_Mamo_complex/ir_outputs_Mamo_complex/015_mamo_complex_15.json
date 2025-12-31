@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_15",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize meal planning to meet nutritional needs at minimal cost.",
     "sense": "min",
     "version": 1
@@ -30,7 +30,7 @@
         "Beef": 13,
         "Rice": 15
       },
-      "description": "Protein content per serving of each food item."
+      "description": "Protein content per unit of each food."
     },
     {
       "name": "carbohydrates",
@@ -43,7 +43,7 @@
         "Beef": 8,
         "Rice": 25
       },
-      "description": "Carbohydrate content per serving of each food item."
+      "description": "Carbohydrate content per unit of each food."
     },
     {
       "name": "calories",
@@ -56,7 +56,7 @@
         "Beef": 230,
         "Rice": 112
       },
-      "description": "Calorie content per serving of each food item."
+      "description": "Calorie content per unit of each food."
     },
     {
       "name": "cost",
@@ -69,7 +69,7 @@
         "Beef": 8,
         "Rice": 3
       },
-      "description": "Cost per serving of each food item."
+      "description": "Cost per unit of each food."
     }
   ],
   "vars": [
@@ -81,33 +81,33 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food item to purchase."
+      "description": "Number of units of each food to purchase."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "expr": "sum(cost[f] * x[f] for f in ['Chicken', 'Broccoli', 'Beef', 'Rice'])",
     "description": "Minimize the total cost of purchasing food items."
   },
   "constraints": [
     {
       "name": "protein_requirement",
-      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(protein[f] * x[f] for f in ['Chicken', 'Broccoli', 'Beef', 'Rice'])",
       "sense": ">=",
       "expr_rhs": "66",
       "description": "Ensure at least 66 grams of protein are consumed."
     },
     {
       "name": "carbohydrate_requirement",
-      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in ['Chicken', 'Broccoli', 'Beef', 'Rice'])",
       "sense": ">=",
       "expr_rhs": "101",
       "description": "Ensure at least 101 grams of carbohydrates are consumed."
     },
     {
       "name": "calorie_requirement",
-      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(calories[f] * x[f] for f in ['Chicken', 'Broccoli', 'Beef', 'Rice'])",
       "sense": ">=",
       "expr_rhs": "1701",
       "description": "Ensure at least 1701 calories are consumed."

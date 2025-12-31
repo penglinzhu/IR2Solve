@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_6",
-    "source": null,
-    "description": "Optimize the purchase of restaurants to maximize annual income within a budget constraint.",
+    "source": "IndustryOR",
+    "description": "The Zhang family decides which restaurants to purchase to maximize their annual income within a budget constraint.",
     "sense": "max",
     "version": 1
   },
@@ -30,7 +30,7 @@
         "C": 30000,
         "D": 50000
       },
-      "description": "Annual income from each restaurant."
+      "description": "Annual income of each restaurant."
     },
     {
       "name": "cost",
@@ -61,11 +61,11 @@
       "vartype": "binary",
       "lb": 0.0,
       "ub": 1.0,
-      "description": "Binary decision variable indicating whether to purchase each restaurant."
+      "description": "Binary decision variable indicating whether to purchase a restaurant."
     }
   ],
   "objective": {
-    "name": "max_annual_income",
+    "name": "max_total_income",
     "sense": "max",
     "expr": "sum(income[r] * purchase[r] for r in ['A', 'B', 'C', 'D'])",
     "description": "Maximize the total annual income from purchased restaurants."

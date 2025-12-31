@@ -1,0 +1,16 @@
+Imagine a network of highways that connect six major cities in a country. These highways are designed to facilitate the transportation of goods from a central warehouse (City 0) to a main retail hub (City 5). Each highway has a specific transportation capacity, indicating the maximum number of trucks it can accommodate per hour.
+
+Here is the transportation capacity of each highway connecting the cities:
+
+- From City 0 (Warehouse): Can send goods to City 1 (14 trucks), City 2 (15 trucks), City 3 (13 trucks), and City 5 (4 trucks).
+- From City 1: Can send goods to City 0 (10 trucks), City 2 (7 trucks), City 3 (18 trucks), City 4 (9 trucks), and City 5 (5 trucks).
+- From City 2: Can send goods to City 0 (11 trucks), City 3 (7 trucks), City 4 (13 trucks), and City 5 (6 trucks).
+- From City 3: Can send goods to City 0 (7 trucks), City 1 (11 trucks), City 2 (18 trucks), City 4 (17 trucks), and City 5 (2 trucks).
+- From City 4: Can send goods to City 0 (19 trucks), City 1 (8 trucks), City 2 (15 trucks), City 3 (15 trucks), and City 5 (5 trucks).
+- From City 5 (Retail Hub): Can send goods back to City 0 (10 trucks), City 1 (19 trucks), City 2 (17 trucks), City 3 (2 trucks), and City 4 (3 trucks).
+
+A capacity of "0" indicates that there is no direct highway link between those two cities.
+
+Now, consider a situation where you're tasked with finding the maximum number of trucks that can be dispatched from the warehouse in City 0 to the retail hub in City 5 per hour, without exceeding the transportation capacity of any highway. 
+
+What is the maximum number of trucks that can be dispatched from the warehouse to the retail hub per hour, while maintaining the transportation capacity of each highway?

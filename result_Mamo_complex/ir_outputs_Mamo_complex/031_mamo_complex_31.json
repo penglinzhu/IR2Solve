@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_31",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize weekly meal prep to meet dietary needs at the lowest cost.",
     "sense": "min",
     "version": 1
@@ -18,7 +18,7 @@
         "Food_6",
         "Food_7"
       ],
-      "description": "Available food items for meal prep."
+      "description": "Different food items available for meal prep."
     }
   ],
   "params": [
@@ -96,14 +96,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food item to purchase."
+      "description": "Number of units of each food item to include in the meal prep."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of food items to meet nutritional needs."
+    "description": "Minimize the total cost of the selected food items."
   },
   "constraints": [
     {

@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_30",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the meal plan to meet nutritional requirements at minimum cost.",
     "sense": "min",
     "version": 1
@@ -36,7 +36,7 @@
         "Apples": 4,
         "Bread": 4
       },
-      "description": "Protein content in grams per serving of each food."
+      "description": "Protein content in grams for each food item."
     },
     {
       "name": "carbohydrates",
@@ -52,7 +52,7 @@
         "Apples": 6,
         "Bread": 23
       },
-      "description": "Carbohydrate content in grams per serving of each food."
+      "description": "Carbohydrate content in grams for each food item."
     },
     {
       "name": "calories",
@@ -68,7 +68,7 @@
         "Apples": 160,
         "Bread": 141
       },
-      "description": "Caloric content per serving of each food."
+      "description": "Calorie content for each food item."
     },
     {
       "name": "price",
@@ -84,7 +84,7 @@
         "Apples": 6,
         "Bread": 5
       },
-      "description": "Price per serving of each food."
+      "description": "Price of each food item in dollars."
     }
   ],
   "vars": [
@@ -96,14 +96,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food to include in the meal plan."
+      "description": "Number of units to purchase for each food item."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(price[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of the meal plan."
+    "description": "Minimize the total cost of purchasing food items."
   },
   "constraints": [
     {
@@ -111,21 +111,21 @@
       "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "59",
-      "description": "Ensure at least 59 grams of protein are included in the meal plan."
+      "description": "Ensure at least 59 grams of protein are consumed."
     },
     {
       "name": "carbohydrates_requirement",
       "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "160",
-      "description": "Ensure at least 160 grams of carbohydrates are included in the meal plan."
+      "description": "Ensure at least 160 grams of carbohydrates are consumed."
     },
     {
       "name": "calories_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "1809",
-      "description": "Ensure at least 1809 calories are included in the meal plan."
+      "description": "Ensure at least 1809 calories are consumed."
     }
   ],
   "graph": null

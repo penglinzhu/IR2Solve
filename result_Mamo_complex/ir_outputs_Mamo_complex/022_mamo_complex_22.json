@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_22",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Determine the lowest-cost way to satisfy the athlete's dietary requirements using six food options.",
     "sense": "min",
     "version": 1
@@ -17,7 +17,7 @@
         "Corn",
         "Whey Protein"
       ],
-      "description": "Different food items available for purchase and cooking."
+      "description": "Available food items to purchase and cook."
     }
   ],
   "params": [
@@ -91,7 +91,7 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units of each food item to purchase."
+      "description": "Number of units to purchase for each food item."
     }
   ],
   "objective": {
@@ -106,21 +106,21 @@
       "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "58",
-      "description": "Ensure at least 58 grams of protein are consumed."
+      "description": "Ensure at least 58 grams of protein are provided."
     },
     {
       "name": "carbohydrate_requirement",
       "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "148",
-      "description": "Ensure at least 148 grams of carbohydrates are consumed."
+      "description": "Ensure at least 148 grams of carbohydrates are provided."
     },
     {
       "name": "calorie_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "2454",
-      "description": "Ensure at least 2454 calories are consumed."
+      "description": "Ensure at least 2454 calories are provided."
     }
   ],
   "graph": null

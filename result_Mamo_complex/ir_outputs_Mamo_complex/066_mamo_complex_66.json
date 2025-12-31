@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_66",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Calculate the maximum volume of goods that can be transported from Node 0 to Node 8 in a transport network with capacity constraints.",
     "sense": "max",
     "version": 1
@@ -112,14 +112,13 @@
           "8": 6
         },
         "8": {
-          "0": 0,
-          "1": 0,
-          "2": 0,
-          "3": 0,
-          "4": 0,
-          "5": 0,
-          "6": 0,
-          "7": 0
+          "0": 7,
+          "1": 15,
+          "2": 14,
+          "3": 18,
+          "4": 18,
+          "5": 11,
+          "6": 18
         }
       },
       "description": "Transport capacities between nodes in thousands of units"
@@ -641,13 +640,6 @@
       "sense": "<=",
       "expr_rhs": "capacity['8']['6']",
       "description": "Flow from Node 8 to Node 6 does not exceed capacity"
-    },
-    {
-      "name": "capacity_constraint_8_7",
-      "expr_lhs": "flow['8']['7']",
-      "sense": "<=",
-      "expr_rhs": "capacity['8']['7']",
-      "description": "Flow from Node 8 to Node 7 does not exceed capacity"
     },
     {
       "name": "flow_conservation_0",

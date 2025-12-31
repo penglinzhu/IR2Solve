@@ -1,0 +1,7 @@
+Consider a scenario where a delivery company needs to deliver packages to four different cities: Alpha, Bravo, Charlie, and Delta. The company can start the delivery from any city, but they must ensure that each city is visited exactly once and then return to the city they started from. The objective is to minimize the total delivery cost, which could include gas expenses, labour hours, and vehicle maintenance costs.
+Here is an overview of the delivery costs between the cities:
+The cost to deliver from Alpha to Bravo is 41 units, to Charlie is 55 units, and to Delta is 22 units.
+From Bravo, it costs 41 units to reach Alpha, 47 units to get to Charlie, and 47 units to Delta.
+If the company starts from Charlie, the costs are 55 units to Alpha, 47 units to Bravo, and 35 units to Delta.
+And if they start at Delta, it costs 22 units to reach Alpha, 47 units to Bravo, and 35 units to Charlie.
+Based on these costs, what is the minimum total delivery cost for the company to deliver packages to each city exactly once and return to the starting point?

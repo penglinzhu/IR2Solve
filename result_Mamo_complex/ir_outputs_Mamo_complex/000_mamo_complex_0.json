@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_0",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the meal plan for a bodybuilder to minimize cost while meeting nutritional requirements.",
     "sense": "min",
     "version": 1
@@ -34,7 +34,7 @@
         "Rice": 15,
         "Spinach": 2
       },
-      "description": "Protein content in grams per serving of each food."
+      "description": "Protein content in grams for each food item."
     },
     {
       "name": "carbohydrates",
@@ -49,7 +49,7 @@
         "Rice": 23,
         "Spinach": 8
       },
-      "description": "Carbohydrate content in grams per serving of each food."
+      "description": "Carbohydrates content in grams for each food item."
     },
     {
       "name": "calories",
@@ -64,7 +64,7 @@
         "Rice": 231,
         "Spinach": 297
       },
-      "description": "Caloric content per serving of each food."
+      "description": "Calories provided by each food item."
     },
     {
       "name": "cost",
@@ -79,7 +79,7 @@
         "Rice": 8,
         "Spinach": 5
       },
-      "description": "Cost per serving of each food."
+      "description": "Cost of each food item in dollars."
     }
   ],
   "vars": [

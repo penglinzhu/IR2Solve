@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_14",
-    "source": null,
-    "description": "Minimize the total cost of producing 2000 units of a product using one of four devices with setup and production costs.",
+    "source": "IndustryOR",
+    "description": "Minimize the total cost of producing 2000 units of a product using one of four devices with known setup and production costs and capacities.",
     "sense": "min",
     "version": 1
   },
@@ -15,7 +15,7 @@
         "C",
         "D"
       ],
-      "description": "Set of devices available for processing the product."
+      "description": "The devices available for processing the product."
     }
   ],
   "params": [
@@ -30,7 +30,7 @@
         "C": 800,
         "D": 700
       },
-      "description": "Setup completion cost for each device in yuan."
+      "description": "Setup completion cost for each device when activated."
     },
     {
       "name": "production_cost",
@@ -43,7 +43,7 @@
         "C": 16,
         "D": 28
       },
-      "description": "Production cost per unit for each device in yuan."
+      "description": "Production cost per unit for each device."
     },
     {
       "name": "max_capacity",
@@ -56,44 +56,44 @@
         "C": 1200,
         "D": 1600
       },
-      "description": "Maximum processing capacity for each device in units."
+      "description": "Maximum processing capacity for each device."
     }
   ],
   "vars": [
-    {
-      "name": "x",
-      "indices": [
-        "DEVICES"
-      ],
-      "vartype": "integer",
-      "lb": 0,
-      "ub": null,
-      "description": "Number of units produced by each device."
-    },
     {
       "name": "y",
       "indices": [
         "DEVICES"
       ],
       "vartype": "binary",
-      "lb": 0,
-      "ub": 1,
+      "lb": 0.0,
+      "ub": 1.0,
       "description": "Binary variable indicating if a device is activated."
+    },
+    {
+      "name": "x",
+      "indices": [
+        "DEVICES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units processed by each device."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(setup_cost[d] * y[d] + production_cost[d] * x[d] for d in DEVICES)",
-    "description": "Minimize the total cost including setup and production costs."
+    "description": "Minimize the total cost of setup and production across all devices."
   },
   "constraints": [
     {
-      "name": "production_requirement",
+      "name": "demand_fulfillment",
       "expr_lhs": "sum(x[d] for d in DEVICES)",
       "sense": "==",
       "expr_rhs": "2000",
-      "description": "Ensure that exactly 2000 units are produced in total."
+      "description": "Ensure that the total production meets the demand of 2000 units."
     },
     {
       "name": "capacity_constraint_A",

@@ -1,0 +1,19 @@
+{
+  "run_id": "20251230_204736",
+  "graph_built": true,
+  "verifier_report": {
+    "ok": true,
+    "issues": [],
+    "repairs": [],
+    "notes": "verifier placeholder (no-op)",
+    "graph_required": true
+  },
+  "gurobi_status": null,
+  "gurobi_status_name": "NONE",
+  "gurobi_obj_value": null,
+  "gurobi_metrics": {},
+  "estimation": {
+    "ok": false,
+    "notes": "not run"
+  }
+}

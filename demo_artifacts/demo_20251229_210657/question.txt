@@ -1,0 +1,14 @@
+Imagine you are a dietitian and you have been tasked with creating a meal plan for a bodybuilder. You have six food items to choose from: Steak, Tofu, Chicken, Broccoli, Rice, and Spinach. Each food provides certain amounts of protein, carbohydrates, and calories, and each has its own cost.
+
+Here's the nutritional value and cost of each food:
+
+- Steak: It gives you 14 grams of protein, 23 grams of carbohydrates, and 63 calories for $4.
+- Tofu: It offers 2 grams of protein, 13 grams of carbohydrates, and 162 calories for $6.
+- Chicken: It packs a punch with 17 grams of protein, 13 grams of carbohydrates, and gives you 260 calories for $6.
+- Broccoli: It provides 3 grams of protein, a mere 1 gram of carbohydrates, and 55 calories for $8.
+- Rice: It gives a hearty 15 grams of protein, 23 grams of carbohydrates, and 231 calories for $8.
+- Spinach: It provides 2 grams of protein, 8 grams of carbohydrates, and a huge 297 calories for just $5.
+
+Your goal is to ensure that the bodybuilder gets at least 83 grams of protein, 192 grams of carbohydrates, and 2089 calories from whatever combination of these foods you choose. The challenge is to keep the cost as low as possible while meeting these nutritional targets. 
+
+What is the minimum cost to meet these nutritional requirements with the available food options?

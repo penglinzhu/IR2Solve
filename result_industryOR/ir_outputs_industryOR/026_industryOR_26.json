@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_26",
-    "source": null,
-    "description": "Optimize the selection of feed to meet nutritional requirements at minimum cost.",
+    "source": "IndustryOR",
+    "description": "Optimize the selection of feed types to meet nutritional requirements at minimum cost.",
     "sense": "min",
     "version": 1
   },
@@ -32,7 +32,7 @@
         "4": 6,
         "5": 18
       },
-      "description": "Protein content per gram of feed."
+      "description": "Protein content per gram of each feed."
     },
     {
       "name": "mineral_content",
@@ -46,7 +46,7 @@
         "4": 2,
         "5": 0.5
       },
-      "description": "Mineral content per gram of feed."
+      "description": "Mineral content per gram of each feed."
     },
     {
       "name": "vitamin_content",
@@ -60,10 +60,10 @@
         "4": 2,
         "5": 0.8
       },
-      "description": "Vitamin content per milligram of feed."
+      "description": "Vitamin content per milligram of each feed."
     },
     {
-      "name": "price_per_kg",
+      "name": "price",
       "indices": [
         "FEEDS"
       ],
@@ -74,12 +74,12 @@
         "4": 0.3,
         "5": 0.8
       },
-      "description": "Price per kilogram of feed in yuan."
+      "description": "Price per kilogram of each feed."
     }
   ],
   "vars": [
     {
-      "name": "x",
+      "name": "amount",
       "indices": [
         "FEEDS"
       ],
@@ -92,27 +92,27 @@
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(x[f] * price_per_kg[f] / 1000 for f in FEEDS)",
-    "description": "Minimize the total cost of feed."
+    "expr": "sum(amount[f] * price[f] / 1000 for f in FEEDS)",
+    "description": "Minimize the total cost of feed selection."
   },
   "constraints": [
     {
       "name": "protein_requirement",
-      "expr_lhs": "sum(x[f] * protein_content[f] for f in FEEDS)",
+      "expr_lhs": "sum(amount[f] * protein_content[f] for f in FEEDS)",
       "sense": ">=",
       "expr_rhs": "700",
       "description": "Ensure at least 700g of protein is provided."
     },
     {
       "name": "mineral_requirement",
-      "expr_lhs": "sum(x[f] * mineral_content[f] for f in FEEDS)",
+      "expr_lhs": "sum(amount[f] * mineral_content[f] for f in FEEDS)",
       "sense": ">=",
       "expr_rhs": "30",
       "description": "Ensure at least 30g of minerals is provided."
     },
     {
       "name": "vitamin_requirement",
-      "expr_lhs": "sum(x[f] * vitamin_content[f] for f in FEEDS)",
+      "expr_lhs": "sum(amount[f] * vitamin_content[f] for f in FEEDS)",
       "sense": ">=",
       "expr_rhs": "100",
       "description": "Ensure at least 100mg of vitamins is provided."

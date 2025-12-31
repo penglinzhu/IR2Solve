@@ -1,0 +1,17 @@
+Welcome to the challenge of optimizing the network of a futuristic transportation system that interconnects 7 strategic hubs across a thriving metropolis. These hubs, ranging from the central dispatch center to the main distribution hub, are connected by a network of high-speed transit lanes, each with a distinct capacity limitation for vehicles per hour. 
+
+Here's a breakdown of the transit system's capabilities, indicating the maximum number of vehicles that can move from one hub to another within an hour:
+
+- From Hub 0 (Central Dispatch): Vehicles can move to Hub 1 (15 vehicles), Hub 2 (2 vehicles), Hub 3 (16 vehicles), Hub 4 (3 vehicles), Hub 5 (5 vehicles), and Hub 6 (3 vehicles).
+- From Hub 1: Vehicles can move to Hub 0 (7 vehicles), Hub 4 (19 vehicles), Hub 5 (15 vehicles), and Hub 6 (16 vehicles).
+- From Hub 2: Vehicles can move to Hub 0 (11 vehicles), Hub 1 (14 vehicles), Hub 3 (14 vehicles), Hub 4 (8 vehicles), Hub 5 (11 vehicles), and Hub 6 (6 vehicles).
+- From Hub 3: Vehicles can move to Hub 0 (17 vehicles), Hub 1 (11 vehicles), Hub 2 (11 vehicles), Hub 4 (11 vehicles), Hub 5 (16 vehicles), and Hub 6 (19 vehicles).
+- From Hub 4: Vehicles can move to Hub 0 (10 vehicles), Hub 1 (4 vehicles), Hub 2 (17 vehicles), Hub 3 (20 vehicles), Hub 5 (12 vehicles), and Hub 6 (17 vehicles).
+- From Hub 5: Vehicles can move to Hub 0 (3 vehicles), Hub 2 (4 vehicles), Hub 3 (5 vehicles), Hub 4 (20 vehicles), and Hub 6 (4 vehicles).
+- From Hub 6 (Main Distribution Hub): Vehicles can move back to Hub 0 (15 vehicles), Hub 1 (2 vehicles), Hub 2 (15 vehicles), Hub 3 (18 vehicles), Hub 4 (17 vehicles), and Hub 5 (7 vehicles).
+
+In this advanced transit network, a capacity of "0" indicates that there is no direct transit lane connecting two specific hubs.
+
+The objective is to determine the maximum capacity of vehicles that can be dispatched from Hub 0 (the Central Dispatch Center) to Hub 6 (the Main Distribution Hub) per hour, while ensuring that the flow through each transit lane does not exceed its specified capacity limit. 
+
+What is the maximum number of vehicles that can be optimally dispatched from the Central Dispatch Center to the Main Distribution Hub within an hour?

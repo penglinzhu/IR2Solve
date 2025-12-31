@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "problem_id": "restaurant_table_ordering",
+    "source": null,
+    "description": "Optimize the ordering of tables from suppliers A, B, and C to minimize cost while satisfying constraints.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "SUPPLIERS",
+      "elements": [
+        "A",
+        "B",
+        "C"
+      ],
+      "description": "The suppliers from which tables can be ordered."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "SUPPLIERS"
+      ],
+      "values": {
+        "A": 120,
+        "B": 110,
+        "C": 100
+      },
+      "description": "Cost per table from each supplier."
+    },
+    {
+      "name": "tables_per_order",
+      "indices": [
+        "SUPPLIERS"
+      ],
+      "values": {
+        "A": 20,
+        "B": 15,
+        "C": 15
+      },
+      "description": "Number of tables included in each order from each supplier."
+    }
+  ],
+  "vars": [
+    {
+      "name": "orders",
+      "indices": [
+        "SUPPLIERS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of orders placed with each supplier."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[s] * orders[s] for s in SUPPLIERS)",
+    "description": "Minimize the total cost of ordering tables."
+  },
+  "constraints": [
+    {
+      "name": "min_tables",
+      "expr_lhs": "sum(tables_per_order[s] * orders[s] for s in SUPPLIERS)",
+      "sense": ">=",
+      "expr_rhs": "150",
+      "description": "The restaurant needs to order at least 150 tables."
+    },
+    {
+      "name": "max_tables",
+      "expr_lhs": "sum(tables_per_order[s] * orders[s] for s in SUPPLIERS)",
+      "sense": "<=",
+      "expr_rhs": "600",
+      "description": "The restaurant can order a maximum of 600 tables."
+    },
+    {
+      "name": "order_B_if_A",
+      "expr_lhs": "orders['B']",
+      "sense": ">=",
+      "expr_rhs": "1",
+      "description": "If the restaurant orders from supplier A, it must also order from supplier B."
+    },
+    {
+      "name": "min_30_tables_B_if_A",
+      "expr_lhs": "tables_per_order['B'] * orders['B']",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "If the restaurant orders from supplier A, it must order at least 30 tables from supplier B."
+    },
+    {
+      "name": "order_C_if_B",
+      "expr_lhs": "orders['C']",
+      "sense": ">=",
+      "expr_rhs": "1",
+      "description": "If the restaurant orders from supplier B, it must also order from supplier C."
+    }
+  ],
+  "graph": null
+}

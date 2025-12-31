@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_0",
-    "source": null,
-    "description": "Determine which children the Zhang family should take on a trip to minimize the total cost while satisfying various constraints.",
+    "source": "IndustryOR",
+    "description": "Determine which children the Zhang family should take on their trip to minimize the total cost.",
     "sense": "min",
     "version": 1
   },
@@ -34,7 +34,7 @@
         "George": 800,
         "Ginny": 1500
       },
-      "description": "The cost of taking each child on the trip."
+      "description": "The cost of taking each child."
     }
   ],
   "vars": [
@@ -53,7 +53,7 @@
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[c] * take[c] for c in CHILDREN)",
-    "description": "Minimize the total cost of taking the children on the trip."
+    "description": "Minimize the total cost of taking the children."
   },
   "constraints": [
     {
@@ -68,42 +68,42 @@
       "expr_lhs": "take['Ginny']",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ginny must be taken on the trip."
+      "description": "Ginny is the youngest, so the Zhang family will definitely take her."
     },
     {
-      "name": "harry_not_fred",
+      "name": "no_harry_fred",
       "expr_lhs": "take['Harry'] + take['Fred']",
       "sense": "<=",
       "expr_rhs": "1",
-      "description": "If Harry is taken, Fred cannot be taken."
+      "description": "If the couple takes Harry, they will not take Fred."
     },
     {
-      "name": "harry_not_george",
+      "name": "no_harry_george",
       "expr_lhs": "take['Harry'] + take['George']",
       "sense": "<=",
       "expr_rhs": "1",
-      "description": "If Harry is taken, George cannot be taken."
+      "description": "If the couple takes Harry, they will not take George."
     },
     {
-      "name": "george_must_fred",
-      "expr_lhs": "take['George']",
+      "name": "george_fred",
+      "expr_lhs": "take['George'] - take['Fred']",
       "sense": "<=",
-      "expr_rhs": "take['Fred']",
-      "description": "If George is taken, Fred must also be taken."
+      "expr_rhs": "0",
+      "description": "If they take George, they must also take Fred."
     },
     {
-      "name": "george_must_hermione",
-      "expr_lhs": "take['George']",
+      "name": "george_hermione",
+      "expr_lhs": "take['George'] - take['Hermione']",
       "sense": "<=",
-      "expr_rhs": "take['Hermione']",
-      "description": "If George is taken, Hermione must also be taken."
+      "expr_rhs": "0",
+      "description": "If they take George, they must also take Hermione."
     },
     {
-      "name": "at_least_3_children",
+      "name": "min_3_children",
       "expr_lhs": "sum(take[c] for c in CHILDREN)",
       "sense": ">=",
       "expr_rhs": "3",
-      "description": "The family must take at least 3 children."
+      "description": "The Zhang family has decided to take at least three children."
     }
   ],
   "graph": null

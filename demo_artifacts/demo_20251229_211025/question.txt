@@ -1,0 +1,17 @@
+Imagine you're the logistics coordinator in charge of distributing medical supplies among four different hospitals during an unexpected health crisis. Each hospital starts with a specific number of supplies but has varying needs based on the urgency and scale of cases they are handling.
+
+Here's what each hospital has and what they need:
+
+- Hospital 1 has 480 units of supplies but needs only 61 units.
+- Hospital 2 has 492 units but needs 313 units.
+- Hospital 3 has 74 units but needs 93 units.
+- Hospital 4 has 317 units but needs 199 units.
+
+Due to the urgent situation, you can transfer supplies between hospitals, but each transfer incurs a cost, which varies depending on the hospitals involved. Here’s a breakdown of the cost to transfer supplies from one hospital to another:
+
+- Moving supplies from/to Hospital 1: To Hospital 2 costs 8, to Hospital 3 costs 42, to Hospital 4 costs 27.
+- Moving supplies from/to Hospital 2: To Hospital 1 costs 17, to Hospital 3 costs 13, to Hospital 4 costs 30.
+- Moving supplies from/to Hospital 3: To Hospital 1 costs 4, to Hospital 2 costs 14, to Hospital 4 costs 16.
+- Moving supplies from/to Hospital 4: To Hospital 1 costs 33, to Hospital 2 costs 9, to Hospital 3 costs 42.
+
+Your objective is to ensure each hospital has the supplies it needs while minimizing the total cost of transfers. What would be the minimum cost to achieve this?

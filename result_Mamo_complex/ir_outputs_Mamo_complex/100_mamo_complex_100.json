@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_100",
-    "source": null,
-    "description": "Optimize the production of fruit salads A and B to maximize profit given fruit resource constraints.",
+    "source": "Mamo_complex_lp",
+    "description": "Maximize the total profit from making fruit salads A and B given the available stock of fruits and constraints on leftover or additional usage.",
     "sense": "max",
     "version": 1
   },
@@ -35,10 +35,10 @@
         "A": 10,
         "B": 20
       },
-      "description": "Net profit per unit of each salad type"
+      "description": "Net profit for each unit of fruit salad"
     },
     {
-      "name": "resource_usage",
+      "name": "requirement",
       "indices": [
         "SALADS",
         "FRUITS"
@@ -55,10 +55,10 @@
           "strawberry": 1
         }
       },
-      "description": "Amount of each fruit used per unit of each salad type"
+      "description": "Amount of each fruit required to make one unit of each salad"
     },
     {
-      "name": "available_stock",
+      "name": "stock",
       "indices": [
         "FRUITS"
       ],
@@ -79,36 +79,36 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units produced for each type of salad"
+      "description": "Number of units of each fruit salad to produce"
     }
   ],
   "objective": {
     "name": "max_total_profit",
     "sense": "max",
-    "expr": "10 * x['A'] + 20 * x['B']",
-    "description": "Maximize total profit from producing salads A and B"
+    "expr": "sum(profit[s] * x[s] for s in SALADS)",
+    "description": "Maximize the total profit from producing fruit salads A and B"
   },
   "constraints": [
     {
       "name": "mango_usage",
-      "expr_lhs": "0.25 * x['A'] + 0.5 * x['B']",
+      "expr_lhs": "sum(requirement[s]['mango'] * x[s] for s in SALADS)",
       "sense": "<=",
-      "expr_rhs": "25 + 5",
-      "description": "Mango usage constraint with at most 5 additional units used"
+      "expr_rhs": "stock['mango'] + 5",
+      "description": "Mango usage must not exceed available stock plus 5 additional units"
     },
     {
       "name": "pineapple_usage",
-      "expr_lhs": "0.125 * x['A'] + 0.25 * x['B']",
+      "expr_lhs": "sum(requirement[s]['pineapple'] * x[s] for s in SALADS)",
       "sense": "<=",
-      "expr_rhs": "10 + 5",
-      "description": "Pineapple usage constraint with at most 5 additional units used"
+      "expr_rhs": "stock['pineapple'] + 5",
+      "description": "Pineapple usage must not exceed available stock plus 5 additional units"
     },
     {
       "name": "strawberry_usage",
-      "expr_lhs": "3 * x['A'] + 1 * x['B']",
+      "expr_lhs": "sum(requirement[s]['strawberry'] * x[s] for s in SALADS)",
       "sense": "<=",
-      "expr_rhs": "120 + 5",
-      "description": "Strawberry usage constraint with at most 5 additional units used"
+      "expr_rhs": "stock['strawberry'] + 5",
+      "description": "Strawberry usage must not exceed available stock plus 5 additional units"
     }
   ],
   "graph": null

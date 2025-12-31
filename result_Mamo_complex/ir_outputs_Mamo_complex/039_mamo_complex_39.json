@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_39",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the distribution of medical supplies across regions to meet demands at minimum cost.",
     "sense": "min",
     "version": 1
@@ -35,7 +35,7 @@
       "description": "Initial stock of supplies in each region."
     },
     {
-      "name": "required_stock",
+      "name": "required_supply",
       "indices": [
         "REGIONS"
       ],
@@ -46,7 +46,7 @@
         "4": 359,
         "5": 74
       },
-      "description": "Required stock of supplies in each region."
+      "description": "Required supply in each region."
     },
     {
       "name": "transfer_cost",
@@ -96,7 +96,7 @@
         "REGIONS",
         "REGIONS"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
       "description": "Amount of supplies transferred from one region to another."
@@ -110,39 +110,39 @@
   },
   "constraints": [
     {
-      "name": "balance_region_1",
+      "name": "supply_balance_1",
       "expr_lhs": "initial_stock['1'] + sum(transfer[j]['1'] for j in REGIONS if j != '1') - sum(transfer['1'][j] for j in REGIONS if j != '1')",
       "sense": ">=",
-      "expr_rhs": "required_stock['1']",
-      "description": "Ensure region 1 meets its required stock."
+      "expr_rhs": "required_supply['1']",
+      "description": "Ensure Region 1 meets its supply requirement."
     },
     {
-      "name": "balance_region_2",
+      "name": "supply_balance_2",
       "expr_lhs": "initial_stock['2'] + sum(transfer[j]['2'] for j in REGIONS if j != '2') - sum(transfer['2'][j] for j in REGIONS if j != '2')",
       "sense": ">=",
-      "expr_rhs": "required_stock['2']",
-      "description": "Ensure region 2 meets its required stock."
+      "expr_rhs": "required_supply['2']",
+      "description": "Ensure Region 2 meets its supply requirement."
     },
     {
-      "name": "balance_region_3",
+      "name": "supply_balance_3",
       "expr_lhs": "initial_stock['3'] + sum(transfer[j]['3'] for j in REGIONS if j != '3') - sum(transfer['3'][j] for j in REGIONS if j != '3')",
       "sense": ">=",
-      "expr_rhs": "required_stock['3']",
-      "description": "Ensure region 3 meets its required stock."
+      "expr_rhs": "required_supply['3']",
+      "description": "Ensure Region 3 meets its supply requirement."
     },
     {
-      "name": "balance_region_4",
+      "name": "supply_balance_4",
       "expr_lhs": "initial_stock['4'] + sum(transfer[j]['4'] for j in REGIONS if j != '4') - sum(transfer['4'][j] for j in REGIONS if j != '4')",
       "sense": ">=",
-      "expr_rhs": "required_stock['4']",
-      "description": "Ensure region 4 meets its required stock."
+      "expr_rhs": "required_supply['4']",
+      "description": "Ensure Region 4 meets its supply requirement."
     },
     {
-      "name": "balance_region_5",
+      "name": "supply_balance_5",
       "expr_lhs": "initial_stock['5'] + sum(transfer[j]['5'] for j in REGIONS if j != '5') - sum(transfer['5'][j] for j in REGIONS if j != '5')",
       "sense": ">=",
-      "expr_rhs": "required_stock['5']",
-      "description": "Ensure region 5 meets its required stock."
+      "expr_rhs": "required_supply['5']",
+      "description": "Ensure Region 5 meets its supply requirement."
     }
   ],
   "graph": null

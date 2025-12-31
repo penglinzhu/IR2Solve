@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_25",
+    "source": null,
+    "description": "Optimize daily meal plan to fulfill nutritional intake while minimizing expenses.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Beef",
+        "Pasta",
+        "Broccoli",
+        "Chicken",
+        "Apple",
+        "Pork",
+        "Lentils",
+        "Eggs",
+        "Cheese"
+      ],
+      "description": "Different food items available for the meal plan."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Beef": 5,
+        "Pasta": 6,
+        "Broccoli": 5,
+        "Chicken": 4,
+        "Apple": 1,
+        "Pork": 6,
+        "Lentils": 1,
+        "Eggs": 2,
+        "Cheese": 7
+      },
+      "description": "Cost of each food item."
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Beef": 18,
+        "Pasta": 2,
+        "Broccoli": 7,
+        "Chicken": 20,
+        "Apple": 5,
+        "Pork": 13,
+        "Lentils": 15,
+        "Eggs": 20,
+        "Cheese": 9
+      },
+      "description": "Protein content of each food item in grams."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Beef": 13,
+        "Pasta": 25,
+        "Broccoli": 30,
+        "Chicken": 16,
+        "Apple": 6,
+        "Pork": 9,
+        "Lentils": 18,
+        "Eggs": 18,
+        "Cheese": 14
+      },
+      "description": "Carbohydrate content of each food item in grams."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Beef": 233,
+        "Pasta": 251,
+        "Broccoli": 191,
+        "Chicken": 231,
+        "Apple": 111,
+        "Pork": 275,
+        "Lentils": 99,
+        "Eggs": 210,
+        "Cheese": 74
+      },
+      "description": "Calorie content of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of servings of each food item."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of the meal plan."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "68",
+      "description": "Ensure at least 68 grams of protein are consumed."
+    },
+    {
+      "name": "carbohydrate_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "151",
+      "description": "Ensure at least 151 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calorie_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "1900",
+      "description": "Ensure at least 1900 calories are consumed."
+    }
+  ],
+  "graph": null
+}

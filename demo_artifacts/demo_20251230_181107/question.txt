@@ -1,0 +1,9 @@
+A restaurant needs to order tables from three different suppliers, A, B, and C. The cost of ordering each table from supplier A is $120, from supplier B is $110, and from supplier C is $100. The restaurant wants to minimize the total cost of the orders.
+
+In addition, each order from supplier A will include 20 tables, while orders from suppliers B and C will include 15 tables each. The quantity of orders can only be whole numbers. The restaurant needs to order at least 150 tables.
+
+Each order from supplier A will include 20 tables, while orders from suppliers B and C will include 15 tables each. The restaurant needs to order a maximum of 600 tables.
+
+If the restaurant decides to order tables from supplier A, it must also order at least 30 tables from supplier B.
+
+Furthermore, if the restaurant decides to order tables from supplier B, it must also order tables from supplier C.

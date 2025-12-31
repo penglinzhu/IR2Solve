@@ -1,0 +1,18 @@
+A factory produces three types of products: I, II, and III. Each product requires two processing steps, A and B. The factory has two types of equipment for step A, represented by A1 and A2, and three types of equipment for step B, represented by B1, B2, and B3. Product I can be processed on any type of A equipment and any type of B equipment. Product II can be processed on any type of A equipment, but for step B, it can only be processed on B1 equipment. Product III can only be processed on A2 and B2 equipment. The unit processing time, raw material cost, selling price, equipment available time, and equipment cost at full load for each type of equipment are shown in Table 1-18. Determine the optimal production plan to maximize the profit for the factory.
+
+Table 1-18
+\begin{tabular}{c|c|c|c|c|c}
+\hline \multirow{2}{*}{ Equipment } & \multicolumn{3}{|c|}{ Product } & \multirow{2}{*}{ Equipment Available Time } & \multirow{2}{*}{\begin{tabular}{c} 
+Equipment Cost at \\
+Full Load (CNY)
+\end{tabular}} \\
+\cline { 2 - 4 } & I & II & III & 6000 & 300 \\
+$A_1$ & 5 & 10 & & 10000 & 321 \\
+$A_2$ & 7 & 9 & 12 & 4000 & 250 \\
+$B_1$ & 6 & 8 & & 7000 & 783 \\
+$B_2$ & 4 & & 11 & 4000 & 200 \\
+$B_3$ & 7 & & & & \\
+\hline Raw Material Cost (CNY / unit) & 0.25 & 0.35 & 0.50 & & \\
+Unit Price (CNY / unit) & 1.25 & 2.00 & 2.80 & & \\
+\hline
+\end{tabular}

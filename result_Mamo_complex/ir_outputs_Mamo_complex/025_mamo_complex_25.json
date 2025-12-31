@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_25",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize daily meal plan to fulfill nutritional intake while minimizing expenses.",
     "sense": "min",
     "version": 1

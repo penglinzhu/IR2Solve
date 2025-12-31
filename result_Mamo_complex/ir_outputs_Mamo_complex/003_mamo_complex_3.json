@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_3",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the meal plan to meet nutritional requirements at minimum cost.",
     "sense": "min",
     "version": 1
@@ -49,7 +49,7 @@
         "Food_5": 13,
         "Food_6": 1
       },
-      "description": "Protein content of each food item (grams)"
+      "description": "Protein content of each food item in grams"
     },
     {
       "name": "carbohydrates",
@@ -64,7 +64,7 @@
         "Food_5": 1,
         "Food_6": 13
       },
-      "description": "Carbohydrates content of each food item (grams)"
+      "description": "Carbohydrate content of each food item in grams"
     },
     {
       "name": "calories",
@@ -79,7 +79,7 @@
         "Food_5": 136,
         "Food_6": 225
       },
-      "description": "Calories content of each food item"
+      "description": "Caloric content of each food item"
     }
   ],
   "vars": [

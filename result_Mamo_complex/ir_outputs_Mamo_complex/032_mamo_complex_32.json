@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_32",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Determine the least expensive way to meet nutritional requirements using four food options.",
     "sense": "min",
     "version": 1
@@ -15,7 +15,7 @@
         "Pasta",
         "Chicken"
       ],
-      "description": "Different food items available for the meal plan."
+      "description": "Different food items considered for the meal plan."
     }
   ],
   "params": [
@@ -30,7 +30,7 @@
         "Pasta": 1,
         "Chicken": 10
       },
-      "description": "Protein content in grams per serving of each food item."
+      "description": "Protein content in grams for each food item."
     },
     {
       "name": "carbohydrates",
@@ -43,7 +43,7 @@
         "Pasta": 26,
         "Chicken": 1
       },
-      "description": "Carbohydrate content in grams per serving of each food item."
+      "description": "Carbohydrate content in grams for each food item."
     },
     {
       "name": "calories",
@@ -56,7 +56,7 @@
         "Pasta": 52,
         "Chicken": 69
       },
-      "description": "Caloric content per serving of each food item."
+      "description": "Calorie content for each food item."
     },
     {
       "name": "cost",
@@ -69,7 +69,7 @@
         "Pasta": 9,
         "Chicken": 4
       },
-      "description": "Cost per serving of each food item in dollars."
+      "description": "Cost in dollars for each food item."
     }
   ],
   "vars": [
@@ -78,17 +78,17 @@
       "indices": [
         "FOOD_ITEMS"
       ],
-      "vartype": "integer",
+      "vartype": "continuous",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food item to purchase."
+      "description": "Amount of each food item to purchase."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[i] * x[i] for i in FOOD_ITEMS)",
-    "description": "Minimize the total cost of the food items selected."
+    "description": "Minimize the total cost of purchasing food items."
   },
   "constraints": [
     {

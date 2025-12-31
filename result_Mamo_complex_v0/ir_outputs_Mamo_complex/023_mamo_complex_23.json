@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_23",
+    "source": null,
+    "description": "Optimize the selection of food items to meet nutritional requirements at minimum cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Chicken",
+        "Rice",
+        "Eggs",
+        "Beans",
+        "Spinach",
+        "Corn",
+        "Beef",
+        "Broccoli"
+      ],
+      "description": "Different food items available for selection."
+    }
+  ],
+  "params": [
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 5,
+        "Rice": 8,
+        "Eggs": 18,
+        "Beans": 16,
+        "Spinach": 3,
+        "Corn": 3,
+        "Beef": 6,
+        "Broccoli": 17
+      },
+      "description": "Protein content in grams per unit of each food item."
+    },
+    {
+      "name": "carbohydrates",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 15,
+        "Rice": 17,
+        "Eggs": 20,
+        "Beans": 15,
+        "Spinach": 28,
+        "Corn": 19,
+        "Beef": 24,
+        "Broccoli": 9
+      },
+      "description": "Carbohydrate content in grams per unit of each food item."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 162,
+        "Rice": 282,
+        "Eggs": 234,
+        "Beans": 85,
+        "Spinach": 194,
+        "Corn": 153,
+        "Beef": 167,
+        "Broccoli": 192
+      },
+      "description": "Caloric content per unit of each food item."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Chicken": 8,
+        "Rice": 4,
+        "Eggs": 1,
+        "Beans": 4,
+        "Spinach": 7,
+        "Corn": 2,
+        "Beef": 9,
+        "Broccoli": 3
+      },
+      "description": "Cost in dollars per unit of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units of each food item to purchase."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of purchasing food items."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "68",
+      "description": "Ensure at least 68 grams of protein are consumed."
+    },
+    {
+      "name": "carbohydrates_requirement",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "189",
+      "description": "Ensure at least 189 grams of carbohydrates are consumed."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "1840",
+      "description": "Ensure at least 1840 calories are consumed."
+    }
+  ],
+  "graph": null
+}

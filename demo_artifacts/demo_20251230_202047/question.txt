@@ -1,0 +1,15 @@
+Imagine you're coordinating the distribution of medical supplies to four different clinics to prepare for an upcoming health drive. Each clinic starts with a certain stock of supplies, but each has a specific requirement to ensure they are adequately prepared.
+
+Here’s the initial stock and the required quantities for each clinic:
+- Clinic 1 has 330 units but needs 476 units.
+- Clinic 2 has 294 units but needs 92 units.
+- Clinic 3 has 474 units but needs 385 units.
+- Clinic 4 has 86 units but needs 203 units.
+
+To transport medical supplies from one clinic to another, there are associated costs which vary depending on the route between clinics. Here are the costs for transferring supplies between clinics:
+- From Clinic 1: To Clinic 2 costs 2, to Clinic 3 costs 12, to Clinic 4 costs 19.
+- From Clinic 2: To Clinic 1 costs 28, to Clinic 3 costs 9, to Clinic 4 costs 10.
+- From Clinic 3: To Clinic 1 costs 23, to Clinic 2 costs 46, to Clinic 4 costs 7.
+- From Clinic 4: To Clinic 1 costs 19, to Clinic 2 costs 16, to Clinic 3 costs 23.
+
+The challenge is to fulfill the needs of all clinics by redistributing the supplies among them at the lowest possible transportation cost. What is the minimum cost required to ensure all clinics have the necessary supplies?

@@ -1,0 +1,321 @@
+{
+  "meta": {
+    "problem_id": "telecom_network_flow",
+    "source": null,
+    "description": "Maximize the data flow from the data center (Point 0) to the user hub (Point 5) without exceeding line capacities.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "POINTS",
+      "elements": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "description": "Key points in the telecommunications network."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "POINTS",
+        "POINTS"
+      ],
+      "values": {
+        "0": {
+          "1": 14,
+          "2": 9,
+          "3": 8,
+          "4": 7,
+          "5": 8
+        },
+        "1": {
+          "0": 4,
+          "2": 9,
+          "3": 10,
+          "5": 12
+        },
+        "2": {
+          "0": 4,
+          "1": 12,
+          "3": 13,
+          "4": 20,
+          "5": 16
+        },
+        "3": {
+          "0": 10,
+          "1": 8,
+          "2": 12,
+          "5": 18
+        },
+        "4": {
+          "0": 3,
+          "1": 13,
+          "2": 11,
+          "3": 20,
+          "5": 2
+        },
+        "5": {
+          "0": 17,
+          "1": 4,
+          "2": 8,
+          "3": 2,
+          "4": 12
+        }
+      },
+      "description": "Capacity of data lines between points in GB/s."
+    }
+  ],
+  "vars": [
+    {
+      "name": "flow",
+      "indices": [
+        "POINTS",
+        "POINTS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Data flow between points in GB/s."
+    }
+  ],
+  "objective": {
+    "name": "max_data_flow",
+    "sense": "max",
+    "expr": "flow['0']['5']",
+    "description": "Maximize the data flow from Point 0 to Point 5."
+  },
+  "constraints": [
+    {
+      "name": "capacity_constraint_0_1",
+      "expr_lhs": "flow['0']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['1']",
+      "description": "Flow from Point 0 to Point 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_2",
+      "expr_lhs": "flow['0']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['2']",
+      "description": "Flow from Point 0 to Point 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_3",
+      "expr_lhs": "flow['0']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['3']",
+      "description": "Flow from Point 0 to Point 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_4",
+      "expr_lhs": "flow['0']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['4']",
+      "description": "Flow from Point 0 to Point 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_5",
+      "expr_lhs": "flow['0']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['5']",
+      "description": "Flow from Point 0 to Point 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_0",
+      "expr_lhs": "flow['1']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['0']",
+      "description": "Flow from Point 1 to Point 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_2",
+      "expr_lhs": "flow['1']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['2']",
+      "description": "Flow from Point 1 to Point 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_3",
+      "expr_lhs": "flow['1']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['3']",
+      "description": "Flow from Point 1 to Point 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_5",
+      "expr_lhs": "flow['1']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['5']",
+      "description": "Flow from Point 1 to Point 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_0",
+      "expr_lhs": "flow['2']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['0']",
+      "description": "Flow from Point 2 to Point 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_1",
+      "expr_lhs": "flow['2']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['1']",
+      "description": "Flow from Point 2 to Point 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_3",
+      "expr_lhs": "flow['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['3']",
+      "description": "Flow from Point 2 to Point 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_4",
+      "expr_lhs": "flow['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['4']",
+      "description": "Flow from Point 2 to Point 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_5",
+      "expr_lhs": "flow['2']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['5']",
+      "description": "Flow from Point 2 to Point 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_0",
+      "expr_lhs": "flow['3']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['0']",
+      "description": "Flow from Point 3 to Point 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_1",
+      "expr_lhs": "flow['3']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['1']",
+      "description": "Flow from Point 3 to Point 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_2",
+      "expr_lhs": "flow['3']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['2']",
+      "description": "Flow from Point 3 to Point 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_5",
+      "expr_lhs": "flow['3']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['5']",
+      "description": "Flow from Point 3 to Point 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_0",
+      "expr_lhs": "flow['4']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['0']",
+      "description": "Flow from Point 4 to Point 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_1",
+      "expr_lhs": "flow['4']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['1']",
+      "description": "Flow from Point 4 to Point 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_2",
+      "expr_lhs": "flow['4']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['2']",
+      "description": "Flow from Point 4 to Point 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_3",
+      "expr_lhs": "flow['4']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['3']",
+      "description": "Flow from Point 4 to Point 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_5",
+      "expr_lhs": "flow['4']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['5']",
+      "description": "Flow from Point 4 to Point 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_0",
+      "expr_lhs": "flow['5']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['0']",
+      "description": "Flow from Point 5 to Point 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_1",
+      "expr_lhs": "flow['5']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['1']",
+      "description": "Flow from Point 5 to Point 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_2",
+      "expr_lhs": "flow['5']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['2']",
+      "description": "Flow from Point 5 to Point 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_3",
+      "expr_lhs": "flow['5']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['3']",
+      "description": "Flow from Point 5 to Point 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_4",
+      "expr_lhs": "flow['5']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['4']",
+      "description": "Flow from Point 5 to Point 4 does not exceed capacity."
+    },
+    {
+      "name": "flow_conservation_1",
+      "expr_lhs": "flow['0']['1'] + flow['2']['1'] + flow['3']['1'] + flow['4']['1'] + flow['5']['1']",
+      "sense": "==",
+      "expr_rhs": "flow['1']['0'] + flow['1']['2'] + flow['1']['3'] + flow['1']['5']",
+      "description": "Flow conservation at Point 1."
+    },
+    {
+      "name": "flow_conservation_2",
+      "expr_lhs": "flow['0']['2'] + flow['1']['2'] + flow['3']['2'] + flow['4']['2'] + flow['5']['2']",
+      "sense": "==",
+      "expr_rhs": "flow['2']['0'] + flow['2']['1'] + flow['2']['3'] + flow['2']['4'] + flow['2']['5']",
+      "description": "Flow conservation at Point 2."
+    },
+    {
+      "name": "flow_conservation_3",
+      "expr_lhs": "flow['0']['3'] + flow['1']['3'] + flow['2']['3'] + flow['4']['3'] + flow['5']['3']",
+      "sense": "==",
+      "expr_rhs": "flow['3']['0'] + flow['3']['1'] + flow['3']['2'] + flow['3']['5']",
+      "description": "Flow conservation at Point 3."
+    },
+    {
+      "name": "flow_conservation_4",
+      "expr_lhs": "flow['0']['4'] + flow['1']['4'] + flow['2']['4'] + flow['3']['4'] + flow['5']['4']",
+      "sense": "==",
+      "expr_rhs": "flow['4']['0'] + flow['4']['1'] + flow['4']['2'] + flow['4']['3'] + flow['4']['5']",
+      "description": "Flow conservation at Point 4."
+    }
+  ],
+  "graph": null
+}

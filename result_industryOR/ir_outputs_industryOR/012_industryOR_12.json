@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "industryOR_12",
-    "source": null,
+    "source": "IndustryOR",
     "description": "Maximize the annual profit of a wood storage and transportation company considering buying, selling, and storage costs.",
     "sense": "max",
     "version": 1
@@ -62,19 +62,19 @@
       "name": "storage_cost_a",
       "indices": [],
       "values": 70,
-      "description": "Fixed storage cost per m^3."
+      "description": "Fixed part of the storage cost per m^3."
     },
     {
       "name": "storage_cost_b",
       "indices": [],
       "values": 100,
-      "description": "Variable storage cost per m^3 per quarter."
+      "description": "Variable part of the storage cost per m^3 per quarter."
     },
     {
       "name": "max_storage_capacity",
       "indices": [],
-      "values": 200,
-      "description": "Maximum storage capacity in 10,000 m^3."
+      "values": 200000,
+      "description": "Maximum storage capacity in m^3."
     }
   ],
   "vars": [
@@ -83,7 +83,7 @@
       "indices": [
         "QUARTERS"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
       "description": "Amount of wood purchased in 10,000 m^3 for each quarter."
@@ -93,7 +93,7 @@
       "indices": [
         "QUARTERS"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
       "description": "Amount of wood sold in 10,000 m^3 for each quarter."
@@ -103,7 +103,7 @@
       "indices": [
         "QUARTERS"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
       "description": "Amount of wood in inventory in 10,000 m^3 at the end of each quarter."
@@ -149,56 +149,56 @@
       "expr_lhs": "sell['Winter']",
       "sense": "<=",
       "expr_rhs": "max_sales_volume['Winter']",
-      "description": "Sales volume constraint for Winter."
+      "description": "Sales limit for Winter."
     },
     {
       "name": "max_sales_Spring",
       "expr_lhs": "sell['Spring']",
       "sense": "<=",
       "expr_rhs": "max_sales_volume['Spring']",
-      "description": "Sales volume constraint for Spring."
+      "description": "Sales limit for Spring."
     },
     {
       "name": "max_sales_Summer",
       "expr_lhs": "sell['Summer']",
       "sense": "<=",
       "expr_rhs": "max_sales_volume['Summer']",
-      "description": "Sales volume constraint for Summer."
+      "description": "Sales limit for Summer."
     },
     {
       "name": "max_sales_Autumn",
       "expr_lhs": "sell['Autumn']",
       "sense": "<=",
       "expr_rhs": "max_sales_volume['Autumn']",
-      "description": "Sales volume constraint for Autumn."
+      "description": "Sales limit for Autumn."
     },
     {
       "name": "max_storage_Winter",
       "expr_lhs": "inventory['Winter']",
       "sense": "<=",
-      "expr_rhs": "max_storage_capacity",
-      "description": "Storage capacity constraint for Winter."
+      "expr_rhs": "max_storage_capacity / 10000",
+      "description": "Storage capacity limit for Winter."
     },
     {
       "name": "max_storage_Spring",
       "expr_lhs": "inventory['Spring']",
       "sense": "<=",
-      "expr_rhs": "max_storage_capacity",
-      "description": "Storage capacity constraint for Spring."
+      "expr_rhs": "max_storage_capacity / 10000",
+      "description": "Storage capacity limit for Spring."
     },
     {
       "name": "max_storage_Summer",
       "expr_lhs": "inventory['Summer']",
       "sense": "<=",
-      "expr_rhs": "max_storage_capacity",
-      "description": "Storage capacity constraint for Summer."
+      "expr_rhs": "max_storage_capacity / 10000",
+      "description": "Storage capacity limit for Summer."
     },
     {
       "name": "max_storage_Autumn",
       "expr_lhs": "inventory['Autumn']",
       "sense": "<=",
-      "expr_rhs": "max_storage_capacity",
-      "description": "Storage capacity constraint for Autumn."
+      "expr_rhs": "max_storage_capacity / 10000",
+      "description": "Storage capacity limit for Autumn."
     },
     {
       "name": "end_of_year_inventory",

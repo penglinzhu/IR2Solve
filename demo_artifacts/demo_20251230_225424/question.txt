@@ -1,0 +1,19 @@
+In the heart of a bustling metropolis, an expansive network of waterways and canals forms the lifeline for its residents, connecting 9 critical distribution centers that manage the flow of water from the city's reservoirs to its farthest suburbs. This intricate system, designed to ensure the smooth and efficient delivery of water, consists of channels with varying capacities, reflecting the maximum volumes of water (in thousands of gallons per hour) that can traverse these connections without causing overflow or damage.
+
+Here's a detailed look at the capacities of each channel in this vital network:
+
+- From Distribution Center 0 (Source), the water can be directed to Centers 1 through 8 with capacities of 9, 7, 18, 0, 0, 7, 0, and 2 thousand gallons per hour, respectively.
+- Center 1 has the capability to forward water to other centers, including sending 15, 11, 5, 20, 15, 18, 9, and 15 thousand gallons per hour to Centers 0 through 8 (excluding itself).
+- Similarly, the capacities from Center 2 to others are marked by flows of 3, 8, 0, 10, 16, 18, 8, 0, and 20 thousand gallons per hour to Centers 0 through 8, respectively.
+- The flow continues from Center 3 with capacities of 13, 3, 7, 0, 20, 13, 16, 6, and 20 thousand gallons per hour to the respective centers.
+- From Center 4, water can be distributed with capacities of 7, 20, 2, 4, 0, 9, 3, 14, and 2 thousand gallons per hour.
+- Center 5 allows for a distribution flow of 17, 10, 5, 1, 4, 0, 4, 3, and 20 thousand gallons per hour towards the respective centers.
+- The network from Center 6 can support flows of 0, 20, 10, 10, 15, 5, 0, 1, and 10 thousand gallons per hour.
+- From Center 7, water can be directed with capacities of 10, 3, 9, 4, 3, 13, 18, 0, and 20 thousand gallons per hour.
+- Finally, Center 8 can send back or redistribute water with capacities of 2, 12, 10, 5, 15, 14, 0, 10, and 0 thousand gallons per hour to the respective centers.
+
+In this network, a capacity of "0" indicates the absence of a direct channel between two centers, necessitating the redirection of flow through other centers to ensure connectivity.
+
+Given this complex and dynamic system, the city's water management team faces the challenging task of determining the maximum volume of water that can be efficiently distributed from Distribution Center 0 (the source) to all other centers, culminating at the final node (Center 8) which represents the city's outskirts. This calculation is crucial for optimizing the water supply and meeting the growing needs of the city's population.
+
+What is the maximum amount of water (in thousands of gallons per hour) that can be distributed from the source to the outskirts without exceeding the specified capacities of the channels in the network?

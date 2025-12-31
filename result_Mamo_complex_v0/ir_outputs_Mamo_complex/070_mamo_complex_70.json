@@ -1,0 +1,433 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_70",
+    "source": null,
+    "description": "Optimize the network of a futuristic transportation system interconnecting 7 strategic hubs to maximize vehicle dispatch from Hub 0 to Hub 6.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "HUBS",
+      "elements": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "description": "Strategic hubs in the transportation network."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "HUBS",
+        "HUBS"
+      ],
+      "values": {
+        "0": {
+          "1": 15,
+          "2": 2,
+          "3": 16,
+          "4": 3,
+          "5": 5,
+          "6": 3
+        },
+        "1": {
+          "0": 7,
+          "4": 19,
+          "5": 15,
+          "6": 16
+        },
+        "2": {
+          "0": 11,
+          "1": 14,
+          "3": 14,
+          "4": 8,
+          "5": 11,
+          "6": 6
+        },
+        "3": {
+          "0": 17,
+          "1": 11,
+          "2": 11,
+          "4": 11,
+          "5": 16,
+          "6": 19
+        },
+        "4": {
+          "0": 10,
+          "1": 4,
+          "2": 17,
+          "3": 20,
+          "5": 12,
+          "6": 17
+        },
+        "5": {
+          "0": 3,
+          "2": 4,
+          "3": 5,
+          "4": 20,
+          "6": 4
+        },
+        "6": {
+          "0": 15,
+          "1": 2,
+          "2": 15,
+          "3": 18,
+          "4": 17,
+          "5": 7
+        }
+      },
+      "description": "Maximum number of vehicles that can move between hubs per hour."
+    }
+  ],
+  "vars": [
+    {
+      "name": "flow",
+      "indices": [
+        "HUBS",
+        "HUBS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Flow of vehicles between hubs."
+    }
+  ],
+  "objective": {
+    "name": "max_dispatch_to_hub_6",
+    "sense": "max",
+    "expr": "flow['0']['6']",
+    "description": "Maximize the number of vehicles dispatched from Hub 0 to Hub 6."
+  },
+  "constraints": [
+    {
+      "name": "capacity_constraint_0_1",
+      "expr_lhs": "flow['0']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['1']",
+      "description": "Flow from Hub 0 to Hub 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_2",
+      "expr_lhs": "flow['0']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['2']",
+      "description": "Flow from Hub 0 to Hub 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_3",
+      "expr_lhs": "flow['0']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['3']",
+      "description": "Flow from Hub 0 to Hub 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_4",
+      "expr_lhs": "flow['0']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['4']",
+      "description": "Flow from Hub 0 to Hub 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_5",
+      "expr_lhs": "flow['0']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['5']",
+      "description": "Flow from Hub 0 to Hub 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_0_6",
+      "expr_lhs": "flow['0']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['0']['6']",
+      "description": "Flow from Hub 0 to Hub 6 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_0",
+      "expr_lhs": "flow['1']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['0']",
+      "description": "Flow from Hub 1 to Hub 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_4",
+      "expr_lhs": "flow['1']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['4']",
+      "description": "Flow from Hub 1 to Hub 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_5",
+      "expr_lhs": "flow['1']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['5']",
+      "description": "Flow from Hub 1 to Hub 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_1_6",
+      "expr_lhs": "flow['1']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['6']",
+      "description": "Flow from Hub 1 to Hub 6 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_0",
+      "expr_lhs": "flow['2']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['0']",
+      "description": "Flow from Hub 2 to Hub 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_1",
+      "expr_lhs": "flow['2']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['1']",
+      "description": "Flow from Hub 2 to Hub 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_3",
+      "expr_lhs": "flow['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['3']",
+      "description": "Flow from Hub 2 to Hub 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_4",
+      "expr_lhs": "flow['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['4']",
+      "description": "Flow from Hub 2 to Hub 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_5",
+      "expr_lhs": "flow['2']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['5']",
+      "description": "Flow from Hub 2 to Hub 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_2_6",
+      "expr_lhs": "flow['2']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['6']",
+      "description": "Flow from Hub 2 to Hub 6 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_0",
+      "expr_lhs": "flow['3']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['0']",
+      "description": "Flow from Hub 3 to Hub 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_1",
+      "expr_lhs": "flow['3']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['1']",
+      "description": "Flow from Hub 3 to Hub 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_2",
+      "expr_lhs": "flow['3']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['2']",
+      "description": "Flow from Hub 3 to Hub 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_4",
+      "expr_lhs": "flow['3']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['4']",
+      "description": "Flow from Hub 3 to Hub 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_5",
+      "expr_lhs": "flow['3']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['5']",
+      "description": "Flow from Hub 3 to Hub 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_3_6",
+      "expr_lhs": "flow['3']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['6']",
+      "description": "Flow from Hub 3 to Hub 6 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_0",
+      "expr_lhs": "flow['4']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['0']",
+      "description": "Flow from Hub 4 to Hub 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_1",
+      "expr_lhs": "flow['4']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['1']",
+      "description": "Flow from Hub 4 to Hub 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_2",
+      "expr_lhs": "flow['4']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['2']",
+      "description": "Flow from Hub 4 to Hub 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_3",
+      "expr_lhs": "flow['4']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['3']",
+      "description": "Flow from Hub 4 to Hub 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_5",
+      "expr_lhs": "flow['4']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['5']",
+      "description": "Flow from Hub 4 to Hub 5 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_4_6",
+      "expr_lhs": "flow['4']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['4']['6']",
+      "description": "Flow from Hub 4 to Hub 6 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_0",
+      "expr_lhs": "flow['5']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['0']",
+      "description": "Flow from Hub 5 to Hub 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_2",
+      "expr_lhs": "flow['5']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['2']",
+      "description": "Flow from Hub 5 to Hub 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_3",
+      "expr_lhs": "flow['5']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['3']",
+      "description": "Flow from Hub 5 to Hub 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_4",
+      "expr_lhs": "flow['5']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['4']",
+      "description": "Flow from Hub 5 to Hub 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_5_6",
+      "expr_lhs": "flow['5']['6']",
+      "sense": "<=",
+      "expr_rhs": "capacity['5']['6']",
+      "description": "Flow from Hub 5 to Hub 6 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_6_0",
+      "expr_lhs": "flow['6']['0']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['0']",
+      "description": "Flow from Hub 6 to Hub 0 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_6_1",
+      "expr_lhs": "flow['6']['1']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['1']",
+      "description": "Flow from Hub 6 to Hub 1 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_6_2",
+      "expr_lhs": "flow['6']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['2']",
+      "description": "Flow from Hub 6 to Hub 2 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_6_3",
+      "expr_lhs": "flow['6']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['3']",
+      "description": "Flow from Hub 6 to Hub 3 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_6_4",
+      "expr_lhs": "flow['6']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['4']",
+      "description": "Flow from Hub 6 to Hub 4 does not exceed capacity."
+    },
+    {
+      "name": "capacity_constraint_6_5",
+      "expr_lhs": "flow['6']['5']",
+      "sense": "<=",
+      "expr_rhs": "capacity['6']['5']",
+      "description": "Flow from Hub 6 to Hub 5 does not exceed capacity."
+    },
+    {
+      "name": "flow_conservation_0",
+      "expr_lhs": "flow['0']['1'] + flow['0']['2'] + flow['0']['3'] + flow['0']['4'] + flow['0']['5'] + flow['0']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['1']['0'] + flow['2']['0'] + flow['3']['0'] + flow['4']['0'] + flow['5']['0'] + flow['6']['0']",
+      "description": "Flow conservation at Hub 0."
+    },
+    {
+      "name": "flow_conservation_1",
+      "expr_lhs": "flow['1']['0'] + flow['1']['4'] + flow['1']['5'] + flow['1']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['0']['1'] + flow['2']['1'] + flow['3']['1'] + flow['4']['1']",
+      "description": "Flow conservation at Hub 1."
+    },
+    {
+      "name": "flow_conservation_2",
+      "expr_lhs": "flow['2']['0'] + flow['2']['1'] + flow['2']['3'] + flow['2']['4'] + flow['2']['5'] + flow['2']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['0']['2'] + flow['1']['2'] + flow['3']['2'] + flow['4']['2'] + flow['5']['2']",
+      "description": "Flow conservation at Hub 2."
+    },
+    {
+      "name": "flow_conservation_3",
+      "expr_lhs": "flow['3']['0'] + flow['3']['1'] + flow['3']['2'] + flow['3']['4'] + flow['3']['5'] + flow['3']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['0']['3'] + flow['2']['3'] + flow['4']['3'] + flow['5']['3']",
+      "description": "Flow conservation at Hub 3."
+    },
+    {
+      "name": "flow_conservation_4",
+      "expr_lhs": "flow['4']['0'] + flow['4']['1'] + flow['4']['2'] + flow['4']['3'] + flow['4']['5'] + flow['4']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['0']['4'] + flow['1']['4'] + flow['2']['4'] + flow['3']['4'] + flow['5']['4']",
+      "description": "Flow conservation at Hub 4."
+    },
+    {
+      "name": "flow_conservation_5",
+      "expr_lhs": "flow['5']['0'] + flow['5']['2'] + flow['5']['3'] + flow['5']['4'] + flow['5']['6']",
+      "sense": "==",
+      "expr_rhs": "flow['0']['5'] + flow['1']['5'] + flow['2']['5'] + flow['3']['5'] + flow['4']['5']",
+      "description": "Flow conservation at Hub 5."
+    },
+    {
+      "name": "flow_conservation_6",
+      "expr_lhs": "flow['6']['0'] + flow['6']['1'] + flow['6']['2'] + flow['6']['3'] + flow['6']['4'] + flow['6']['5']",
+      "sense": "==",
+      "expr_rhs": "flow['0']['6'] + flow['1']['6'] + flow['2']['6'] + flow['3']['6'] + flow['4']['6'] + flow['5']['6']",
+      "description": "Flow conservation at Hub 6."
+    }
+  ],
+  "graph": null
+}

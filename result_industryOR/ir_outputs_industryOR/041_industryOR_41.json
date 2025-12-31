@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "industryOR_41",
-    "source": null,
+    "source": "IndustryOR",
     "description": "Determine the minimum number of waitstaff required to meet the minimum staffing requirements for each time period in a 24-hour restaurant operation.",
     "sense": "min",
     "version": 1
@@ -53,7 +53,7 @@
     "name": "min_total_waitstaff",
     "sense": "min",
     "expr": "sum(x[t] for t in TIME_PERIODS)",
-    "description": "Minimize the total number of waitstaff required."
+    "description": "Minimize the total number of waitstaff scheduled."
   },
   "constraints": [
     {

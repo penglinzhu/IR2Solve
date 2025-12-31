@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_38",
+    "source": null,
+    "description": "Distribute medical supplies among hospitals to meet their needs at minimum transfer cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "HOSPITALS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Set of hospitals involved in the supply distribution."
+    }
+  ],
+  "params": [
+    {
+      "name": "initial_stock",
+      "indices": [
+        "HOSPITALS"
+      ],
+      "values": {
+        "1": 480,
+        "2": 492,
+        "3": 74,
+        "4": 317
+      },
+      "description": "Initial stock of supplies at each hospital."
+    },
+    {
+      "name": "required_stock",
+      "indices": [
+        "HOSPITALS"
+      ],
+      "values": {
+        "1": 61,
+        "2": 313,
+        "3": 93,
+        "4": 199
+      },
+      "description": "Required stock of supplies at each hospital."
+    },
+    {
+      "name": "transfer_cost",
+      "indices": [
+        "HOSPITALS",
+        "HOSPITALS"
+      ],
+      "values": {
+        "1": {
+          "2": 8,
+          "3": 42,
+          "4": 27
+        },
+        "2": {
+          "1": 17,
+          "3": 13,
+          "4": 30
+        },
+        "3": {
+          "1": 4,
+          "2": 14,
+          "4": 16
+        },
+        "4": {
+          "1": 33,
+          "2": 9,
+          "3": 42
+        }
+      },
+      "description": "Cost of transferring supplies between hospitals."
+    }
+  ],
+  "vars": [
+    {
+      "name": "transfer",
+      "indices": [
+        "HOSPITALS",
+        "HOSPITALS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of supplies transferred from one hospital to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(transfer_cost[i][j] * transfer[i][j] for i in HOSPITALS for j in HOSPITALS if i != j)",
+    "description": "Minimize the total cost of transferring supplies between hospitals."
+  },
+  "constraints": [
+    {
+      "name": "balance_hospital_1",
+      "expr_lhs": "initial_stock['1'] + transfer['2']['1'] + transfer['3']['1'] + transfer['4']['1'] - transfer['1']['2'] - transfer['1']['3'] - transfer['1']['4']",
+      "sense": ">=",
+      "expr_rhs": "required_stock['1']",
+      "description": "Ensure Hospital 1 meets its required stock."
+    },
+    {
+      "name": "balance_hospital_2",
+      "expr_lhs": "initial_stock['2'] + transfer['1']['2'] + transfer['3']['2'] + transfer['4']['2'] - transfer['2']['1'] - transfer['2']['3'] - transfer['2']['4']",
+      "sense": ">=",
+      "expr_rhs": "required_stock['2']",
+      "description": "Ensure Hospital 2 meets its required stock."
+    },
+    {
+      "name": "balance_hospital_3",
+      "expr_lhs": "initial_stock['3'] + transfer['1']['3'] + transfer['2']['3'] + transfer['4']['3'] - transfer['3']['1'] - transfer['3']['2'] - transfer['3']['4']",
+      "sense": ">=",
+      "expr_rhs": "required_stock['3']",
+      "description": "Ensure Hospital 3 meets its required stock."
+    },
+    {
+      "name": "balance_hospital_4",
+      "expr_lhs": "initial_stock['4'] + transfer['1']['4'] + transfer['2']['4'] + transfer['3']['4'] - transfer['4']['1'] - transfer['4']['2'] - transfer['4']['3']",
+      "sense": ">=",
+      "expr_rhs": "required_stock['4']",
+      "description": "Ensure Hospital 4 meets its required stock."
+    }
+  ],
+  "graph": null
+}

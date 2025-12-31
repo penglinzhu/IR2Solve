@@ -1,0 +1,280 @@
+{
+  "meta": {
+    "problem_id": "industryOR_36",
+    "source": "IndustryOR",
+    "description": "Optimize production to minimize total compensation and storage costs for three products over four quarters.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "I",
+        "II",
+        "III"
+      ],
+      "description": "The products to be produced."
+    },
+    {
+      "name": "QUARTERS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "The quarters of the year."
+    }
+  ],
+  "params": [
+    {
+      "name": "contract_booking",
+      "indices": [
+        "PRODUCTS",
+        "QUARTERS"
+      ],
+      "values": {
+        "I": {
+          "1": 1500,
+          "2": 1000,
+          "3": 2000,
+          "4": 1200
+        },
+        "II": {
+          "1": 1500,
+          "2": 1500,
+          "3": 1200,
+          "4": 1500
+        },
+        "III": {
+          "1": 1000,
+          "2": 2000,
+          "3": 1500,
+          "4": 2500
+        }
+      },
+      "description": "Contract booking numbers for each product and quarter."
+    },
+    {
+      "name": "production_time_per_unit",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "I": 2,
+        "II": 4,
+        "III": 3
+      },
+      "description": "Production time required per unit for each product."
+    },
+    {
+      "name": "production_time_limit",
+      "indices": [],
+      "values": 15000,
+      "description": "Total production time available per quarter."
+    },
+    {
+      "name": "compensation_cost",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "I": 20,
+        "II": 20,
+        "III": 10
+      },
+      "description": "Compensation cost per unit for late delivery for each product."
+    },
+    {
+      "name": "storage_cost",
+      "indices": [],
+      "values": 5,
+      "description": "Storage cost per unit per quarter for products produced but not delivered."
+    }
+  ],
+  "vars": [
+    {
+      "name": "produce",
+      "indices": [
+        "PRODUCTS",
+        "QUARTERS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of units produced for each product in each quarter."
+    },
+    {
+      "name": "inventory",
+      "indices": [
+        "PRODUCTS",
+        "QUARTERS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Inventory level for each product at the end of each quarter."
+    },
+    {
+      "name": "compensate",
+      "indices": [
+        "PRODUCTS",
+        "QUARTERS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of units not delivered on time for each product in each quarter."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(compensation_cost[p] * compensate[p][q] + storage_cost * inventory[p][q] for p in PRODUCTS for q in QUARTERS)",
+    "description": "Minimize the total compensation and storage costs."
+  },
+  "constraints": [
+    {
+      "name": "production_time_limit_q1",
+      "expr_lhs": "sum(produce[p]['1'] * production_time_per_unit[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "production_time_limit",
+      "description": "Production time limit for quarter 1."
+    },
+    {
+      "name": "production_time_limit_q2",
+      "expr_lhs": "sum(produce[p]['2'] * production_time_per_unit[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "production_time_limit",
+      "description": "Production time limit for quarter 2."
+    },
+    {
+      "name": "production_time_limit_q3",
+      "expr_lhs": "sum(produce[p]['3'] * production_time_per_unit[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "production_time_limit",
+      "description": "Production time limit for quarter 3."
+    },
+    {
+      "name": "production_time_limit_q4",
+      "expr_lhs": "sum(produce[p]['4'] * production_time_per_unit[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "production_time_limit",
+      "description": "Production time limit for quarter 4."
+    },
+    {
+      "name": "inventory_balance_I_q1",
+      "expr_lhs": "produce['I']['1'] - contract_booking['I']['1'] - compensate['I']['1']",
+      "sense": "==",
+      "expr_rhs": "inventory['I']['1']",
+      "description": "Inventory balance for product I in quarter 1."
+    },
+    {
+      "name": "inventory_balance_I_q2",
+      "expr_lhs": "produce['I']['2'] - contract_booking['I']['2'] - compensate['I']['2'] + inventory['I']['1']",
+      "sense": "==",
+      "expr_rhs": "inventory['I']['2']",
+      "description": "Inventory balance for product I in quarter 2."
+    },
+    {
+      "name": "inventory_balance_I_q3",
+      "expr_lhs": "produce['I']['3'] - contract_booking['I']['3'] - compensate['I']['3'] + inventory['I']['2']",
+      "sense": "==",
+      "expr_rhs": "inventory['I']['3']",
+      "description": "Inventory balance for product I in quarter 3."
+    },
+    {
+      "name": "inventory_balance_I_q4",
+      "expr_lhs": "produce['I']['4'] - contract_booking['I']['4'] - compensate['I']['4'] + inventory['I']['3']",
+      "sense": "==",
+      "expr_rhs": "inventory['I']['4']",
+      "description": "Inventory balance for product I in quarter 4."
+    },
+    {
+      "name": "inventory_balance_II_q1",
+      "expr_lhs": "produce['II']['1'] - contract_booking['II']['1'] - compensate['II']['1']",
+      "sense": "==",
+      "expr_rhs": "inventory['II']['1']",
+      "description": "Inventory balance for product II in quarter 1."
+    },
+    {
+      "name": "inventory_balance_II_q2",
+      "expr_lhs": "produce['II']['2'] - contract_booking['II']['2'] - compensate['II']['2'] + inventory['II']['1']",
+      "sense": "==",
+      "expr_rhs": "inventory['II']['2']",
+      "description": "Inventory balance for product II in quarter 2."
+    },
+    {
+      "name": "inventory_balance_II_q3",
+      "expr_lhs": "produce['II']['3'] - contract_booking['II']['3'] - compensate['II']['3'] + inventory['II']['2']",
+      "sense": "==",
+      "expr_rhs": "inventory['II']['3']",
+      "description": "Inventory balance for product II in quarter 3."
+    },
+    {
+      "name": "inventory_balance_II_q4",
+      "expr_lhs": "produce['II']['4'] - contract_booking['II']['4'] - compensate['II']['4'] + inventory['II']['3']",
+      "sense": "==",
+      "expr_rhs": "inventory['II']['4']",
+      "description": "Inventory balance for product II in quarter 4."
+    },
+    {
+      "name": "inventory_balance_III_q1",
+      "expr_lhs": "produce['III']['1'] - contract_booking['III']['1'] - compensate['III']['1']",
+      "sense": "==",
+      "expr_rhs": "inventory['III']['1']",
+      "description": "Inventory balance for product III in quarter 1."
+    },
+    {
+      "name": "inventory_balance_III_q2",
+      "expr_lhs": "produce['III']['2'] - contract_booking['III']['2'] - compensate['III']['2'] + inventory['III']['1']",
+      "sense": "==",
+      "expr_rhs": "inventory['III']['2']",
+      "description": "Inventory balance for product III in quarter 2."
+    },
+    {
+      "name": "inventory_balance_III_q3",
+      "expr_lhs": "produce['III']['3'] - contract_booking['III']['3'] - compensate['III']['3'] + inventory['III']['2']",
+      "sense": "==",
+      "expr_rhs": "inventory['III']['3']",
+      "description": "Inventory balance for product III in quarter 3."
+    },
+    {
+      "name": "inventory_balance_III_q4",
+      "expr_lhs": "produce['III']['4'] - contract_booking['III']['4'] - compensate['III']['4'] + inventory['III']['3']",
+      "sense": "==",
+      "expr_rhs": "inventory['III']['4']",
+      "description": "Inventory balance for product III in quarter 4."
+    },
+    {
+      "name": "end_inventory_requirement_I",
+      "expr_lhs": "inventory['I']['4']",
+      "sense": ">=",
+      "expr_rhs": "150",
+      "description": "End of year inventory requirement for product I."
+    },
+    {
+      "name": "end_inventory_requirement_II",
+      "expr_lhs": "inventory['II']['4']",
+      "sense": ">=",
+      "expr_rhs": "150",
+      "description": "End of year inventory requirement for product II."
+    },
+    {
+      "name": "end_inventory_requirement_III",
+      "expr_lhs": "inventory['III']['4']",
+      "sense": ">=",
+      "expr_rhs": "150",
+      "description": "End of year inventory requirement for product III."
+    },
+    {
+      "name": "no_production_I_q2",
+      "expr_lhs": "produce['I']['2']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "No production of product I in quarter 2 due to equipment replacement."
+    }
+  ],
+  "graph": null
+}

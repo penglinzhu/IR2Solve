@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_36",
-    "source": null,
-    "description": "Optimize the redistribution of medical supplies among clinics to meet their requirements at minimum transportation cost.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the distribution of medical supplies among clinics to meet their requirements at minimum transportation cost.",
     "sense": "min",
     "version": 1
   },
@@ -15,7 +15,7 @@
         "3",
         "4"
       ],
-      "description": "Set of clinics involved in the distribution."
+      "description": "Set of clinics involved in the supply distribution."
     }
   ],
   "params": [
@@ -78,12 +78,12 @@
   ],
   "vars": [
     {
-      "name": "flow",
+      "name": "x",
       "indices": [
         "CLINICS",
         "CLINICS"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
       "description": "Amount of supplies transported from one clinic to another."
@@ -92,35 +92,35 @@
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(transport_cost[i][j] * flow[i][j] for i in CLINICS for j in CLINICS if i != j)",
+    "expr": "sum(transport_cost[i][j] * x[i][j] for i in CLINICS for j in CLINICS if i != j)",
     "description": "Minimize the total transportation cost of redistributing supplies."
   },
   "constraints": [
     {
-      "name": "clinic_1_balance",
-      "expr_lhs": "initial_stock['1'] + sum(flow[j]['1'] for j in CLINICS if j != '1') - sum(flow['1'][j] for j in CLINICS if j != '1')",
-      "sense": ">=",
+      "name": "supply_balance_1",
+      "expr_lhs": "initial_stock['1'] + sum(x[j]['1'] for j in CLINICS if j != '1') - sum(x['1'][j] for j in CLINICS if j != '1')",
+      "sense": "==",
       "expr_rhs": "required_stock['1']",
       "description": "Ensure Clinic 1 meets its required stock."
     },
     {
-      "name": "clinic_2_balance",
-      "expr_lhs": "initial_stock['2'] + sum(flow[j]['2'] for j in CLINICS if j != '2') - sum(flow['2'][j] for j in CLINICS if j != '2')",
-      "sense": ">=",
+      "name": "supply_balance_2",
+      "expr_lhs": "initial_stock['2'] + sum(x[j]['2'] for j in CLINICS if j != '2') - sum(x['2'][j] for j in CLINICS if j != '2')",
+      "sense": "==",
       "expr_rhs": "required_stock['2']",
       "description": "Ensure Clinic 2 meets its required stock."
     },
     {
-      "name": "clinic_3_balance",
-      "expr_lhs": "initial_stock['3'] + sum(flow[j]['3'] for j in CLINICS if j != '3') - sum(flow['3'][j] for j in CLINICS if j != '3')",
-      "sense": ">=",
+      "name": "supply_balance_3",
+      "expr_lhs": "initial_stock['3'] + sum(x[j]['3'] for j in CLINICS if j != '3') - sum(x['3'][j] for j in CLINICS if j != '3')",
+      "sense": "==",
       "expr_rhs": "required_stock['3']",
       "description": "Ensure Clinic 3 meets its required stock."
     },
     {
-      "name": "clinic_4_balance",
-      "expr_lhs": "initial_stock['4'] + sum(flow[j]['4'] for j in CLINICS if j != '4') - sum(flow['4'][j] for j in CLINICS if j != '4')",
-      "sense": ">=",
+      "name": "supply_balance_4",
+      "expr_lhs": "initial_stock['4'] + sum(x[j]['4'] for j in CLINICS if j != '4') - sum(x['4'][j] for j in CLINICS if j != '4')",
+      "sense": "==",
       "expr_rhs": "required_stock['4']",
       "description": "Ensure Clinic 4 meets its required stock."
     }

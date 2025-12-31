@@ -1,0 +1,17 @@
+Imagine a futuristic transportation network that connects 9 major cities across a vast region, designed to maximize the efficiency of cargo transport from the central hub to a key distribution center. Each city in this network is connected by high-capacity routes, with the ability to transport a significant volume of goods measured in thousands of tons.
+
+Here's a detailed layout of the transportation capacities between each pair of cities:
+
+- From City 0 (Central Hub): Cargo can be sent to City 1 (1 ton), City 2 (16 tons), City 3 (8 tons), City 4 (18 tons), City 5 (4 tons), City 6 (0 tons, indicating no direct route), City 7 (8 tons), and City 8 (5 tons).
+- From City 1: Cargo can be dispatched to City 0 (15 tons), City 2 (11 tons), City 3 (8 tons), City 4 (13 tons), City 5 (2 tons), City 6 (1 ton), City 7 (7 tons), and City 8 (6 tons).
+- From City 2: Shipments can go to City 0 (15 tons), City 1 (4 tons), City 3 (3 tons), City 4 (1 ton), City 5 (13 tons), City 6 (13 tons), City 7 (11 tons), and City 8 (9 tons).
+- From City 3: Goods can be transported to City 0 (4 tons), City 1 (16 tons), City 2 (8 tons), City 4 (12 tons), City 5 (18 tons), City 6 (19 tons), City 7 (8 tons), and City 8 (11 tons).
+- From City 4: Cargo movement is possible to City 0 (4 tons), City 1 (19 tons), City 2 (3 tons), City 3 (2 tons), City 5 (6 tons), City 6 (1 ton), City 7 (13 tons), and City 8 (14 tons).
+- From City 5: Shipments can be directed to City 0 (6 tons), City 1 (19 tons), City 2 (15 tons), City 3 (10 tons), City 4 (16 tons), City 6 (17 tons), City 7 (15 tons), and City 8 (17 tons).
+- From City 6: Cargo can be routed to City 0 (13 tons), City 1 (7 tons), City 2 (13 tons), City 3 (4 tons), City 4 (14 tons), City 5 (3 tons), City 7 (8 tons), and City 8 (8 tons).
+- From City 7: Goods can be moved to City 0 (10 tons), City 1 (6 tons), City 2 (19 tons), City 3 (1 ton), City 4 (12 tons), City 5 (6 tons), City 6 (9 tons), and City 8 (14 tons).
+- From City 8 (Key Distribution Center): This city receives and dispatches goods but primarily serves as the endpoint for cargo coming from the Central Hub.
+
+A capacity of "0" in this context indicates that there is no established route for direct cargo transport between those two cities.
+
+The challenge is to determine the maximum amount of cargo, in thousands of tons, that can be transported from the Central Hub (City 0) to the Key Distribution Center (City 8), ensuring that the flow of goods through each route does not surpass its highest capacity. What is the optimal value of cargo that can be moved from the Central Hub to the Key Distribution Center?

@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_110",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Determine the production schedule for Sailco Corporation to minimize the sum of production and inventory costs over four quarters.",
     "sense": "min",
     "version": 1
@@ -10,12 +10,12 @@
     {
       "name": "QUARTERS",
       "elements": [
-        "Q1",
-        "Q2",
-        "Q3",
-        "Q4"
+        "1",
+        "2",
+        "3",
+        "4"
       ],
-      "description": "The four quarters of the planning horizon."
+      "description": "The four quarters of the year."
     }
   ],
   "params": [
@@ -25,10 +25,10 @@
         "QUARTERS"
       ],
       "values": {
-        "Q1": 40,
-        "Q2": 60,
-        "Q3": 75,
-        "Q4": 25
+        "1": 40,
+        "2": 60,
+        "3": 75,
+        "4": 25
       },
       "description": "Demand for sailboats in each quarter."
     },
@@ -98,37 +98,37 @@
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(regular_cost * regular_production[q] + overtime_cost * overtime_production[q] + holding_cost * inventory[q] for q in ['Q1', 'Q2', 'Q3', 'Q4'])",
-    "description": "Minimize the total cost of production and inventory holding over four quarters."
+    "expr": "sum(regular_production[q] * regular_cost + overtime_production[q] * overtime_cost + inventory[q] * holding_cost for q in ['1', '2', '3', '4'])",
+    "description": "Minimize the total cost of production and inventory over four quarters."
   },
   "constraints": [
     {
-      "name": "inventory_balance_Q1",
-      "expr_lhs": "initial_inventory + regular_production['Q1'] + overtime_production['Q1'] - demand['Q1']",
+      "name": "inventory_balance_q1",
+      "expr_lhs": "initial_inventory + regular_production['1'] + overtime_production['1'] - demand['1']",
       "sense": "==",
-      "expr_rhs": "inventory['Q1']",
-      "description": "Inventory balance for Q1."
+      "expr_rhs": "inventory['1']",
+      "description": "Inventory balance for the first quarter."
     },
     {
-      "name": "inventory_balance_Q2",
-      "expr_lhs": "inventory['Q1'] + regular_production['Q2'] + overtime_production['Q2'] - demand['Q2']",
+      "name": "inventory_balance_q2",
+      "expr_lhs": "inventory['1'] + regular_production['2'] + overtime_production['2'] - demand['2']",
       "sense": "==",
-      "expr_rhs": "inventory['Q2']",
-      "description": "Inventory balance for Q2."
+      "expr_rhs": "inventory['2']",
+      "description": "Inventory balance for the second quarter."
     },
     {
-      "name": "inventory_balance_Q3",
-      "expr_lhs": "inventory['Q2'] + regular_production['Q3'] + overtime_production['Q3'] - demand['Q3']",
+      "name": "inventory_balance_q3",
+      "expr_lhs": "inventory['2'] + regular_production['3'] + overtime_production['3'] - demand['3']",
       "sense": "==",
-      "expr_rhs": "inventory['Q3']",
-      "description": "Inventory balance for Q3."
+      "expr_rhs": "inventory['3']",
+      "description": "Inventory balance for the third quarter."
     },
     {
-      "name": "inventory_balance_Q4",
-      "expr_lhs": "inventory['Q3'] + regular_production['Q4'] + overtime_production['Q4'] - demand['Q4']",
+      "name": "inventory_balance_q4",
+      "expr_lhs": "inventory['3'] + regular_production['4'] + overtime_production['4'] - demand['4']",
       "sense": "==",
-      "expr_rhs": "inventory['Q4']",
-      "description": "Inventory balance for Q4."
+      "expr_rhs": "inventory['4']",
+      "description": "Inventory balance for the fourth quarter."
     }
   ],
   "graph": null

@@ -1,0 +1,20 @@
+A factory needs to rent a warehouse to store materials for the next 4 months. The required warehouse area for each month is listed in Table 1-14.
+Table 1-14
+\begin{tabular}{c|c|c|c|c}
+\hline Month & 1 & 2 & 3 & 4 \\
+\hline Required Warehouse Area $/ \mathrm{m}^2$ & 1500 & 1000 & 2000 & 1200 \\
+\hline
+\end{tabular}
+
+The longer the rental contract period, the greater the discount on warehouse rental fees. The specific data is listed in Table 1-15.
+Table 1-15
+\begin{tabular}{c|c|c|c|c}
+\hline Contract Rental Period $/$ months & 1 & 2 & 3 & 4 \\
+\hline \begin{tabular}{c} 
+Rental Fee for Warehouse \\
+Area within the Contract Period $/ \mathrm{m}^2$
+\end{tabular} & 28 & 45 & 60 & 73 \\
+\hline
+\end{tabular}
+
+The warehouse rental contract can be processed at the beginning of each month, and each contract specifies the rental area and period. Therefore, the factory can rent a contract on any month, and each time, they can sign one contract or multiple contracts with different rental areas and rental periods. The overall goal is to minimize the rental fees paid. Try to establish a linear programming mathematical model based on the above requirements.

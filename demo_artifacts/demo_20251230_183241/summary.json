@@ -1,0 +1,23 @@
+{
+  "run_id": "20251230_183241",
+  "graph_built": true,
+  "verifier_report": {
+    "ok": true,
+    "issues": [],
+    "repairs": [],
+    "notes": "verifier placeholder (no-op)",
+    "graph_required": true
+  },
+  "gurobi_status": 5,
+  "gurobi_status_name": "UNBOUNDED",
+  "gurobi_obj_value": null,
+  "gurobi_metrics": {
+    "runtime_sec": 0.0,
+    "node_count": 0,
+    "mip_gap": 0.0
+  },
+  "estimation": {
+    "ok": true,
+    "notes": "estimation placeholder (no-op)"
+  }
+}

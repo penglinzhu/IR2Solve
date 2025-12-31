@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_43",
+    "source": "Mamo_complex_lp",
+    "description": "Minimize the total travel cost for a bus tour visiting each city exactly once and returning to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "description": "The cities to be visited in the tour."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "E": {
+          "F": 37,
+          "G": 72,
+          "H": 66,
+          "I": 33
+        },
+        "F": {
+          "E": 37,
+          "G": 26,
+          "H": 56,
+          "I": 100
+        },
+        "G": {
+          "E": 72,
+          "F": 26,
+          "H": 49,
+          "I": 32
+        },
+        "H": {
+          "E": 66,
+          "F": 56,
+          "G": 49,
+          "I": 13
+        },
+        "I": {
+          "E": 33,
+          "F": 100,
+          "G": 32,
+          "H": 13
+        }
+      },
+      "description": "Travel costs between cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if the tour goes from city i to city j."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[i][j] * x[i][j] for i in CITIES for j in CITIES)",
+    "description": "Minimize the total travel cost of the tour."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once_E",
+      "expr_lhs": "sum(x['E'][j] for j in CITIES if j != 'E')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City E must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_city_once_F",
+      "expr_lhs": "sum(x['F'][j] for j in CITIES if j != 'F')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City F must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_city_once_G",
+      "expr_lhs": "sum(x['G'][j] for j in CITIES if j != 'G')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City G must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_city_once_H",
+      "expr_lhs": "sum(x['H'][j] for j in CITIES if j != 'H')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City H must be departed from exactly once."
+    },
+    {
+      "name": "visit_each_city_once_I",
+      "expr_lhs": "sum(x['I'][j] for j in CITIES if j != 'I')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City I must be departed from exactly once."
+    },
+    {
+      "name": "enter_each_city_once_E",
+      "expr_lhs": "sum(x[i]['E'] for i in CITIES if i != 'E')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City E must be entered exactly once."
+    },
+    {
+      "name": "enter_each_city_once_F",
+      "expr_lhs": "sum(x[i]['F'] for i in CITIES if i != 'F')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City F must be entered exactly once."
+    },
+    {
+      "name": "enter_each_city_once_G",
+      "expr_lhs": "sum(x[i]['G'] for i in CITIES if i != 'G')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City G must be entered exactly once."
+    },
+    {
+      "name": "enter_each_city_once_H",
+      "expr_lhs": "sum(x[i]['H'] for i in CITIES if i != 'H')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City H must be entered exactly once."
+    },
+    {
+      "name": "enter_each_city_once_I",
+      "expr_lhs": "sum(x[i]['I'] for i in CITIES if i != 'I')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "City I must be entered exactly once."
+    }
+  ],
+  "graph": null
+}

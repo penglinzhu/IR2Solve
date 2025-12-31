@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_24",
-    "source": null,
-    "description": "Optimize meal planning to meet nutritional requirements at minimal cost.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the selection of food items to meet dietary needs at minimal cost.",
     "sense": "min",
     "version": 1
   },
@@ -15,7 +15,7 @@
         "Broccoli",
         "Eggs"
       ],
-      "description": "Types of food items available for meal planning."
+      "description": "Types of food items available for selection."
     }
   ],
   "params": [
@@ -81,33 +81,33 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units of each food item to purchase."
+      "description": "Number of units to purchase for each food item."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "expr": "sum(cost[f] * x[f] for f in ['Chicken', 'Rice', 'Broccoli', 'Eggs'])",
     "description": "Minimize the total cost of purchasing food items."
   },
   "constraints": [
     {
       "name": "protein_requirement",
-      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(protein[f] * x[f] for f in ['Chicken', 'Rice', 'Broccoli', 'Eggs'])",
       "sense": ">=",
       "expr_rhs": "84",
       "description": "Ensure at least 84 grams of protein are consumed."
     },
     {
       "name": "carbohydrates_requirement",
-      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(carbohydrates[f] * x[f] for f in ['Chicken', 'Rice', 'Broccoli', 'Eggs'])",
       "sense": ">=",
       "expr_rhs": "117",
       "description": "Ensure at least 117 grams of carbohydrates are consumed."
     },
     {
       "name": "calories_requirement",
-      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "expr_lhs": "sum(calories[f] * x[f] for f in ['Chicken', 'Rice', 'Broccoli', 'Eggs'])",
       "sense": ">=",
       "expr_rhs": "1554",
       "description": "Ensure at least 1554 calories are consumed."

@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_27",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the selection of food items to meet nutritional goals at minimum cost.",
     "sense": "min",
     "version": 1
@@ -86,14 +86,14 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units of each food item to purchase."
+      "description": "Number of units of each food item to select."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of purchasing food items."
+    "description": "Minimize the total cost of selected food items."
   },
   "constraints": [
     {

@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_109",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Maximize the profit from blending raw gasolines into regular and premium gasoline products.",
     "sense": "max",
     "version": 1
@@ -15,7 +15,7 @@
         "3",
         "4"
       ],
-      "description": "Types of raw gasoline available for blending."
+      "description": "Types of raw gasolines available for blending."
     },
     {
       "name": "FINAL_PRODUCTS",
@@ -110,71 +110,71 @@
       "vartype": "continuous",
       "lb": 0.0,
       "ub": null,
-      "description": "Barrels of raw gasoline blended into each final product."
+      "description": "Amount of each raw gasoline used in each final product."
     }
   ],
   "objective": {
-    "name": "max_profit",
+    "name": "max_total_profit",
     "sense": "max",
-    "expr": "sum((selling_price[p] * sum(blend[r][p] for r in RAW_GASOLINES) - sum(cost[r] * blend[r][p] for r in RAW_GASOLINES)) for p in FINAL_PRODUCTS)",
-    "description": "Maximize the profit from selling the blended gasoline products."
+    "expr": "sum((selling_price[p] - sum(cost[r] * blend[r][p] for r in RAW_GASOLINES)) * sum(blend[r][p] for r in RAW_GASOLINES) for p in FINAL_PRODUCTS)",
+    "description": "Maximize the total profit from selling the final gasoline products."
   },
   "constraints": [
     {
-      "name": "availability_1",
+      "name": "availability_constraint_1",
       "expr_lhs": "sum(blend['1'][p] for p in FINAL_PRODUCTS)",
       "sense": "<=",
       "expr_rhs": "availability['1']",
       "description": "Do not exceed availability of raw gasoline 1."
     },
     {
-      "name": "availability_2",
+      "name": "availability_constraint_2",
       "expr_lhs": "sum(blend['2'][p] for p in FINAL_PRODUCTS)",
       "sense": "<=",
       "expr_rhs": "availability['2']",
       "description": "Do not exceed availability of raw gasoline 2."
     },
     {
-      "name": "availability_3",
+      "name": "availability_constraint_3",
       "expr_lhs": "sum(blend['3'][p] for p in FINAL_PRODUCTS)",
       "sense": "<=",
       "expr_rhs": "availability['3']",
       "description": "Do not exceed availability of raw gasoline 3."
     },
     {
-      "name": "availability_4",
+      "name": "availability_constraint_4",
       "expr_lhs": "sum(blend['4'][p] for p in FINAL_PRODUCTS)",
       "sense": "<=",
       "expr_rhs": "availability['4']",
       "description": "Do not exceed availability of raw gasoline 4."
     },
     {
-      "name": "demand_regular",
-      "expr_lhs": "sum(blend[r]['regular'] for r in RAW_GASOLINES)",
-      "sense": "<=",
-      "expr_rhs": "max_demand['regular']",
-      "description": "Do not exceed demand for regular gasoline."
-    },
-    {
-      "name": "demand_premium",
-      "expr_lhs": "sum(blend[r]['premium'] for r in RAW_GASOLINES)",
-      "sense": "<=",
-      "expr_rhs": "max_demand['premium']",
-      "description": "Do not exceed demand for premium gasoline."
-    },
-    {
-      "name": "octane_regular",
+      "name": "octane_constraint_regular",
       "expr_lhs": "sum(octane_rating[r] * blend[r]['regular'] for r in RAW_GASOLINES)",
       "sense": ">=",
       "expr_rhs": "min_octane['regular'] * sum(blend[r]['regular'] for r in RAW_GASOLINES)",
       "description": "Ensure minimum octane for regular gasoline."
     },
     {
-      "name": "octane_premium",
+      "name": "octane_constraint_premium",
       "expr_lhs": "sum(octane_rating[r] * blend[r]['premium'] for r in RAW_GASOLINES)",
       "sense": ">=",
       "expr_rhs": "min_octane['premium'] * sum(blend[r]['premium'] for r in RAW_GASOLINES)",
       "description": "Ensure minimum octane for premium gasoline."
+    },
+    {
+      "name": "demand_constraint_regular",
+      "expr_lhs": "sum(blend[r]['regular'] for r in RAW_GASOLINES)",
+      "sense": "<=",
+      "expr_rhs": "max_demand['regular']",
+      "description": "Do not exceed demand for regular gasoline."
+    },
+    {
+      "name": "demand_constraint_premium",
+      "expr_lhs": "sum(blend[r]['premium'] for r in RAW_GASOLINES)",
+      "sense": "<=",
+      "expr_rhs": "max_demand['premium']",
+      "description": "Do not exceed demand for premium gasoline."
     }
   ],
   "graph": null

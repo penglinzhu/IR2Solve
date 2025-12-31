@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "problem_id": "industryOR_27",
+    "source": "IndustryOR",
+    "description": "Determine the optimal production plan to maximize the profit for the factory producing three types of products using different equipment.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "I",
+        "II",
+        "III"
+      ],
+      "description": "Types of products produced by the factory."
+    },
+    {
+      "name": "EQUIPMENT_A",
+      "elements": [
+        "A1",
+        "A2"
+      ],
+      "description": "Types of equipment for processing step A."
+    },
+    {
+      "name": "EQUIPMENT_B",
+      "elements": [
+        "B1",
+        "B2",
+        "B3"
+      ],
+      "description": "Types of equipment for processing step B."
+    }
+  ],
+  "params": [
+    {
+      "name": "processing_time_A",
+      "indices": [
+        "EQUIPMENT_A",
+        "PRODUCTS"
+      ],
+      "values": {
+        "A1": {
+          "I": 5,
+          "II": 10,
+          "III": null
+        },
+        "A2": {
+          "I": 7,
+          "II": 9,
+          "III": 12
+        }
+      },
+      "description": "Processing time for each product on equipment A."
+    },
+    {
+      "name": "processing_time_B",
+      "indices": [
+        "EQUIPMENT_B",
+        "PRODUCTS"
+      ],
+      "values": {
+        "B1": {
+          "I": 6,
+          "II": 8,
+          "III": null
+        },
+        "B2": {
+          "I": 4,
+          "II": null,
+          "III": 11
+        },
+        "B3": {
+          "I": 7,
+          "II": null,
+          "III": null
+        }
+      },
+      "description": "Processing time for each product on equipment B."
+    },
+    {
+      "name": "equipment_available_time",
+      "indices": [
+        "EQUIPMENT_A",
+        "EQUIPMENT_B"
+      ],
+      "values": {
+        "A1": 10000,
+        "A2": 4000,
+        "B1": 7000,
+        "B2": 4000,
+        "B3": 6000
+      },
+      "description": "Available time for each equipment type."
+    },
+    {
+      "name": "equipment_cost",
+      "indices": [
+        "EQUIPMENT_A",
+        "EQUIPMENT_B"
+      ],
+      "values": {
+        "A1": 321,
+        "A2": 250,
+        "B1": 783,
+        "B2": 200,
+        "B3": 300
+      },
+      "description": "Cost at full load for each equipment type."
+    },
+    {
+      "name": "raw_material_cost",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "I": 0.25,
+        "II": 0.35,
+        "III": 0.5
+      },
+      "description": "Raw material cost per unit for each product."
+    },
+    {
+      "name": "unit_price",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "I": 1.25,
+        "II": 2.0,
+        "III": 2.8
+      },
+      "description": "Selling price per unit for each product."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x_A",
+      "indices": [
+        "EQUIPMENT_A",
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of units of each product processed on equipment A."
+    },
+    {
+      "name": "x_B",
+      "indices": [
+        "EQUIPMENT_B",
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0,
+      "ub": null,
+      "description": "Number of units of each product processed on equipment B."
+    }
+  ],
+  "objective": {
+    "name": "max_profit",
+    "sense": "max",
+    "expr": "sum((unit_price[p] - raw_material_cost[p]) * (sum(x_A[a][p] for a in EQUIPMENT_A) + sum(x_B[b][p] for b in EQUIPMENT_B)) - sum(equipment_cost[a] for a in EQUIPMENT_A) - sum(equipment_cost[b] for b in EQUIPMENT_B) for p in PRODUCTS)",
+    "description": "Maximize the profit from selling products minus raw material and equipment costs."
+  },
+  "constraints": [
+    {
+      "name": "equipment_A_time_constraint_A1",
+      "expr_lhs": "sum(processing_time_A['A1'][p] * x_A['A1'][p] for p in PRODUCTS if processing_time_A['A1'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "equipment_available_time['A1']",
+      "description": "Time constraint for equipment A1."
+    },
+    {
+      "name": "equipment_A_time_constraint_A2",
+      "expr_lhs": "sum(processing_time_A['A2'][p] * x_A['A2'][p] for p in PRODUCTS if processing_time_A['A2'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "equipment_available_time['A2']",
+      "description": "Time constraint for equipment A2."
+    },
+    {
+      "name": "equipment_B_time_constraint_B1",
+      "expr_lhs": "sum(processing_time_B['B1'][p] * x_B['B1'][p] for p in PRODUCTS if processing_time_B['B1'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "equipment_available_time['B1']",
+      "description": "Time constraint for equipment B1."
+    },
+    {
+      "name": "equipment_B_time_constraint_B2",
+      "expr_lhs": "sum(processing_time_B['B2'][p] * x_B['B2'][p] for p in PRODUCTS if processing_time_B['B2'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "equipment_available_time['B2']",
+      "description": "Time constraint for equipment B2."
+    },
+    {
+      "name": "equipment_B_time_constraint_B3",
+      "expr_lhs": "sum(processing_time_B['B3'][p] * x_B['B3'][p] for p in PRODUCTS if processing_time_B['B3'][p] is not None)",
+      "sense": "<=",
+      "expr_rhs": "equipment_available_time['B3']",
+      "description": "Time constraint for equipment B3."
+    },
+    {
+      "name": "product_II_B_constraint",
+      "expr_lhs": "x_B['B2']['II'] + x_B['B3']['II']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Product II can only be processed on B1 equipment."
+    },
+    {
+      "name": "product_III_A_constraint",
+      "expr_lhs": "x_A['A1']['III']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Product III can only be processed on A2 equipment."
+    },
+    {
+      "name": "product_III_B_constraint",
+      "expr_lhs": "x_B['B1']['III'] + x_B['B3']['III']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Product III can only be processed on B2 equipment."
+    }
+  ],
+  "graph": null
+}

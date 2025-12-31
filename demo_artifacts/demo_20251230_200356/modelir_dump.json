@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "problem_id": "diet_optimization_001",
+    "source": null,
+    "description": "Minimize the cost of a meal plan while meeting daily nutritional requirements for protein, carbohydrates, and calories.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "FOODS",
+      "elements": [
+        "Food_1",
+        "Food_2",
+        "Food_3",
+        "Food_4",
+        "Food_5",
+        "Food_6",
+        "Food_7",
+        "Food_8"
+      ],
+      "description": "List of available food items."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 6,
+        "Food_2": 4,
+        "Food_3": 4,
+        "Food_4": 3,
+        "Food_5": 2,
+        "Food_6": 7,
+        "Food_7": 3,
+        "Food_8": 3
+      },
+      "description": "Cost of each food item."
+    },
+    {
+      "name": "protein",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 1,
+        "Food_2": 18,
+        "Food_3": 19,
+        "Food_4": 19,
+        "Food_5": 3,
+        "Food_6": 8,
+        "Food_7": 15,
+        "Food_8": 3
+      },
+      "description": "Protein content of each food item in grams."
+    },
+    {
+      "name": "carbs",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 4,
+        "Food_2": 2,
+        "Food_3": 26,
+        "Food_4": 10,
+        "Food_5": 24,
+        "Food_6": 26,
+        "Food_7": 27,
+        "Food_8": 30
+      },
+      "description": "Carbohydrate content of each food item in grams."
+    },
+    {
+      "name": "calories",
+      "indices": [
+        "FOODS"
+      ],
+      "values": {
+        "Food_1": 93,
+        "Food_2": 219,
+        "Food_3": 155,
+        "Food_4": 105,
+        "Food_5": 255,
+        "Food_6": 182,
+        "Food_7": 173,
+        "Food_8": 191
+      },
+      "description": "Caloric content of each food item."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "FOODS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of each food item to include in the meal plan."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[f] * x[f] for f in FOODS)",
+    "description": "Minimize the total cost of the meal plan."
+  },
+  "constraints": [
+    {
+      "name": "protein_requirement",
+      "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "98",
+      "description": "Ensure at least 98 grams of protein are included in the meal plan."
+    },
+    {
+      "name": "carbs_requirement",
+      "expr_lhs": "sum(carbs[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "113",
+      "description": "Ensure at least 113 grams of carbohydrates are included in the meal plan."
+    },
+    {
+      "name": "calories_requirement",
+      "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
+      "sense": ">=",
+      "expr_rhs": "1768",
+      "description": "Ensure at least 1768 calories are included in the meal plan."
+    }
+  ]
+}

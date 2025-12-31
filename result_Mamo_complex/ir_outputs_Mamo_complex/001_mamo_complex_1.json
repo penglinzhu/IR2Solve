@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_1",
-    "source": null,
-    "description": "Determine the most cost-effective way to purchase food items to meet nutritional requirements.",
+    "source": "Mamo_complex_lp",
+    "description": "Determine the most cost-effective way to purchase food items to meet or exceed nutritional requirements.",
     "sense": "min",
     "version": 1
   },
@@ -69,7 +69,7 @@
         "Food_3": 10,
         "Food_4": 2
       },
-      "description": "Cost per unit of each food item in dollars."
+      "description": "Cost per unit of each food item."
     }
   ],
   "vars": [
@@ -96,21 +96,21 @@
       "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "84",
-      "description": "Ensure at least 84 grams of protein are purchased."
+      "description": "Ensure at least 84 grams of protein are provided."
     },
     {
       "name": "carbohydrate_requirement",
       "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "132",
-      "description": "Ensure at least 132 grams of carbohydrates are purchased."
+      "description": "Ensure at least 132 grams of carbohydrates are provided."
     },
     {
       "name": "calorie_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "1990",
-      "description": "Ensure at least 1990 calories are purchased."
+      "description": "Ensure at least 1990 calories are provided."
     }
   ],
   "graph": null

@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_104",
+    "source": null,
+    "description": "Maximize the daily profit of a company producing two types of products with constraints on labor and raw materials.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "PRODUCTS",
+      "elements": [
+        "product_1",
+        "product_2"
+      ],
+      "description": "Types of products produced by the company"
+    }
+  ],
+  "params": [
+    {
+      "name": "assembly_time",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "product_1": 0.25,
+        "product_2": 0.3333
+      },
+      "description": "Assembly time required for each product in hours"
+    },
+    {
+      "name": "testing_time",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "product_1": 0.125,
+        "product_2": 0.3333
+      },
+      "description": "Testing time required for each product in hours"
+    },
+    {
+      "name": "raw_material_cost",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "product_1": 1.2,
+        "product_2": 0.9
+      },
+      "description": "Cost of raw materials for each product in dollars"
+    },
+    {
+      "name": "market_value",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "values": {
+        "product_1": 9,
+        "product_2": 8
+      },
+      "description": "Market value of each product in dollars"
+    },
+    {
+      "name": "max_assembly_hours",
+      "indices": [],
+      "values": 90,
+      "description": "Maximum available assembly labor hours per day"
+    },
+    {
+      "name": "max_testing_hours",
+      "indices": [],
+      "values": 80,
+      "description": "Maximum available testing labor hours per day"
+    },
+    {
+      "name": "overtime_cost",
+      "indices": [],
+      "values": 7,
+      "description": "Cost of overtime assembly labor per hour"
+    },
+    {
+      "name": "max_overtime_hours",
+      "indices": [],
+      "values": 50,
+      "description": "Maximum overtime assembly labor hours per day"
+    }
+  ],
+  "vars": [
+    {
+      "name": "production_qty",
+      "indices": [
+        "PRODUCTS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of units produced for each product"
+    },
+    {
+      "name": "overtime_hours",
+      "indices": [],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": 50,
+      "description": "Overtime assembly labor hours used"
+    }
+  ],
+  "objective": {
+    "name": "max_daily_profit",
+    "sense": "max",
+    "expr": "sum((market_value[p] - raw_material_cost[p]) * production_qty[p] for p in PRODUCTS) - overtime_cost * overtime_hours",
+    "description": "Maximize the daily profit considering product market value, raw material cost, and overtime labor cost"
+  },
+  "constraints": [
+    {
+      "name": "assembly_capacity",
+      "expr_lhs": "sum(assembly_time[p] * production_qty[p] for p in PRODUCTS) + overtime_hours",
+      "sense": "<=",
+      "expr_rhs": "max_assembly_hours + max_overtime_hours",
+      "description": "Total assembly time including overtime must not exceed available hours"
+    },
+    {
+      "name": "testing_capacity",
+      "expr_lhs": "sum(testing_time[p] * production_qty[p] for p in PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "max_testing_hours",
+      "description": "Total testing time must not exceed available hours"
+    }
+  ],
+  "graph": null
+}

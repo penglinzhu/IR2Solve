@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_101",
-    "source": null,
-    "description": "Maximize the flow from node 1 to node 4 in a directed network with given capacities.",
+    "source": "Mamo_complex_lp",
+    "description": "Determine the maximum flow from node 1 to node 4 in a directed graph with given capacities.",
     "sense": "max",
     "version": 1
   },
@@ -15,10 +15,10 @@
         "3",
         "4"
       ],
-      "description": "Nodes in the network"
+      "description": "The nodes in the graph."
     },
     {
-      "name": "ARCS",
+      "name": "EDGES",
       "elements": [
         [
           "1",
@@ -41,15 +41,14 @@
           "4"
         ]
       ],
-      "description": "Directed edges in the network"
+      "description": "The directed edges in the graph."
     }
   ],
   "params": [
     {
       "name": "capacity",
       "indices": [
-        "NODES",
-        "NODES"
+        "EDGES"
       ],
       "values": {
         "1": {
@@ -64,99 +63,76 @@
           "4": 12
         }
       },
-      "description": "Capacity of each arc"
+      "description": "Capacity of each edge in the graph."
     }
   ],
   "vars": [
     {
       "name": "flow",
       "indices": [
-        "NODES",
-        "NODES"
+        "EDGES"
       ],
       "vartype": "continuous",
       "lb": 0.0,
       "ub": null,
-      "description": "Flow through each arc"
-    },
-    {
-      "name": "F",
-      "indices": [],
-      "vartype": "continuous",
-      "lb": 0.0,
-      "ub": null,
-      "description": "Total flow from source to sink"
+      "description": "Flow through each edge in the graph."
     }
   ],
   "objective": {
     "name": "max_total_flow",
     "sense": "max",
-    "expr": "F",
-    "description": "Maximize the total flow from node 1 to node 4"
+    "expr": "flow['1']['2'] + flow['1']['3']",
+    "description": "Maximize the total flow from node 1 to node 4."
   },
   "constraints": [
     {
-      "name": "capacity_1_2",
+      "name": "capacity_constraint_1_2",
       "expr_lhs": "flow['1']['2']",
       "sense": "<=",
       "expr_rhs": "capacity['1']['2']",
-      "description": "Capacity constraint for arc 1->2"
+      "description": "Flow on edge 1->2 does not exceed its capacity."
     },
     {
-      "name": "capacity_1_3",
+      "name": "capacity_constraint_1_3",
       "expr_lhs": "flow['1']['3']",
       "sense": "<=",
       "expr_rhs": "capacity['1']['3']",
-      "description": "Capacity constraint for arc 1->3"
+      "description": "Flow on edge 1->3 does not exceed its capacity."
     },
     {
-      "name": "capacity_2_3",
+      "name": "capacity_constraint_2_3",
       "expr_lhs": "flow['2']['3']",
       "sense": "<=",
       "expr_rhs": "capacity['2']['3']",
-      "description": "Capacity constraint for arc 2->3"
+      "description": "Flow on edge 2->3 does not exceed its capacity."
     },
     {
-      "name": "capacity_2_4",
+      "name": "capacity_constraint_2_4",
       "expr_lhs": "flow['2']['4']",
       "sense": "<=",
       "expr_rhs": "capacity['2']['4']",
-      "description": "Capacity constraint for arc 2->4"
+      "description": "Flow on edge 2->4 does not exceed its capacity."
     },
     {
-      "name": "capacity_3_4",
+      "name": "capacity_constraint_3_4",
       "expr_lhs": "flow['3']['4']",
       "sense": "<=",
       "expr_rhs": "capacity['3']['4']",
-      "description": "Capacity constraint for arc 3->4"
+      "description": "Flow on edge 3->4 does not exceed its capacity."
     },
     {
-      "name": "source_flow_balance",
-      "expr_lhs": "flow['1']['2'] + flow['1']['3']",
+      "name": "flow_conservation_2",
+      "expr_lhs": "flow['1']['2'] - flow['2']['3'] - flow['2']['4']",
       "sense": "==",
-      "expr_rhs": "F",
-      "description": "Flow balance at source node 1"
+      "expr_rhs": "0",
+      "description": "Flow conservation at node 2."
     },
     {
-      "name": "sink_flow_balance",
-      "expr_lhs": "flow['2']['4'] + flow['3']['4']",
+      "name": "flow_conservation_3",
+      "expr_lhs": "flow['1']['3'] + flow['2']['3'] - flow['3']['4']",
       "sense": "==",
-      "expr_rhs": "F",
-      "description": "Flow balance at sink node 4"
-    },
-    {
-      "name": "intermediate_flow_balance_2",
-      "expr_lhs": "flow['1']['2'] + flow['3']['2']",
-      "sense": "==",
-      "expr_rhs": "flow['2']['3'] + flow['2']['4']",
-      "description": "Flow conservation at intermediate node 2"
-    },
-    {
-      "name": "intermediate_flow_balance_3",
-      "expr_lhs": "flow['1']['3'] + flow['2']['3']",
-      "sense": "==",
-      "expr_rhs": "flow['3']['4']",
-      "description": "Flow conservation at intermediate node 3"
+      "expr_rhs": "0",
+      "description": "Flow conservation at node 3."
     }
   ],
   "graph": null

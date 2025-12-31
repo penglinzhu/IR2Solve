@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_108",
-    "source": null,
-    "description": "Optimize the grain mix to meet nutrient requirements for sheep at minimum cost.",
+    "source": "Mamo_complex_lp",
+    "description": "Determine the minimum cost of feeding sheep with grains to meet nutrient requirements.",
     "sense": "min",
     "version": 1
   },
@@ -57,7 +57,7 @@
       "description": "Nutrient content per pound of each grain."
     },
     {
-      "name": "grain_cost",
+      "name": "cost",
       "indices": [
         "GRAINS"
       ],
@@ -69,7 +69,7 @@
       "description": "Cost in cents per pound of each grain."
     },
     {
-      "name": "min_nutrient_requirement",
+      "name": "min_requirement",
       "indices": [
         "NUTRIENTS"
       ],
@@ -79,7 +79,7 @@
         "C": 90,
         "D": 14
       },
-      "description": "Minimum daily nutrient requirement for the sheep."
+      "description": "Minimum daily requirement of each nutrient."
     }
   ],
   "vars": [
@@ -91,42 +91,42 @@
       "vartype": "continuous",
       "lb": 0.0,
       "ub": null,
-      "description": "Amount of each grain to feed the sheep in pounds."
+      "description": "Amount of each grain to feed in pounds."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(grain_cost[g] * x[g] for g in ['1', '2', '3'])",
-    "description": "Minimize the total cost of grains to meet nutrient requirements."
+    "expr": "sum(cost[g] * x[g] for g in GRAINS)",
+    "description": "Minimize the total cost of feeding the sheep."
   },
   "constraints": [
     {
       "name": "nutrient_A_requirement",
-      "expr_lhs": "sum(nutrient_content[g]['A'] * x[g] for g in ['1', '2', '3'])",
+      "expr_lhs": "sum(nutrient_content[g]['A'] * x[g] for g in GRAINS)",
       "sense": ">=",
-      "expr_rhs": "min_nutrient_requirement['A']",
+      "expr_rhs": "min_requirement['A']",
       "description": "Ensure minimum requirement of nutrient A is met."
     },
     {
       "name": "nutrient_B_requirement",
-      "expr_lhs": "sum(nutrient_content[g]['B'] * x[g] for g in ['1', '2', '3'])",
+      "expr_lhs": "sum(nutrient_content[g]['B'] * x[g] for g in GRAINS)",
       "sense": ">=",
-      "expr_rhs": "min_nutrient_requirement['B']",
+      "expr_rhs": "min_requirement['B']",
       "description": "Ensure minimum requirement of nutrient B is met."
     },
     {
       "name": "nutrient_C_requirement",
-      "expr_lhs": "sum(nutrient_content[g]['C'] * x[g] for g in ['1', '2', '3'])",
+      "expr_lhs": "sum(nutrient_content[g]['C'] * x[g] for g in GRAINS)",
       "sense": ">=",
-      "expr_rhs": "min_nutrient_requirement['C']",
+      "expr_rhs": "min_requirement['C']",
       "description": "Ensure minimum requirement of nutrient C is met."
     },
     {
       "name": "nutrient_D_requirement",
-      "expr_lhs": "sum(nutrient_content[g]['D'] * x[g] for g in ['1', '2', '3'])",
+      "expr_lhs": "sum(nutrient_content[g]['D'] * x[g] for g in GRAINS)",
       "sense": ">=",
-      "expr_rhs": "min_nutrient_requirement['D']",
+      "expr_rhs": "min_requirement['D']",
       "description": "Ensure minimum requirement of nutrient D is met."
     }
   ],

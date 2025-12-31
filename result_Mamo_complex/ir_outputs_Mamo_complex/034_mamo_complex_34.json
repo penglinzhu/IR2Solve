@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_34",
-    "source": null,
-    "description": "Optimize a meal plan to meet nutritional requirements at minimum cost.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the selection of food items to meet nutritional requirements at minimum cost.",
     "sense": "min",
     "version": 1
   },
@@ -94,7 +94,7 @@
         "Eggs": 99,
         "Quinoa": 87
       },
-      "description": "Calorie content of each food item."
+      "description": "Caloric content of each food item."
     }
   ],
   "vars": [
@@ -113,7 +113,7 @@
     "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(cost[f] * x[f] for f in FOODS)",
-    "description": "Minimize the total cost of the selected food items."
+    "description": "Minimize the total cost of selected food items."
   },
   "constraints": [
     {

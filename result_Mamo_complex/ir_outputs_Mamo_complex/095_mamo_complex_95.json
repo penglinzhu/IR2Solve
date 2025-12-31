@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_95",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the opening of distribution centers and transportation to meet retail store demands at minimal cost.",
     "sense": "min",
     "version": 1
@@ -154,117 +154,117 @@
       "vartype": "binary",
       "lb": 0.0,
       "ub": 1.0,
-      "description": "Binary variable indicating if a distribution center is opened"
+      "description": "Binary variable indicating if a distribution center is open"
     },
     {
-      "name": "flow",
+      "name": "supply",
       "indices": [
         "CENTERS",
         "STORES"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Amount of goods transported from each center to each store"
+      "description": "Units supplied from a center to a store"
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(opening_cost[c] * open_center[c] for c in CENTERS) + sum(transport_cost[c][s] * flow[c][s] for c in CENTERS for s in STORES)",
+    "expr": "sum(opening_cost[c] * open_center[c] for c in CENTERS) + sum(transport_cost[c][s] * supply[c][s] for c in CENTERS for s in STORES)",
     "description": "Minimize the total cost of opening centers and transporting goods"
   },
   "constraints": [
     {
       "name": "demand_satisfaction_store_1",
-      "expr_lhs": "sum(flow[c]['1'] for c in CENTERS)",
+      "expr_lhs": "sum(supply[c]['1'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['1']",
-      "description": "Ensure demand at store 1 is met"
+      "description": "Meet demand for store 1"
     },
     {
       "name": "demand_satisfaction_store_2",
-      "expr_lhs": "sum(flow[c]['2'] for c in CENTERS)",
+      "expr_lhs": "sum(supply[c]['2'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['2']",
-      "description": "Ensure demand at store 2 is met"
+      "description": "Meet demand for store 2"
     },
     {
       "name": "demand_satisfaction_store_3",
-      "expr_lhs": "sum(flow[c]['3'] for c in CENTERS)",
+      "expr_lhs": "sum(supply[c]['3'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['3']",
-      "description": "Ensure demand at store 3 is met"
+      "description": "Meet demand for store 3"
     },
     {
       "name": "demand_satisfaction_store_4",
-      "expr_lhs": "sum(flow[c]['4'] for c in CENTERS)",
+      "expr_lhs": "sum(supply[c]['4'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['4']",
-      "description": "Ensure demand at store 4 is met"
+      "description": "Meet demand for store 4"
     },
     {
       "name": "demand_satisfaction_store_5",
-      "expr_lhs": "sum(flow[c]['5'] for c in CENTERS)",
+      "expr_lhs": "sum(supply[c]['5'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['5']",
-      "description": "Ensure demand at store 5 is met"
+      "description": "Meet demand for store 5"
     },
     {
       "name": "demand_satisfaction_store_6",
-      "expr_lhs": "sum(flow[c]['6'] for c in CENTERS)",
+      "expr_lhs": "sum(supply[c]['6'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['6']",
-      "description": "Ensure demand at store 6 is met"
+      "description": "Meet demand for store 6"
     },
     {
       "name": "demand_satisfaction_store_7",
-      "expr_lhs": "sum(flow[c]['7'] for c in CENTERS)",
+      "expr_lhs": "sum(supply[c]['7'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['7']",
-      "description": "Ensure demand at store 7 is met"
+      "description": "Meet demand for store 7"
     },
     {
-      "name": "capacity_limit_center_1",
-      "expr_lhs": "sum(flow['1'][s] for s in STORES)",
+      "name": "capacity_constraint_center_1",
+      "expr_lhs": "sum(supply['1'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['1'] * open_center['1']",
-      "description": "Do not exceed capacity of center 1 if opened"
+      "description": "Do not exceed capacity of center 1"
     },
     {
-      "name": "capacity_limit_center_2",
-      "expr_lhs": "sum(flow['2'][s] for s in STORES)",
+      "name": "capacity_constraint_center_2",
+      "expr_lhs": "sum(supply['2'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['2'] * open_center['2']",
-      "description": "Do not exceed capacity of center 2 if opened"
+      "description": "Do not exceed capacity of center 2"
     },
     {
-      "name": "capacity_limit_center_3",
-      "expr_lhs": "sum(flow['3'][s] for s in STORES)",
+      "name": "capacity_constraint_center_3",
+      "expr_lhs": "sum(supply['3'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['3'] * open_center['3']",
-      "description": "Do not exceed capacity of center 3 if opened"
+      "description": "Do not exceed capacity of center 3"
     },
     {
-      "name": "capacity_limit_center_4",
-      "expr_lhs": "sum(flow['4'][s] for s in STORES)",
+      "name": "capacity_constraint_center_4",
+      "expr_lhs": "sum(supply['4'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['4'] * open_center['4']",
-      "description": "Do not exceed capacity of center 4 if opened"
+      "description": "Do not exceed capacity of center 4"
     },
     {
-      "name": "capacity_limit_center_5",
-      "expr_lhs": "sum(flow['5'][s] for s in STORES)",
+      "name": "capacity_constraint_center_5",
+      "expr_lhs": "sum(supply['5'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['5'] * open_center['5']",
-      "description": "Do not exceed capacity of center 5 if opened"
+      "description": "Do not exceed capacity of center 5"
     },
     {
-      "name": "capacity_limit_center_6",
-      "expr_lhs": "sum(flow['6'][s] for s in STORES)",
+      "name": "capacity_constraint_center_6",
+      "expr_lhs": "sum(supply['6'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['6'] * open_center['6']",
-      "description": "Do not exceed capacity of center 6 if opened"
+      "description": "Do not exceed capacity of center 6"
     }
   ],
   "graph": null

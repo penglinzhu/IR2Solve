@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_49",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Determine the minimum travel cost for a salesperson to visit each of five cities exactly once and return to the starting city.",
     "sense": "min",
     "version": 1
@@ -72,13 +72,23 @@
       "lb": 0.0,
       "ub": 1.0,
       "description": "Binary variable indicating if the route between two cities is taken."
+    },
+    {
+      "name": "u",
+      "indices": [
+        "CITIES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Helper variable for subtour elimination."
     }
   ],
   "objective": {
-    "name": "min_total_travel_cost",
+    "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(travel_cost[i][j] * x[i][j] for i in CITIES for j in CITIES if i != j)",
-    "description": "Minimize the total travel cost for the salesperson's tour."
+    "description": "Minimize the total travel cost for the tour."
   },
   "constraints": [
     {
@@ -86,70 +96,140 @@
       "expr_lhs": "sum(x['1'][j] for j in CITIES if j != '1')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure city 1 is visited exactly once."
+      "description": "Ensure exactly one outgoing route from City 1."
     },
     {
       "name": "visit_each_city_once_2",
       "expr_lhs": "sum(x['2'][j] for j in CITIES if j != '2')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure city 2 is visited exactly once."
+      "description": "Ensure exactly one outgoing route from City 2."
     },
     {
       "name": "visit_each_city_once_3",
       "expr_lhs": "sum(x['3'][j] for j in CITIES if j != '3')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure city 3 is visited exactly once."
+      "description": "Ensure exactly one outgoing route from City 3."
     },
     {
       "name": "visit_each_city_once_4",
       "expr_lhs": "sum(x['4'][j] for j in CITIES if j != '4')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure city 4 is visited exactly once."
+      "description": "Ensure exactly one outgoing route from City 4."
     },
     {
       "name": "visit_each_city_once_5",
       "expr_lhs": "sum(x['5'][j] for j in CITIES if j != '5')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure city 5 is visited exactly once."
+      "description": "Ensure exactly one outgoing route from City 5."
     },
     {
-      "name": "leave_each_city_once_1",
+      "name": "enter_each_city_once_1",
       "expr_lhs": "sum(x[i]['1'] for i in CITIES if i != '1')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure exactly one route leaves city 1."
+      "description": "Ensure exactly one incoming route to City 1."
     },
     {
-      "name": "leave_each_city_once_2",
+      "name": "enter_each_city_once_2",
       "expr_lhs": "sum(x[i]['2'] for i in CITIES if i != '2')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure exactly one route leaves city 2."
+      "description": "Ensure exactly one incoming route to City 2."
     },
     {
-      "name": "leave_each_city_once_3",
+      "name": "enter_each_city_once_3",
       "expr_lhs": "sum(x[i]['3'] for i in CITIES if i != '3')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure exactly one route leaves city 3."
+      "description": "Ensure exactly one incoming route to City 3."
     },
     {
-      "name": "leave_each_city_once_4",
+      "name": "enter_each_city_once_4",
       "expr_lhs": "sum(x[i]['4'] for i in CITIES if i != '4')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure exactly one route leaves city 4."
+      "description": "Ensure exactly one incoming route to City 4."
     },
     {
-      "name": "leave_each_city_once_5",
+      "name": "enter_each_city_once_5",
       "expr_lhs": "sum(x[i]['5'] for i in CITIES if i != '5')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure exactly one route leaves city 5."
+      "description": "Ensure exactly one incoming route to City 5."
+    },
+    {
+      "name": "subtour_elimination_1",
+      "expr_lhs": "u['1'] - u['2'] + 5 * x['1']['2']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 1 and 2."
+    },
+    {
+      "name": "subtour_elimination_2",
+      "expr_lhs": "u['1'] - u['3'] + 5 * x['1']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 1 and 3."
+    },
+    {
+      "name": "subtour_elimination_3",
+      "expr_lhs": "u['1'] - u['4'] + 5 * x['1']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 1 and 4."
+    },
+    {
+      "name": "subtour_elimination_4",
+      "expr_lhs": "u['1'] - u['5'] + 5 * x['1']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 1 and 5."
+    },
+    {
+      "name": "subtour_elimination_5",
+      "expr_lhs": "u['2'] - u['3'] + 5 * x['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 2 and 3."
+    },
+    {
+      "name": "subtour_elimination_6",
+      "expr_lhs": "u['2'] - u['4'] + 5 * x['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 2 and 4."
+    },
+    {
+      "name": "subtour_elimination_7",
+      "expr_lhs": "u['2'] - u['5'] + 5 * x['2']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 2 and 5."
+    },
+    {
+      "name": "subtour_elimination_8",
+      "expr_lhs": "u['3'] - u['4'] + 5 * x['3']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 3 and 4."
+    },
+    {
+      "name": "subtour_elimination_9",
+      "expr_lhs": "u['3'] - u['5'] + 5 * x['3']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 3 and 5."
+    },
+    {
+      "name": "subtour_elimination_10",
+      "expr_lhs": "u['4'] - u['5'] + 5 * x['4']['5']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 4 and 5."
     }
   ],
   "graph": null

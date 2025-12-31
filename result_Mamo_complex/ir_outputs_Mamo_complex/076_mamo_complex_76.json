@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_76",
-    "source": null,
-    "description": "Optimize the distribution strategy to minimize the total cost of opening distribution centers and transporting goods to retail stores.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the distribution strategy for Global Supply Network Inc. to minimize the total cost of opening distribution centers and transporting goods to retail stores.",
     "sense": "min",
     "version": 1
   },
@@ -134,7 +134,7 @@
           "6": 4
         }
       },
-      "description": "Transportation cost per unit from each distribution center to each store"
+      "description": "Transportation cost per unit from each distribution center to each retail store"
     },
     {
       "name": "demand",
@@ -182,125 +182,125 @@
       "description": "Binary variable indicating if a distribution center is opened"
     },
     {
-      "name": "shipment",
+      "name": "supply",
       "indices": [
         "CENTERS",
         "STORES"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Amount of goods shipped from a distribution center to a store"
+      "description": "Amount of goods supplied from a distribution center to a retail store"
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(opening_cost[c] * open_center[c] for c in CENTERS) + sum(transport_cost[c][s] * shipment[c][s] for c in CENTERS for s in STORES)",
-    "description": "Minimize the total cost of opening centers and transporting goods"
+    "expr": "sum(opening_cost[c] * open_center[c] for c in CENTERS) + sum(transport_cost[c][s] * supply[c][s] for c in CENTERS for s in STORES)",
+    "description": "Minimize the total cost of opening distribution centers and transporting goods to retail stores"
   },
   "constraints": [
     {
       "name": "demand_fulfillment_store_1",
-      "expr_lhs": "sum(shipment[c]['1'] for c in CENTERS)",
-      "sense": "==",
+      "expr_lhs": "sum(supply[c]['1'] for c in CENTERS)",
+      "sense": ">=",
       "expr_rhs": "demand['1']",
       "description": "Fulfill demand for store 1"
     },
     {
       "name": "demand_fulfillment_store_2",
-      "expr_lhs": "sum(shipment[c]['2'] for c in CENTERS)",
-      "sense": "==",
+      "expr_lhs": "sum(supply[c]['2'] for c in CENTERS)",
+      "sense": ">=",
       "expr_rhs": "demand['2']",
       "description": "Fulfill demand for store 2"
     },
     {
       "name": "demand_fulfillment_store_3",
-      "expr_lhs": "sum(shipment[c]['3'] for c in CENTERS)",
-      "sense": "==",
+      "expr_lhs": "sum(supply[c]['3'] for c in CENTERS)",
+      "sense": ">=",
       "expr_rhs": "demand['3']",
       "description": "Fulfill demand for store 3"
     },
     {
       "name": "demand_fulfillment_store_4",
-      "expr_lhs": "sum(shipment[c]['4'] for c in CENTERS)",
-      "sense": "==",
+      "expr_lhs": "sum(supply[c]['4'] for c in CENTERS)",
+      "sense": ">=",
       "expr_rhs": "demand['4']",
       "description": "Fulfill demand for store 4"
     },
     {
       "name": "demand_fulfillment_store_5",
-      "expr_lhs": "sum(shipment[c]['5'] for c in CENTERS)",
-      "sense": "==",
+      "expr_lhs": "sum(supply[c]['5'] for c in CENTERS)",
+      "sense": ">=",
       "expr_rhs": "demand['5']",
       "description": "Fulfill demand for store 5"
     },
     {
       "name": "demand_fulfillment_store_6",
-      "expr_lhs": "sum(shipment[c]['6'] for c in CENTERS)",
-      "sense": "==",
+      "expr_lhs": "sum(supply[c]['6'] for c in CENTERS)",
+      "sense": ">=",
       "expr_rhs": "demand['6']",
       "description": "Fulfill demand for store 6"
     },
     {
       "name": "capacity_limit_center_1",
-      "expr_lhs": "sum(shipment['1'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['1'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['1'] * open_center['1']",
       "description": "Capacity limit for center 1"
     },
     {
       "name": "capacity_limit_center_2",
-      "expr_lhs": "sum(shipment['2'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['2'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['2'] * open_center['2']",
       "description": "Capacity limit for center 2"
     },
     {
       "name": "capacity_limit_center_3",
-      "expr_lhs": "sum(shipment['3'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['3'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['3'] * open_center['3']",
       "description": "Capacity limit for center 3"
     },
     {
       "name": "capacity_limit_center_4",
-      "expr_lhs": "sum(shipment['4'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['4'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['4'] * open_center['4']",
       "description": "Capacity limit for center 4"
     },
     {
       "name": "capacity_limit_center_5",
-      "expr_lhs": "sum(shipment['5'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['5'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['5'] * open_center['5']",
       "description": "Capacity limit for center 5"
     },
     {
       "name": "capacity_limit_center_6",
-      "expr_lhs": "sum(shipment['6'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['6'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['6'] * open_center['6']",
       "description": "Capacity limit for center 6"
     },
     {
       "name": "capacity_limit_center_7",
-      "expr_lhs": "sum(shipment['7'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['7'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['7'] * open_center['7']",
       "description": "Capacity limit for center 7"
     },
     {
       "name": "capacity_limit_center_8",
-      "expr_lhs": "sum(shipment['8'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['8'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['8'] * open_center['8']",
       "description": "Capacity limit for center 8"
     },
     {
       "name": "capacity_limit_center_9",
-      "expr_lhs": "sum(shipment['9'][s] for s in STORES)",
+      "expr_lhs": "sum(supply['9'][s] for s in STORES)",
       "sense": "<=",
       "expr_rhs": "capacity['9'] * open_center['9']",
       "description": "Capacity limit for center 9"

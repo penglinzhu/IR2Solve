@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "problem_id": "warehouse_allocation",
+    "source": null,
+    "description": "Optimize the allocation of products among warehouses to meet demands at minimum transportation cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WAREHOUSES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "description": "Set of warehouses"
+    }
+  ],
+  "params": [
+    {
+      "name": "supply",
+      "indices": [
+        "WAREHOUSES"
+      ],
+      "values": {
+        "1": 497,
+        "2": 39,
+        "3": 416,
+        "4": 71,
+        "5": 445,
+        "6": 471
+      },
+      "description": "Current supply at each warehouse"
+    },
+    {
+      "name": "demand",
+      "indices": [
+        "WAREHOUSES"
+      ],
+      "values": {
+        "1": 161,
+        "2": 257,
+        "3": 252,
+        "4": 251,
+        "5": 372,
+        "6": 370
+      },
+      "description": "Demand at each warehouse"
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "WAREHOUSES",
+        "WAREHOUSES"
+      ],
+      "values": {
+        "1": {
+          "2": 5,
+          "3": 7,
+          "4": 5,
+          "5": 27,
+          "6": 49
+        },
+        "2": {
+          "1": 31,
+          "3": 14,
+          "4": 31,
+          "5": 3,
+          "6": 4
+        },
+        "3": {
+          "1": 9,
+          "2": 13,
+          "4": 23,
+          "5": 38,
+          "6": 19
+        },
+        "4": {
+          "1": 47,
+          "2": 34,
+          "3": 7,
+          "5": 34,
+          "6": 35
+        },
+        "5": {
+          "1": 21,
+          "2": 11,
+          "3": 6,
+          "4": 7,
+          "6": 50
+        },
+        "6": {
+          "1": 28,
+          "2": 41,
+          "3": 34,
+          "4": 17,
+          "5": 32
+        }
+      },
+      "description": "Transportation cost per unit between warehouses"
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "WAREHOUSES",
+        "WAREHOUSES"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Units transported from one warehouse to another"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[i][j] * x[i][j] for i in WAREHOUSES for j in WAREHOUSES if i != j)",
+    "description": "Minimize the total transportation cost"
+  },
+  "constraints": [
+    {
+      "name": "supply_constraint_1",
+      "expr_lhs": "sum(x['1'][j] for j in WAREHOUSES if j != '1')",
+      "sense": "<=",
+      "expr_rhs": "supply['1']",
+      "description": "Supply constraint for warehouse 1"
+    },
+    {
+      "name": "supply_constraint_2",
+      "expr_lhs": "sum(x['2'][j] for j in WAREHOUSES if j != '2')",
+      "sense": "<=",
+      "expr_rhs": "supply['2']",
+      "description": "Supply constraint for warehouse 2"
+    },
+    {
+      "name": "supply_constraint_3",
+      "expr_lhs": "sum(x['3'][j] for j in WAREHOUSES if j != '3')",
+      "sense": "<=",
+      "expr_rhs": "supply['3']",
+      "description": "Supply constraint for warehouse 3"
+    },
+    {
+      "name": "supply_constraint_4",
+      "expr_lhs": "sum(x['4'][j] for j in WAREHOUSES if j != '4')",
+      "sense": "<=",
+      "expr_rhs": "supply['4']",
+      "description": "Supply constraint for warehouse 4"
+    },
+    {
+      "name": "supply_constraint_5",
+      "expr_lhs": "sum(x['5'][j] for j in WAREHOUSES if j != '5')",
+      "sense": "<=",
+      "expr_rhs": "supply['5']",
+      "description": "Supply constraint for warehouse 5"
+    },
+    {
+      "name": "supply_constraint_6",
+      "expr_lhs": "sum(x['6'][j] for j in WAREHOUSES if j != '6')",
+      "sense": "<=",
+      "expr_rhs": "supply['6']",
+      "description": "Supply constraint for warehouse 6"
+    },
+    {
+      "name": "demand_constraint_1",
+      "expr_lhs": "sum(x[i]['1'] for i in WAREHOUSES if i != '1')",
+      "sense": ">=",
+      "expr_rhs": "demand['1']",
+      "description": "Demand constraint for warehouse 1"
+    },
+    {
+      "name": "demand_constraint_2",
+      "expr_lhs": "sum(x[i]['2'] for i in WAREHOUSES if i != '2')",
+      "sense": ">=",
+      "expr_rhs": "demand['2']",
+      "description": "Demand constraint for warehouse 2"
+    },
+    {
+      "name": "demand_constraint_3",
+      "expr_lhs": "sum(x[i]['3'] for i in WAREHOUSES if i != '3')",
+      "sense": ">=",
+      "expr_rhs": "demand['3']",
+      "description": "Demand constraint for warehouse 3"
+    },
+    {
+      "name": "demand_constraint_4",
+      "expr_lhs": "sum(x[i]['4'] for i in WAREHOUSES if i != '4')",
+      "sense": ">=",
+      "expr_rhs": "demand['4']",
+      "description": "Demand constraint for warehouse 4"
+    },
+    {
+      "name": "demand_constraint_5",
+      "expr_lhs": "sum(x[i]['5'] for i in WAREHOUSES if i != '5')",
+      "sense": ">=",
+      "expr_rhs": "demand['5']",
+      "description": "Demand constraint for warehouse 5"
+    },
+    {
+      "name": "demand_constraint_6",
+      "expr_lhs": "sum(x[i]['6'] for i in WAREHOUSES if i != '6')",
+      "sense": ">=",
+      "expr_rhs": "demand['6']",
+      "description": "Demand constraint for warehouse 6"
+    }
+  ],
+  "graph": null
+}

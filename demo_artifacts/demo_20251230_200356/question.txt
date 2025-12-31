@@ -1,0 +1,20 @@
+Imagine you're a dietitian crafting a meal plan for someone with specific nutritional goals. The challenge is not just to meet these nutritional needs but to do so in the most cost-effective way possible. The individual requires a precise amount of protein, carbohydrates, and calories each day, but the budget is tight, making it crucial to minimize the cost of the meal plan.
+
+You have a list of eight food items to choose from, each with distinct nutritional content and associated cost:
+
+- Food_1: A modest source of protein and carbs with 1 gram of protein, 4 grams of carbohydrates, and 93 calories at a cost of $6.
+- Food_2: Rich in protein with 18 grams of protein, 2 grams of carbohydrates, and 219 calories, priced at $4.
+- Food_3: A balanced choice providing 19 grams of protein, 26 grams of carbs, and 155 calories for $4.
+- Food_4: High in protein with 19 grams of protein, 10 grams of carbs, and 105 calories, costing $3.
+- Food_5: Carb-heavy with 3 grams of protein, 24 grams of carbohydrates, and 255 calories at just $2.
+- Food_6: A good mix with 8 grams of protein, 26 grams of carbs, and 182 calories for $7.
+- Food_7: Impressive protein and carb content with 15 grams of protein, 27 grams of carbohydrates, and 173 calories, all for $3.
+- Food_8: Carb-rich with 3 grams of protein, 30 grams of carbohydrates, and 191 calories, also at $3.
+
+The daily dietary requirements for the individual are:
+
+- Protein: At least 98 grams
+- Carbohydrates: At least 113 grams
+- Calories: At least 1768
+
+With these food options and nutritional needs in mind, what is the minimum cost required to meet the daily protein, carbohydrate, and calorie requirements?

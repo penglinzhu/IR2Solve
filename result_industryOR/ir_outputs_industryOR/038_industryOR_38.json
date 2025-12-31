@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_38",
-    "source": null,
-    "description": "Traveling Salesman Problem with specific values for 5 cities and given distance matrix.",
+    "source": "IndustryOR",
+    "description": "Traveling Salesman Problem with 5 cities and specific distance matrix.",
     "sense": "min",
     "version": 1
   },
@@ -10,57 +10,57 @@
     {
       "name": "CITIES",
       "elements": [
+        "0",
         "1",
         "2",
         "3",
-        "4",
-        "5"
+        "4"
       ],
       "description": "Set of cities including the starting city."
     }
   ],
   "params": [
     {
-      "name": "D",
+      "name": "d",
       "indices": [
         "CITIES",
         "CITIES"
       ],
       "values": {
+        "0": {
+          "0": 0,
+          "1": 10,
+          "2": 15,
+          "3": 20,
+          "4": 25
+        },
         "1": {
+          "0": 10,
           "1": 0,
-          "2": 10,
-          "3": 15,
-          "4": 20,
-          "5": 25
+          "2": 35,
+          "3": 25,
+          "4": 30
         },
         "2": {
-          "1": 10,
+          "0": 15,
+          "1": 35,
           "2": 0,
-          "3": 35,
-          "4": 25,
-          "5": 30
+          "3": 30,
+          "4": 20
         },
         "3": {
-          "1": 15,
-          "2": 35,
-          "3": 0,
-          "4": 30,
-          "5": 20
-        },
-        "4": {
-          "1": 20,
-          "2": 25,
-          "3": 30,
-          "4": 0,
-          "5": 15
-        },
-        "5": {
+          "0": 20,
           "1": 25,
           "2": 30,
-          "3": 20,
-          "4": 15,
-          "5": 0
+          "3": 0,
+          "4": 15
+        },
+        "4": {
+          "0": 25,
+          "1": 30,
+          "2": 20,
+          "3": 15,
+          "4": 0
         }
       },
       "description": "Distance matrix between cities."
@@ -84,18 +84,25 @@
         "CITIES"
       ],
       "vartype": "integer",
-      "lb": 1.0,
-      "ub": 5.0,
+      "lb": 0.0,
+      "ub": null,
       "description": "Helper variable to eliminate subtours."
     }
   ],
   "objective": {
     "name": "min_total_distance",
     "sense": "min",
-    "expr": "sum(D[i][j] * x[i][j] for i in CITIES for j in CITIES)",
+    "expr": "sum(d[i][j] * x[i][j] for i in CITIES for j in CITIES)",
     "description": "Minimize the total travel distance."
   },
   "constraints": [
+    {
+      "name": "visit_each_city_once_0",
+      "expr_lhs": "sum(x['0'][j] for j in CITIES if j != '0')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the salesman leaves city 0 exactly once."
+    },
     {
       "name": "visit_each_city_once_1",
       "expr_lhs": "sum(x['1'][j] for j in CITIES if j != '1')",
@@ -125,11 +132,11 @@
       "description": "Ensure the salesman leaves city 4 exactly once."
     },
     {
-      "name": "visit_each_city_once_5",
-      "expr_lhs": "sum(x['5'][j] for j in CITIES if j != '5')",
+      "name": "enter_each_city_once_0",
+      "expr_lhs": "sum(x[i]['0'] for i in CITIES if i != '0')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Ensure the salesman leaves city 5 exactly once."
+      "description": "Ensure the salesman enters city 0 exactly once."
     },
     {
       "name": "enter_each_city_once_1",
@@ -160,39 +167,74 @@
       "description": "Ensure the salesman enters city 4 exactly once."
     },
     {
-      "name": "enter_each_city_once_5",
-      "expr_lhs": "sum(x[i]['5'] for i in CITIES if i != '5')",
-      "sense": "==",
-      "expr_rhs": "1",
-      "description": "Ensure the salesman enters city 5 exactly once."
+      "name": "subtour_elimination_1",
+      "expr_lhs": "u['0'] - u['1'] + 5 * x['0']['1']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 0 and 1."
     },
     {
       "name": "subtour_elimination_2",
-      "expr_lhs": "u['2'] - u['1'] + 5 * x['1']['2']",
+      "expr_lhs": "u['0'] - u['2'] + 5 * x['0']['2']",
       "sense": "<=",
       "expr_rhs": "4",
-      "description": "Subtour elimination constraint for city 2."
+      "description": "Subtour elimination constraint for cities 0 and 2."
     },
     {
       "name": "subtour_elimination_3",
-      "expr_lhs": "u['3'] - u['2'] + 5 * x['2']['3']",
+      "expr_lhs": "u['0'] - u['3'] + 5 * x['0']['3']",
       "sense": "<=",
       "expr_rhs": "4",
-      "description": "Subtour elimination constraint for city 3."
+      "description": "Subtour elimination constraint for cities 0 and 3."
     },
     {
       "name": "subtour_elimination_4",
-      "expr_lhs": "u['4'] - u['3'] + 5 * x['3']['4']",
+      "expr_lhs": "u['0'] - u['4'] + 5 * x['0']['4']",
       "sense": "<=",
       "expr_rhs": "4",
-      "description": "Subtour elimination constraint for city 4."
+      "description": "Subtour elimination constraint for cities 0 and 4."
     },
     {
       "name": "subtour_elimination_5",
-      "expr_lhs": "u['5'] - u['4'] + 5 * x['4']['5']",
+      "expr_lhs": "u['1'] - u['2'] + 5 * x['1']['2']",
       "sense": "<=",
       "expr_rhs": "4",
-      "description": "Subtour elimination constraint for city 5."
+      "description": "Subtour elimination constraint for cities 1 and 2."
+    },
+    {
+      "name": "subtour_elimination_6",
+      "expr_lhs": "u['1'] - u['3'] + 5 * x['1']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 1 and 3."
+    },
+    {
+      "name": "subtour_elimination_7",
+      "expr_lhs": "u['1'] - u['4'] + 5 * x['1']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 1 and 4."
+    },
+    {
+      "name": "subtour_elimination_8",
+      "expr_lhs": "u['2'] - u['3'] + 5 * x['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 2 and 3."
+    },
+    {
+      "name": "subtour_elimination_9",
+      "expr_lhs": "u['2'] - u['4'] + 5 * x['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 2 and 4."
+    },
+    {
+      "name": "subtour_elimination_10",
+      "expr_lhs": "u['3'] - u['4'] + 5 * x['3']['4']",
+      "sense": "<=",
+      "expr_rhs": "4",
+      "description": "Subtour elimination constraint for cities 3 and 4."
     }
   ],
   "graph": null

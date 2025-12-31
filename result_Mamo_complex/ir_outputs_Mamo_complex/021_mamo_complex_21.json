@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_21",
-    "source": null,
-    "description": "Determine the least expensive way to meet nutritional needs using six food items.",
+    "source": "Mamo_complex_lp",
+    "description": "Determine the least expensive way to meet all nutritional needs from a group of six food items.",
     "sense": "min",
     "version": 1
   },
@@ -17,7 +17,7 @@
         "Lentils",
         "Apples"
       ],
-      "description": "Different food items available for the meal plan."
+      "description": "Different food items considered for the meal plan."
     }
   ],
   "params": [
@@ -34,7 +34,7 @@
         "Lentils": 15,
         "Apples": 8
       },
-      "description": "Protein content per unit of each food item."
+      "description": "Protein content in grams for each food item."
     },
     {
       "name": "carbohydrates",
@@ -49,7 +49,7 @@
         "Lentils": 17,
         "Apples": 13
       },
-      "description": "Carbohydrate content per unit of each food item."
+      "description": "Carbohydrate content in grams for each food item."
     },
     {
       "name": "calories",
@@ -64,7 +64,7 @@
         "Lentils": 88,
         "Apples": 77
       },
-      "description": "Calorie content per unit of each food item."
+      "description": "Calorie content for each food item."
     },
     {
       "name": "cost",
@@ -79,7 +79,7 @@
         "Lentils": 1,
         "Apples": 2
       },
-      "description": "Cost per unit of each food item."
+      "description": "Cost in dollars for each food item."
     }
   ],
   "vars": [
@@ -91,7 +91,7 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units of each food item to include in the meal plan."
+      "description": "Number of servings of each food item."
     }
   ],
   "objective": {
@@ -106,21 +106,21 @@
       "expr_lhs": "sum(protein[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "70",
-      "description": "Ensure at least 70 grams of protein are included in the meal plan."
+      "description": "Ensure at least 70 grams of protein."
     },
     {
-      "name": "carbohydrate_requirement",
+      "name": "carbohydrates_requirement",
       "expr_lhs": "sum(carbohydrates[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "187",
-      "description": "Ensure at least 187 grams of carbohydrates are included in the meal plan."
+      "description": "Ensure at least 187 grams of carbohydrates."
     },
     {
-      "name": "calorie_requirement",
+      "name": "calories_requirement",
       "expr_lhs": "sum(calories[f] * x[f] for f in FOODS)",
       "sense": ">=",
       "expr_rhs": "2181",
-      "description": "Ensure at least 2181 calories are included in the meal plan."
+      "description": "Ensure at least 2181 calories."
     }
   ],
   "graph": null

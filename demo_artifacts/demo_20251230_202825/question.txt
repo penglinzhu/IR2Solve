@@ -1,0 +1,23 @@
+Imagine you are coordinating a logistics effort to redistribute essential supplies among seven regional distribution centers. Each center starts with a specific quantity of supplies but has different needs to ensure smooth operations across the regions.
+
+Here's the initial setup:
+
+- Distribution Center 1 has 97 units but needs 119 units.
+- Distribution Center 2 has 458 units but needs 275 units.
+- Distribution Center 3 has 473 units but needs only 36 units.
+- Distribution Center 4 has 380 units but needs 459 units.
+- Distribution Center 5 has 34 units but needs 17 units.
+- Distribution Center 6 has 399 units but needs 128 units.
+- Distribution Center 7 has 163 units but needs 425 units.
+
+To move supplies between these centers, there is a cost associated with each transfer, which varies depending on the route. Here's the cost matrix showing the cost to transfer supplies from one center to another:
+
+- From/To Center 1: To 2 costs 41, to 3 costs 42, to 4 costs 31, to 5 costs 39, to 6 costs 2, to 7 costs 18.
+- From/To Center 2: To 1 costs 48, to 3 costs 9, to 4 costs 22, to 5 costs 47, to 6 costs 29, to 7 costs 39.
+- From/To Center 3: To 1 costs 36, to 2 costs 22, to 4 costs 29, to 5 costs 45, to 6 costs 33, to 7 costs 45.
+- From/To Center 4: To 1 costs 19, to 2 costs 5, to 3 costs 10, to 5 costs 3, to 6 costs 42, to 7 costs 20.
+- From/To Center 5: To 1 costs 13, to 2 costs 10, to 3 costs 21, to 4 costs 7, to 6 costs 35, to 7 costs 11.
+- From/To Center 6: To 1 costs 5, to 2 costs 35, to 3 costs 29, to 4 costs 16, to 5 costs 40, to 7 costs 9.
+- From/To Center 7: To 1 costs 7, to 2 costs 24, to 3 costs 26, to 4 costs 38, to 5 costs 33, to 6 costs 13.
+
+Your task is to ensure each distribution center has the supplies it needs while minimizing the total cost of redistribution. What would be the minimum cost to achieve this?

@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_32",
-    "source": null,
-    "description": "Optimize the production of toy trucks, planes, boats, and trains to maximize profit given resource constraints and logical conditions.",
+    "source": "IndustryOR",
+    "description": "Optimize the number of toy types to manufacture to maximize profit given resource constraints and logical conditions.",
     "sense": "max",
     "version": 1
   },
@@ -43,7 +43,7 @@
         "boat": 15,
         "train": 10
       },
-      "description": "Units of wood required to manufacture one unit of each toy type."
+      "description": "Wood required to manufacture one unit of each toy type."
     },
     {
       "name": "steel_required",
@@ -56,7 +56,7 @@
         "boat": 5,
         "train": 4
       },
-      "description": "Units of steel required to manufacture one unit of each toy type."
+      "description": "Steel required to manufacture one unit of each toy type."
     },
     {
       "name": "wood_available",
@@ -78,7 +78,7 @@
         "TOYS"
       ],
       "vartype": "integer",
-      "lb": 0.0,
+      "lb": 0,
       "ub": null,
       "description": "Number of each type of toy to manufacture."
     },
@@ -88,31 +88,31 @@
         "TOYS"
       ],
       "vartype": "binary",
-      "lb": 0.0,
-      "ub": 1.0,
-      "description": "Binary variable indicating whether each type of toy is manufactured."
+      "lb": 0,
+      "ub": 1,
+      "description": "Binary variable indicating whether a type of toy is manufactured."
     }
   ],
   "objective": {
-    "name": "max_profit",
+    "name": "max_total_profit",
     "sense": "max",
-    "expr": "5 * x['truck'] + 10 * x['plane'] + 8 * x['boat'] + 7 * x['train']",
+    "expr": "sum(profit[t] * x[t] for t in ['truck', 'plane', 'boat', 'train'])",
     "description": "Maximize total profit from manufacturing toys."
   },
   "constraints": [
     {
       "name": "wood_constraint",
-      "expr_lhs": "12 * x['truck'] + 20 * x['plane'] + 15 * x['boat'] + 10 * x['train']",
+      "expr_lhs": "sum(wood_required[t] * x[t] for t in ['truck', 'plane', 'boat', 'train'])",
       "sense": "<=",
       "expr_rhs": "wood_available",
-      "description": "Total wood usage cannot exceed available wood."
+      "description": "Total wood used cannot exceed available wood."
     },
     {
       "name": "steel_constraint",
-      "expr_lhs": "6 * x['truck'] + 3 * x['plane'] + 5 * x['boat'] + 4 * x['train']",
+      "expr_lhs": "sum(steel_required[t] * x[t] for t in ['truck', 'plane', 'boat', 'train'])",
       "sense": "<=",
       "expr_rhs": "steel_available",
-      "description": "Total steel usage cannot exceed available steel."
+      "description": "Total steel used cannot exceed available steel."
     },
     {
       "name": "truck_train_exclusion",
@@ -133,7 +133,7 @@
       "expr_lhs": "x['boat']",
       "sense": "<=",
       "expr_rhs": "x['train']",
-      "description": "The number of boats manufactured cannot exceed the number of trains manufactured."
+      "description": "The number of toy boats manufactured cannot exceed the number of toy trains manufactured."
     },
     {
       "name": "truck_binary_link",

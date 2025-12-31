@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_70",
-    "source": null,
-    "description": "Optimize the network of a futuristic transportation system interconnecting 7 strategic hubs to maximize vehicle dispatch from Hub 0 to Hub 6.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the network of a futuristic transportation system to determine the maximum capacity of vehicles that can be dispatched from Hub 0 to Hub 6 per hour.",
     "sense": "max",
     "version": 1
   },
@@ -18,7 +18,7 @@
         "5",
         "6"
       ],
-      "description": "Strategic hubs in the transportation network."
+      "description": "The strategic hubs in the transportation network."
     }
   ],
   "params": [
@@ -100,10 +100,10 @@
     }
   ],
   "objective": {
-    "name": "max_dispatch_to_hub_6",
+    "name": "max_flow_to_hub_6",
     "sense": "max",
     "expr": "flow['0']['6']",
-    "description": "Maximize the number of vehicles dispatched from Hub 0 to Hub 6."
+    "description": "Maximize the flow of vehicles from Hub 0 to Hub 6."
   },
   "constraints": [
     {
@@ -381,51 +381,51 @@
     },
     {
       "name": "flow_conservation_0",
-      "expr_lhs": "flow['0']['1'] + flow['0']['2'] + flow['0']['3'] + flow['0']['4'] + flow['0']['5'] + flow['0']['6']",
+      "expr_lhs": "sum(flow['0'][j] for j in ['1', '2', '3', '4', '5', '6'])",
       "sense": "==",
-      "expr_rhs": "flow['1']['0'] + flow['2']['0'] + flow['3']['0'] + flow['4']['0'] + flow['5']['0'] + flow['6']['0']",
+      "expr_rhs": "sum(flow[i]['0'] for i in ['1', '2', '3', '4', '5', '6'])",
       "description": "Flow conservation at Hub 0."
     },
     {
       "name": "flow_conservation_1",
-      "expr_lhs": "flow['1']['0'] + flow['1']['4'] + flow['1']['5'] + flow['1']['6']",
+      "expr_lhs": "sum(flow['1'][j] for j in ['0', '4', '5', '6'])",
       "sense": "==",
-      "expr_rhs": "flow['0']['1'] + flow['2']['1'] + flow['3']['1'] + flow['4']['1']",
+      "expr_rhs": "sum(flow[i]['1'] for i in ['0', '2', '3', '4', '5', '6'])",
       "description": "Flow conservation at Hub 1."
     },
     {
       "name": "flow_conservation_2",
-      "expr_lhs": "flow['2']['0'] + flow['2']['1'] + flow['2']['3'] + flow['2']['4'] + flow['2']['5'] + flow['2']['6']",
+      "expr_lhs": "sum(flow['2'][j] for j in ['0', '1', '3', '4', '5', '6'])",
       "sense": "==",
-      "expr_rhs": "flow['0']['2'] + flow['1']['2'] + flow['3']['2'] + flow['4']['2'] + flow['5']['2']",
+      "expr_rhs": "sum(flow[i]['2'] for i in ['0', '1', '3', '4', '5', '6'])",
       "description": "Flow conservation at Hub 2."
     },
     {
       "name": "flow_conservation_3",
-      "expr_lhs": "flow['3']['0'] + flow['3']['1'] + flow['3']['2'] + flow['3']['4'] + flow['3']['5'] + flow['3']['6']",
+      "expr_lhs": "sum(flow['3'][j] for j in ['0', '1', '2', '4', '5', '6'])",
       "sense": "==",
-      "expr_rhs": "flow['0']['3'] + flow['2']['3'] + flow['4']['3'] + flow['5']['3']",
+      "expr_rhs": "sum(flow[i]['3'] for i in ['0', '1', '2', '4', '5', '6'])",
       "description": "Flow conservation at Hub 3."
     },
     {
       "name": "flow_conservation_4",
-      "expr_lhs": "flow['4']['0'] + flow['4']['1'] + flow['4']['2'] + flow['4']['3'] + flow['4']['5'] + flow['4']['6']",
+      "expr_lhs": "sum(flow['4'][j] for j in ['0', '1', '2', '3', '5', '6'])",
       "sense": "==",
-      "expr_rhs": "flow['0']['4'] + flow['1']['4'] + flow['2']['4'] + flow['3']['4'] + flow['5']['4']",
+      "expr_rhs": "sum(flow[i]['4'] for i in ['0', '1', '2', '3', '5', '6'])",
       "description": "Flow conservation at Hub 4."
     },
     {
       "name": "flow_conservation_5",
-      "expr_lhs": "flow['5']['0'] + flow['5']['2'] + flow['5']['3'] + flow['5']['4'] + flow['5']['6']",
+      "expr_lhs": "sum(flow['5'][j] for j in ['0', '2', '3', '4', '6'])",
       "sense": "==",
-      "expr_rhs": "flow['0']['5'] + flow['1']['5'] + flow['2']['5'] + flow['3']['5'] + flow['4']['5']",
+      "expr_rhs": "sum(flow[i]['5'] for i in ['0', '1', '2', '3', '4', '6'])",
       "description": "Flow conservation at Hub 5."
     },
     {
       "name": "flow_conservation_6",
-      "expr_lhs": "flow['6']['0'] + flow['6']['1'] + flow['6']['2'] + flow['6']['3'] + flow['6']['4'] + flow['6']['5']",
+      "expr_lhs": "sum(flow['6'][j] for j in ['0', '1', '2', '3', '4', '5'])",
       "sense": "==",
-      "expr_rhs": "flow['0']['6'] + flow['1']['6'] + flow['2']['6'] + flow['3']['6'] + flow['4']['6'] + flow['5']['6']",
+      "expr_rhs": "sum(flow[i]['6'] for i in ['0', '1', '2', '3', '4', '5'])",
       "description": "Flow conservation at Hub 6."
     }
   ],

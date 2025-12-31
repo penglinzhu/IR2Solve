@@ -1,0 +1,21 @@
+Welcome to the world of international logistics! You are a resource manager at a global company, responsible for the allocation of a valuable product among your six international warehouses.
+
+Here's what each warehouse currently has and what they need:
+
+- Warehouse 1 currently has 497 units but needs 161 units.
+- Warehouse 2 currently has 39 units but needs 257 units.
+- Warehouse 3 currently has 416 units but needs 252 units.
+- Warehouse 4 currently has 71 units but needs 251 units.
+- Warehouse 5 currently has 445 units but needs 372 units.
+- Warehouse 6 currently has 471 units but needs 370 units.
+
+You need to orchestrate the movement of these resources to ensure every warehouse meets its required quantity. However, transportation between warehouses carries costs, and these costs vary depending on the pair of warehouses involved. Here's the cost matrix that shows the cost of moving a unit from one warehouse to another:
+
+- Moving product from/to Warehouse 1: To Warehouse 2 costs 5, to Warehouse 3 costs 7, to Warehouse 4 costs 5, to Warehouse 5 costs 27, and to Warehouse 6 costs 49.
+- Moving product from/to Warehouse 2: To Warehouse 1 costs 31, to Warehouse 3 costs 14, to Warehouse 4 costs 31, to Warehouse 5 costs 3, and to Warehouse 6 costs 4.
+- Moving product from/to Warehouse 3: To Warehouse 1 costs 9, to Warehouse 2 costs 13, to Warehouse 4 costs 23, to Warehouse 5 costs 38, and to Warehouse 6 costs 19.
+- Moving product from/to Warehouse 4: To Warehouse 1 costs 47, to Warehouse 2 costs 34, to Warehouse 3 costs 7, to Warehouse 5 costs 34, and to Warehouse 6 costs 35.
+- Moving product from/to Warehouse 5: To Warehouse 1 costs 21, to Warehouse 2 costs 11, to Warehouse 3 costs 6, to Warehouse 4 costs 7, and to Warehouse 6 costs 50.
+- Moving product from/to Warehouse 6: To Warehouse 1 costs 28, to Warehouse 2 costs 41, to Warehouse 3 costs 34, to Warehouse 4 costs 17, to Warehouse 5 costs 32.
+
+Your objective is to relocate the products such that all warehouse needs are met, but with the lowest possible total transportation cost. What is the minimum cost to ensure all warehouses have the quantities they need?

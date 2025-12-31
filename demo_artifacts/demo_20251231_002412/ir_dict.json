@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "problem_id": "china_railroad_ministry_freight_car_relocation",
+    "source": null,
+    "description": "Minimize the cost of relocating freight cars among 5 regions to meet the demand for the fall harvest.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "REGIONS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "description": "Regions in the country where freight cars need to be relocated."
+    }
+  ],
+  "params": [
+    {
+      "name": "cost",
+      "indices": [
+        "REGIONS",
+        "REGIONS"
+      ],
+      "values": {
+        "1": {
+          "2": 10,
+          "3": 12,
+          "4": 17,
+          "5": 34
+        },
+        "2": {
+          "1": 10,
+          "3": 18,
+          "4": 8,
+          "5": 46
+        },
+        "3": {
+          "1": 12,
+          "2": 18,
+          "4": 9,
+          "5": 27
+        },
+        "4": {
+          "1": 17,
+          "2": 8,
+          "3": 9,
+          "5": 20
+        },
+        "5": {
+          "1": 34,
+          "2": 46,
+          "3": 27,
+          "4": 20
+        }
+      },
+      "description": "Cost of moving a car from one region to another."
+    },
+    {
+      "name": "supply",
+      "indices": [
+        "REGIONS"
+      ],
+      "values": {
+        "1": 115,
+        "2": 385,
+        "3": 410,
+        "4": 480,
+        "5": 610
+      },
+      "description": "Current number of cars available in each region."
+    },
+    {
+      "name": "demand",
+      "indices": [
+        "REGIONS"
+      ],
+      "values": {
+        "1": 300,
+        "2": 400,
+        "3": 800,
+        "4": 200,
+        "5": 300
+      },
+      "description": "Number of cars needed in each region for the harvest."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "REGIONS",
+        "REGIONS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Number of cars to move from one region to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(cost[i][j] * x[i][j] for i in REGIONS for j in REGIONS)",
+    "description": "Minimize the total cost of moving cars between regions."
+  },
+  "constraints": [
+    {
+      "name": "supply_constraint_1",
+      "expr_lhs": "sum(x['1'][j] for j in REGIONS)",
+      "sense": "<=",
+      "expr_rhs": "supply['1']",
+      "description": "Cars moved from region 1 cannot exceed its supply."
+    },
+    {
+      "name": "supply_constraint_2",
+      "expr_lhs": "sum(x['2'][j] for j in REGIONS)",
+      "sense": "<=",
+      "expr_rhs": "supply['2']",
+      "description": "Cars moved from region 2 cannot exceed its supply."
+    },
+    {
+      "name": "supply_constraint_3",
+      "expr_lhs": "sum(x['3'][j] for j in REGIONS)",
+      "sense": "<=",
+      "expr_rhs": "supply['3']",
+      "description": "Cars moved from region 3 cannot exceed its supply."
+    },
+    {
+      "name": "supply_constraint_4",
+      "expr_lhs": "sum(x['4'][j] for j in REGIONS)",
+      "sense": "<=",
+      "expr_rhs": "supply['4']",
+      "description": "Cars moved from region 4 cannot exceed its supply."
+    },
+    {
+      "name": "supply_constraint_5",
+      "expr_lhs": "sum(x['5'][j] for j in REGIONS)",
+      "sense": "<=",
+      "expr_rhs": "supply['5']",
+      "description": "Cars moved from region 5 cannot exceed its supply."
+    },
+    {
+      "name": "demand_constraint_1",
+      "expr_lhs": "sum(x[i]['1'] for i in REGIONS)",
+      "sense": ">=",
+      "expr_rhs": "demand['1']",
+      "description": "Cars moved to region 1 must meet its demand."
+    },
+    {
+      "name": "demand_constraint_2",
+      "expr_lhs": "sum(x[i]['2'] for i in REGIONS)",
+      "sense": ">=",
+      "expr_rhs": "demand['2']",
+      "description": "Cars moved to region 2 must meet its demand."
+    },
+    {
+      "name": "demand_constraint_3",
+      "expr_lhs": "sum(x[i]['3'] for i in REGIONS)",
+      "sense": ">=",
+      "expr_rhs": "demand['3']",
+      "description": "Cars moved to region 3 must meet its demand."
+    },
+    {
+      "name": "demand_constraint_4",
+      "expr_lhs": "sum(x[i]['4'] for i in REGIONS)",
+      "sense": ">=",
+      "expr_rhs": "demand['4']",
+      "description": "Cars moved to region 4 must meet its demand."
+    },
+    {
+      "name": "demand_constraint_5",
+      "expr_lhs": "sum(x[i]['5'] for i in REGIONS)",
+      "sense": ">=",
+      "expr_rhs": "demand['5']",
+      "description": "Cars moved to region 5 must meet its demand."
+    }
+  ],
+  "graph": null
+}

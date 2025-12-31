@@ -1,0 +1,220 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_75",
+    "source": null,
+    "description": "Optimize the selection of distribution centers and transportation routes to minimize total costs while meeting store demands.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CENTERS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Potential distribution centers"
+    },
+    {
+      "name": "STORES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "description": "Retail stores needing supply"
+    }
+  ],
+  "params": [
+    {
+      "name": "opening_cost",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 151000,
+        "2": 192000,
+        "3": 114000,
+        "4": 171000
+      },
+      "description": "Opening costs for each distribution center"
+    },
+    {
+      "name": "transport_cost",
+      "indices": [
+        "CENTERS",
+        "STORES"
+      ],
+      "values": {
+        "1": {
+          "1": 5,
+          "2": 5,
+          "3": 2,
+          "4": 3,
+          "5": 3,
+          "6": 3
+        },
+        "2": {
+          "1": 5,
+          "2": 4,
+          "3": 3,
+          "4": 5,
+          "5": 2,
+          "6": 4
+        },
+        "3": {
+          "1": 2,
+          "2": 4,
+          "3": 5,
+          "4": 1,
+          "5": 4,
+          "6": 2
+        },
+        "4": {
+          "1": 5,
+          "2": 4,
+          "3": 1,
+          "4": 1,
+          "5": 3,
+          "6": 3
+        }
+      },
+      "description": "Transportation cost per unit from each center to each store"
+    },
+    {
+      "name": "demand",
+      "indices": [
+        "STORES"
+      ],
+      "values": {
+        "1": 910,
+        "2": 875,
+        "3": 589,
+        "4": 962,
+        "5": 966,
+        "6": 643
+      },
+      "description": "Demand of each retail store in units"
+    },
+    {
+      "name": "capacity",
+      "indices": [
+        "CENTERS"
+      ],
+      "values": {
+        "1": 1631,
+        "2": 1954,
+        "3": 1446,
+        "4": 820
+      },
+      "description": "Supply capacity of each distribution center in units"
+    }
+  ],
+  "vars": [
+    {
+      "name": "open_center",
+      "indices": [
+        "CENTERS"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if a distribution center is opened"
+    },
+    {
+      "name": "transport",
+      "indices": [
+        "CENTERS",
+        "STORES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of goods transported from each center to each store"
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(opening_cost[c] * open_center[c] for c in CENTERS) + sum(transport_cost[c][s] * transport[c][s] for c in CENTERS for s in STORES)",
+    "description": "Minimize the total cost of opening centers and transporting goods"
+  },
+  "constraints": [
+    {
+      "name": "demand_s1",
+      "expr_lhs": "sum(transport[c]['1'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['1']",
+      "description": "Meet demand for store 1"
+    },
+    {
+      "name": "demand_s2",
+      "expr_lhs": "sum(transport[c]['2'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['2']",
+      "description": "Meet demand for store 2"
+    },
+    {
+      "name": "demand_s3",
+      "expr_lhs": "sum(transport[c]['3'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['3']",
+      "description": "Meet demand for store 3"
+    },
+    {
+      "name": "demand_s4",
+      "expr_lhs": "sum(transport[c]['4'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['4']",
+      "description": "Meet demand for store 4"
+    },
+    {
+      "name": "demand_s5",
+      "expr_lhs": "sum(transport[c]['5'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['5']",
+      "description": "Meet demand for store 5"
+    },
+    {
+      "name": "demand_s6",
+      "expr_lhs": "sum(transport[c]['6'] for c in CENTERS)",
+      "sense": ">=",
+      "expr_rhs": "demand['6']",
+      "description": "Meet demand for store 6"
+    },
+    {
+      "name": "capacity_c1",
+      "expr_lhs": "sum(transport['1'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['1'] * open_center['1']",
+      "description": "Capacity constraint for center 1"
+    },
+    {
+      "name": "capacity_c2",
+      "expr_lhs": "sum(transport['2'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['2'] * open_center['2']",
+      "description": "Capacity constraint for center 2"
+    },
+    {
+      "name": "capacity_c3",
+      "expr_lhs": "sum(transport['3'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['3'] * open_center['3']",
+      "description": "Capacity constraint for center 3"
+    },
+    {
+      "name": "capacity_c4",
+      "expr_lhs": "sum(transport['4'][s] for s in STORES)",
+      "sense": "<=",
+      "expr_rhs": "capacity['4'] * open_center['4']",
+      "description": "Capacity constraint for center 4"
+    }
+  ],
+  "graph": null
+}

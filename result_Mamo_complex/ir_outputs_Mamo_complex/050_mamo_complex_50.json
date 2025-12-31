@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_50",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Minimize the total travel cost for a salesperson visiting each city exactly once and returning to the starting city.",
     "sense": "min",
     "version": 1
@@ -60,14 +60,14 @@
       "vartype": "binary",
       "lb": 0.0,
       "ub": 1.0,
-      "description": "Binary variable indicating if the salesperson travels from city i to city j."
+      "description": "Binary variable indicating if the salesperson travels from one city to another."
     }
   ],
   "objective": {
-    "name": "min_total_travel_cost",
+    "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(travel_cost[i][j] * x[i][j] for i in CITIES for j in CITIES if i != j)",
-    "description": "Minimize the total travel cost for the salesperson's tour."
+    "description": "Minimize the total travel cost for the salesperson's journey."
   },
   "constraints": [
     {

@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "problem_id": "mamo_complex_45",
+    "source": "Mamo_complex_lp",
+    "description": "Determine the minimum travel cost for a salesperson to visit each of four cities exactly once and return to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "City 1",
+        "City 2",
+        "City 3",
+        "City 4"
+      ],
+      "description": "The set of cities the salesperson must visit."
+    }
+  ],
+  "params": [
+    {
+      "name": "travel_cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "City 1": {
+          "City 2": 17,
+          "City 3": 25,
+          "City 4": 31
+        },
+        "City 2": {
+          "City 1": 17,
+          "City 3": 93,
+          "City 4": 45
+        },
+        "City 3": {
+          "City 1": 25,
+          "City 2": 93,
+          "City 4": 95
+        },
+        "City 4": {
+          "City 1": 31,
+          "City 2": 45,
+          "City 3": 95
+        }
+      },
+      "description": "The travel cost between each pair of cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if the route includes travel from one city to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(travel_cost[i][j] * x[i][j] for i in CITIES for j in CITIES)",
+    "description": "Minimize the total travel cost of the route."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once_City 1",
+      "expr_lhs": "sum(x['City 1'][j] for j in CITIES if j != 'City 1')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure City 1 is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_City 2",
+      "expr_lhs": "sum(x['City 2'][j] for j in CITIES if j != 'City 2')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure City 2 is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_City 3",
+      "expr_lhs": "sum(x['City 3'][j] for j in CITIES if j != 'City 3')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure City 3 is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_City 4",
+      "expr_lhs": "sum(x['City 4'][j] for j in CITIES if j != 'City 4')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure City 4 is visited exactly once."
+    },
+    {
+      "name": "leave_each_city_once_City 1",
+      "expr_lhs": "sum(x[i]['City 1'] for i in CITIES if i != 'City 1')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves City 1 exactly once."
+    },
+    {
+      "name": "leave_each_city_once_City 2",
+      "expr_lhs": "sum(x[i]['City 2'] for i in CITIES if i != 'City 2')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves City 2 exactly once."
+    },
+    {
+      "name": "leave_each_city_once_City 3",
+      "expr_lhs": "sum(x[i]['City 3'] for i in CITIES if i != 'City 3')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves City 3 exactly once."
+    },
+    {
+      "name": "leave_each_city_once_City 4",
+      "expr_lhs": "sum(x[i]['City 4'] for i in CITIES if i != 'City 4')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves City 4 exactly once."
+    }
+  ],
+  "graph": null
+}

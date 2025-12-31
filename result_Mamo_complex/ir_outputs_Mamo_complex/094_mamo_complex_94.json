@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_94",
-    "source": null,
-    "description": "Optimize the distribution network for SupplyCo to minimize total cost while meeting demands at retail outlets.",
+    "source": "Mamo_complex_lp",
+    "description": "Optimize the distribution network for SupplyCo to minimize total cost while meeting retail outlet demands.",
     "sense": "min",
     "version": 1
   },
@@ -120,10 +120,10 @@
         "CENTERS",
         "OUTLETS"
       ],
-      "vartype": "continuous",
+      "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Amount of goods shipped from each center to each outlet"
+      "description": "Units shipped from each center to each outlet"
     }
   ],
   "objective": {
@@ -134,60 +134,60 @@
   },
   "constraints": [
     {
-      "name": "demand_satisfaction_outlet_1",
+      "name": "demand_satisfaction_1",
       "expr_lhs": "sum(shipment[c]['1'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['1']",
-      "description": "Satisfy demand at outlet 1"
+      "description": "Satisfy demand at Outlet 1"
     },
     {
-      "name": "demand_satisfaction_outlet_2",
+      "name": "demand_satisfaction_2",
       "expr_lhs": "sum(shipment[c]['2'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['2']",
-      "description": "Satisfy demand at outlet 2"
+      "description": "Satisfy demand at Outlet 2"
     },
     {
-      "name": "demand_satisfaction_outlet_3",
+      "name": "demand_satisfaction_3",
       "expr_lhs": "sum(shipment[c]['3'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['3']",
-      "description": "Satisfy demand at outlet 3"
+      "description": "Satisfy demand at Outlet 3"
     },
     {
-      "name": "demand_satisfaction_outlet_4",
+      "name": "demand_satisfaction_4",
       "expr_lhs": "sum(shipment[c]['4'] for c in CENTERS)",
       "sense": ">=",
       "expr_rhs": "demand['4']",
-      "description": "Satisfy demand at outlet 4"
+      "description": "Satisfy demand at Outlet 4"
     },
     {
-      "name": "capacity_limit_center_1",
+      "name": "capacity_limit_1",
       "expr_lhs": "sum(shipment['1'][o] for o in OUTLETS)",
       "sense": "<=",
       "expr_rhs": "capacity['1'] * open_center['1']",
-      "description": "Capacity limit for center 1"
+      "description": "Capacity limit for Center 1"
     },
     {
-      "name": "capacity_limit_center_2",
+      "name": "capacity_limit_2",
       "expr_lhs": "sum(shipment['2'][o] for o in OUTLETS)",
       "sense": "<=",
       "expr_rhs": "capacity['2'] * open_center['2']",
-      "description": "Capacity limit for center 2"
+      "description": "Capacity limit for Center 2"
     },
     {
-      "name": "capacity_limit_center_3",
+      "name": "capacity_limit_3",
       "expr_lhs": "sum(shipment['3'][o] for o in OUTLETS)",
       "sense": "<=",
       "expr_rhs": "capacity['3'] * open_center['3']",
-      "description": "Capacity limit for center 3"
+      "description": "Capacity limit for Center 3"
     },
     {
-      "name": "capacity_limit_center_4",
+      "name": "capacity_limit_4",
       "expr_lhs": "sum(shipment['4'][o] for o in OUTLETS)",
       "sense": "<=",
       "expr_rhs": "capacity['4'] * open_center['4']",
-      "description": "Capacity limit for center 4"
+      "description": "Capacity limit for Center 4"
     }
   ],
   "graph": null

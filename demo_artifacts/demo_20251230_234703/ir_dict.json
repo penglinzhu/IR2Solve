@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "problem_id": "max_flow_graph",
+    "source": null,
+    "description": "Determine the maximum flow from node 1 to node 4 in a directed graph with given capacities.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "NODES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "The nodes in the graph."
+    },
+    {
+      "name": "EDGES",
+      "elements": [
+        [
+          "1",
+          "2"
+        ],
+        [
+          "1",
+          "3"
+        ],
+        [
+          "2",
+          "3"
+        ],
+        [
+          "2",
+          "4"
+        ],
+        [
+          "3",
+          "4"
+        ]
+      ],
+      "description": "The directed edges in the graph."
+    }
+  ],
+  "params": [
+    {
+      "name": "capacity",
+      "indices": [
+        "EDGES"
+      ],
+      "values": {
+        "1": {
+          "2": 8,
+          "3": 7
+        },
+        "2": {
+          "3": 2,
+          "4": 4
+        },
+        "3": {
+          "4": 7
+        }
+      },
+      "description": "Capacity of each edge in the graph."
+    }
+  ],
+  "vars": [
+    {
+      "name": "flow",
+      "indices": [
+        "EDGES"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Flow through each edge."
+    }
+  ],
+  "objective": {
+    "name": "max_total_flow",
+    "sense": "max",
+    "expr": "flow['1']['2'] + flow['1']['3']",
+    "description": "Maximize the total flow from node 1 to node 4."
+  },
+  "constraints": [
+    {
+      "name": "capacity_constraint_1_2",
+      "expr_lhs": "flow['1']['2']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['2']",
+      "description": "Flow on edge 1->2 does not exceed its capacity."
+    },
+    {
+      "name": "capacity_constraint_1_3",
+      "expr_lhs": "flow['1']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['1']['3']",
+      "description": "Flow on edge 1->3 does not exceed its capacity."
+    },
+    {
+      "name": "capacity_constraint_2_3",
+      "expr_lhs": "flow['2']['3']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['3']",
+      "description": "Flow on edge 2->3 does not exceed its capacity."
+    },
+    {
+      "name": "capacity_constraint_2_4",
+      "expr_lhs": "flow['2']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['2']['4']",
+      "description": "Flow on edge 2->4 does not exceed its capacity."
+    },
+    {
+      "name": "capacity_constraint_3_4",
+      "expr_lhs": "flow['3']['4']",
+      "sense": "<=",
+      "expr_rhs": "capacity['3']['4']",
+      "description": "Flow on edge 3->4 does not exceed its capacity."
+    },
+    {
+      "name": "flow_conservation_2",
+      "expr_lhs": "flow['1']['2'] - flow['2']['3'] - flow['2']['4']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Flow conservation at node 2."
+    },
+    {
+      "name": "flow_conservation_3",
+      "expr_lhs": "flow['1']['3'] + flow['2']['3'] - flow['3']['4']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Flow conservation at node 3."
+    }
+  ],
+  "graph": null
+}

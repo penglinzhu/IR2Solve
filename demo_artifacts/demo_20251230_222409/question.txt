@@ -1,0 +1,15 @@
+Consider a scenario where a delivery company needs to deliver packages to five different cities. These cities are labeled as E, F, G, H and I. The delivery van can start its route from any of these cities but must follow one rule: it must visit each city exactly once and then return to the starting city. The aim is to find the route that minimizes the total travel cost, which could be a function of fuel costs, labor costs, or road tolls.
+
+Here's a rundown of the travel costs between these cities:
+
+From City E (1), the cost to reach City F (2) is 35 units, to G (3) is 90 units, to H (4) is 23 units, and to I (5) is 62 units.
+
+From City F (2), the cost to City E (1) is 35 units, to G (3) is 53 units, to H (4) is 58 units, and to I (5) is 46 units.
+
+If we start from City G (3), the cost to reach City E (1) is 90 units, to F (2) is 53 units, to H (4) is 28 units, and to I (5) is 91 units.
+
+From City H (4), the cost to City E (1) is 23 units, to F (2) is 58 units, to G (3) is 28 units, and to I (5) is 77 units.
+
+Lastly, from City I (5), it costs 62 units to reach City E (1), 46 units to get to F (2), 91 units to reach G (3), and 77 units to reach H (4).
+
+What is the minimum total travel cost for the delivery van to visit each city exactly once and return to the starting city?

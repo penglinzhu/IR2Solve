@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_42",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Minimize the total travel cost for a delivery truck to visit each warehouse exactly once and return to the starting warehouse.",
     "sense": "min",
     "version": 1
@@ -71,13 +71,13 @@
       "vartype": "binary",
       "lb": 0.0,
       "ub": 1.0,
-      "description": "1 if the route includes travel from one warehouse to another, 0 otherwise."
+      "description": "1 if the route goes from one warehouse to another, 0 otherwise."
     }
   ],
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(travel_cost[i][j] * x[i][j] for i in WAREHOUSES for j in WAREHOUSES if i != j)",
+    "expr": "sum(travel_cost[i][j] * x[i][j] for i in WAREHOUSES for j in WAREHOUSES)",
     "description": "Minimize the total travel cost for the delivery route."
   },
   "constraints": [
@@ -86,70 +86,70 @@
       "expr_lhs": "sum(x['A'][j] for j in WAREHOUSES if j != 'A')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse A must be departed from exactly once."
+      "description": "Warehouse A must be visited exactly once."
     },
     {
       "name": "visit_each_warehouse_once_B",
       "expr_lhs": "sum(x['B'][j] for j in WAREHOUSES if j != 'B')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse B must be departed from exactly once."
+      "description": "Warehouse B must be visited exactly once."
     },
     {
       "name": "visit_each_warehouse_once_C",
       "expr_lhs": "sum(x['C'][j] for j in WAREHOUSES if j != 'C')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse C must be departed from exactly once."
+      "description": "Warehouse C must be visited exactly once."
     },
     {
       "name": "visit_each_warehouse_once_D",
       "expr_lhs": "sum(x['D'][j] for j in WAREHOUSES if j != 'D')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse D must be departed from exactly once."
+      "description": "Warehouse D must be visited exactly once."
     },
     {
       "name": "visit_each_warehouse_once_E",
       "expr_lhs": "sum(x['E'][j] for j in WAREHOUSES if j != 'E')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse E must be departed from exactly once."
+      "description": "Warehouse E must be visited exactly once."
     },
     {
-      "name": "enter_each_warehouse_once_A",
+      "name": "leave_each_warehouse_once_A",
       "expr_lhs": "sum(x[i]['A'] for i in WAREHOUSES if i != 'A')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse A must be entered exactly once."
+      "description": "Leave Warehouse A exactly once."
     },
     {
-      "name": "enter_each_warehouse_once_B",
+      "name": "leave_each_warehouse_once_B",
       "expr_lhs": "sum(x[i]['B'] for i in WAREHOUSES if i != 'B')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse B must be entered exactly once."
+      "description": "Leave Warehouse B exactly once."
     },
     {
-      "name": "enter_each_warehouse_once_C",
+      "name": "leave_each_warehouse_once_C",
       "expr_lhs": "sum(x[i]['C'] for i in WAREHOUSES if i != 'C')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse C must be entered exactly once."
+      "description": "Leave Warehouse C exactly once."
     },
     {
-      "name": "enter_each_warehouse_once_D",
+      "name": "leave_each_warehouse_once_D",
       "expr_lhs": "sum(x[i]['D'] for i in WAREHOUSES if i != 'D')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse D must be entered exactly once."
+      "description": "Leave Warehouse D exactly once."
     },
     {
-      "name": "enter_each_warehouse_once_E",
+      "name": "leave_each_warehouse_once_E",
       "expr_lhs": "sum(x[i]['E'] for i in WAREHOUSES if i != 'E')",
       "sense": "==",
       "expr_rhs": "1",
-      "description": "Warehouse E must be entered exactly once."
+      "description": "Leave Warehouse E exactly once."
     }
   ],
   "graph": null

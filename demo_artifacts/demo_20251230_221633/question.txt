@@ -1,0 +1,11 @@
+Consider a scenario where a tour guide is planning a bus tour across five cities, named E, F, G, H, and I. The tour must start and end in the same city, and each city should be visited exactly once. The objective is to minimize the total cost of the tour, which could be influenced by factors such as distance, tolls, and fuel expenses.
+
+Here are the travel costs between the cities:
+
+From City E, it costs 37 units to travel to F, 72 units to G, 66 units to H, and 33 units to I.
+Travelling from City F, the costs are 37 units to E, 26 units to G, 56 units to H, and a whopping 100 units to I.
+If the journey starts from City G, it takes 72 units to reach E, 26 units to F, 49 units to H, and 32 units to I.
+From City H, it costs 66 units to get to E, 56 units to F, 49 units to G, and a mere 13 units to I.
+Lastly, from City I, the travel costs are 33 units to E, 100 units to F, 32 units to G, and 13 units to H.
+
+Keeping these costs in mind, what is the minimum total travel cost for the tour guide to take the bus to each city exactly once and return to the starting city?

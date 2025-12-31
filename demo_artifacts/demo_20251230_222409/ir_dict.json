@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "problem_id": "delivery_route_optimization",
+    "source": null,
+    "description": "Find the minimum total travel cost for a delivery van to visit each city exactly once and return to the starting city.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "CITIES",
+      "elements": [
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "description": "The cities that need to be visited."
+    }
+  ],
+  "params": [
+    {
+      "name": "travel_cost",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "values": {
+        "E": {
+          "F": 35,
+          "G": 90,
+          "H": 23,
+          "I": 62
+        },
+        "F": {
+          "E": 35,
+          "G": 53,
+          "H": 58,
+          "I": 46
+        },
+        "G": {
+          "E": 90,
+          "F": 53,
+          "H": 28,
+          "I": 91
+        },
+        "H": {
+          "E": 23,
+          "F": 58,
+          "G": 28,
+          "I": 77
+        },
+        "I": {
+          "E": 62,
+          "F": 46,
+          "G": 91,
+          "H": 77
+        }
+      },
+      "description": "The travel costs between each pair of cities."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "CITIES",
+        "CITIES"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if the route goes from one city to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(travel_cost[i][j] * x[i][j] for i in CITIES for j in CITIES)",
+    "description": "Minimize the total travel cost for the delivery van."
+  },
+  "constraints": [
+    {
+      "name": "visit_each_city_once_E",
+      "expr_lhs": "sum(x['E'][j] for j in CITIES if j != 'E')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city E is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_F",
+      "expr_lhs": "sum(x['F'][j] for j in CITIES if j != 'F')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city F is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_G",
+      "expr_lhs": "sum(x['G'][j] for j in CITIES if j != 'G')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city G is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_H",
+      "expr_lhs": "sum(x['H'][j] for j in CITIES if j != 'H')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city H is visited exactly once."
+    },
+    {
+      "name": "visit_each_city_once_I",
+      "expr_lhs": "sum(x['I'][j] for j in CITIES if j != 'I')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure city I is visited exactly once."
+    },
+    {
+      "name": "leave_each_city_once_E",
+      "expr_lhs": "sum(x[i]['E'] for i in CITIES if i != 'E')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves city E exactly once."
+    },
+    {
+      "name": "leave_each_city_once_F",
+      "expr_lhs": "sum(x[i]['F'] for i in CITIES if i != 'F')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves city F exactly once."
+    },
+    {
+      "name": "leave_each_city_once_G",
+      "expr_lhs": "sum(x[i]['G'] for i in CITIES if i != 'G')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves city G exactly once."
+    },
+    {
+      "name": "leave_each_city_once_H",
+      "expr_lhs": "sum(x[i]['H'] for i in CITIES if i != 'H')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves city H exactly once."
+    },
+    {
+      "name": "leave_each_city_once_I",
+      "expr_lhs": "sum(x[i]['I'] for i in CITIES if i != 'I')",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Ensure the route leaves city I exactly once."
+    }
+  ],
+  "graph": null
+}

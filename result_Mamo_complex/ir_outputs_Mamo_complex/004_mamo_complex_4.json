@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "mamo_complex_4",
-    "source": null,
+    "source": "Mamo_complex_lp",
     "description": "Optimize the meal plan to meet nutritional targets at the minimum cost.",
     "sense": "min",
     "version": 1
@@ -34,7 +34,7 @@
         "Beef": 16,
         "Salmon": 19
       },
-      "description": "Protein content in grams for each food."
+      "description": "Protein content in grams for each food item."
     },
     {
       "name": "carbohydrates",
@@ -49,7 +49,7 @@
         "Beef": 11,
         "Salmon": 13
       },
-      "description": "Carbohydrate content in grams for each food."
+      "description": "Carbohydrate content in grams for each food item."
     },
     {
       "name": "calories",
@@ -64,7 +64,7 @@
         "Beef": 211,
         "Salmon": 211
       },
-      "description": "Caloric content for each food."
+      "description": "Caloric content for each food item."
     },
     {
       "name": "cost",
@@ -79,7 +79,7 @@
         "Beef": 7,
         "Salmon": 9
       },
-      "description": "Cost of each food item."
+      "description": "Cost of each food item in dollars."
     }
   ],
   "vars": [
@@ -91,7 +91,7 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of servings of each food."
+      "description": "Number of servings of each food item."
     }
   ],
   "objective": {

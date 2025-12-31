@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_15",
-    "source": null,
-    "description": "Determine the minimum number of courses a master's student should take to meet category and prerequisite requirements.",
+    "source": "IndustryOR",
+    "description": "Determine the minimum number of courses a master's student should take to meet the category and prerequisite requirements.",
     "sense": "min",
     "version": 1
   },
@@ -19,9 +19,98 @@
         "forecasting"
       ],
       "description": "List of available courses."
+    },
+    {
+      "name": "CATEGORIES",
+      "elements": [
+        "math",
+        "operations_research",
+        "computer"
+      ],
+      "description": "List of course categories."
     }
   ],
-  "params": [],
+  "params": [
+    {
+      "name": "category_requirements",
+      "indices": [
+        "CATEGORIES"
+      ],
+      "values": {
+        "math": 2,
+        "operations_research": 2,
+        "computer": 2
+      },
+      "description": "Number of courses required in each category."
+    },
+    {
+      "name": "course_categories",
+      "indices": [
+        "COURSES",
+        "CATEGORIES"
+      ],
+      "values": {
+        "calculus": {
+          "math": 1,
+          "operations_research": 0,
+          "computer": 0
+        },
+        "operations_research": {
+          "math": 1,
+          "operations_research": 1,
+          "computer": 0
+        },
+        "data_structures": {
+          "math": 1,
+          "operations_research": 0,
+          "computer": 1
+        },
+        "management_statistics": {
+          "math": 1,
+          "operations_research": 1,
+          "computer": 0
+        },
+        "computer_simulation": {
+          "math": 0,
+          "operations_research": 1,
+          "computer": 1
+        },
+        "computer_programming": {
+          "math": 0,
+          "operations_research": 0,
+          "computer": 1
+        },
+        "forecasting": {
+          "math": 1,
+          "operations_research": 1,
+          "computer": 0
+        }
+      },
+      "description": "Mapping of courses to categories."
+    },
+    {
+      "name": "prerequisites",
+      "indices": [
+        "COURSES",
+        "COURSES"
+      ],
+      "values": {
+        "computer_simulation": {
+          "computer_programming": 1
+        },
+        "data_structures": {
+          "computer_programming": 1
+        },
+        "management_statistics": {
+          "calculus": 1
+        },
+        "forecasting": {
+          "management_statistics": 1
+        }
+      },
+      "description": "Prerequisite relationships between courses."
+    }
+  ],
   "vars": [
     {
       "name": "x",
@@ -31,64 +120,64 @@
       "vartype": "binary",
       "lb": 0.0,
       "ub": 1.0,
-      "description": "Binary variable indicating if a course is taken (1) or not (0)."
+      "description": "Binary variable indicating if a course is taken."
     }
   ],
   "objective": {
     "name": "min_total_courses",
     "sense": "min",
-    "expr": "x['calculus'] + x['operations_research'] + x['data_structures'] + x['management_statistics'] + x['computer_simulation'] + x['computer_programming'] + x['forecasting']",
+    "expr": "sum(x[c] for c in COURSES)",
     "description": "Minimize the total number of courses taken."
   },
   "constraints": [
     {
-      "name": "math_courses",
-      "expr_lhs": "x['calculus'] + x['operations_research'] + x['data_structures'] + x['management_statistics'] + x['forecasting']",
+      "name": "math_requirement",
+      "expr_lhs": "sum(x[c] * course_categories[c]['math'] for c in COURSES)",
       "sense": ">=",
-      "expr_rhs": "2",
-      "description": "At least two math courses must be taken."
+      "expr_rhs": "category_requirements['math']",
+      "description": "Ensure at least 2 math courses are taken."
     },
     {
-      "name": "operations_research_courses",
-      "expr_lhs": "x['operations_research'] + x['management_statistics'] + x['computer_simulation'] + x['forecasting']",
+      "name": "operations_research_requirement",
+      "expr_lhs": "sum(x[c] * course_categories[c]['operations_research'] for c in COURSES)",
       "sense": ">=",
-      "expr_rhs": "2",
-      "description": "At least two operations research courses must be taken."
+      "expr_rhs": "category_requirements['operations_research']",
+      "description": "Ensure at least 2 operations research courses are taken."
     },
     {
-      "name": "computer_courses",
-      "expr_lhs": "x['data_structures'] + x['computer_simulation'] + x['computer_programming']",
+      "name": "computer_requirement",
+      "expr_lhs": "sum(x[c] * course_categories[c]['computer'] for c in COURSES)",
       "sense": ">=",
-      "expr_rhs": "2",
-      "description": "At least two computer courses must be taken."
+      "expr_rhs": "category_requirements['computer']",
+      "description": "Ensure at least 2 computer courses are taken."
     },
     {
       "name": "prerequisite_computer_simulation",
       "expr_lhs": "x['computer_simulation']",
       "sense": "<=",
       "expr_rhs": "x['computer_programming']",
-      "description": "Computer simulation can only be taken if computer programming is taken."
+      "description": "Computer simulation requires computer programming."
     },
     {
       "name": "prerequisite_data_structures",
       "expr_lhs": "x['data_structures']",
       "sense": "<=",
       "expr_rhs": "x['computer_programming']",
-      "description": "Data structures can only be taken if computer programming is taken."
+      "description": "Data structures requires computer programming."
     },
     {
       "name": "prerequisite_management_statistics",
       "expr_lhs": "x['management_statistics']",
       "sense": "<=",
       "expr_rhs": "x['calculus']",
-      "description": "Management statistics can only be taken if calculus is taken."
+      "description": "Management statistics requires calculus."
     },
     {
       "name": "prerequisite_forecasting",
       "expr_lhs": "x['forecasting']",
       "sense": "<=",
       "expr_rhs": "x['management_statistics']",
-      "description": "Forecasting can only be taken if management statistics is taken."
+      "description": "Forecasting requires management statistics."
     }
   ],
   "graph": null

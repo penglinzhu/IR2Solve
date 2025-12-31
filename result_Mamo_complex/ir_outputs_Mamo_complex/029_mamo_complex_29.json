@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "mamo_complex_29",
-    "source": null,
-    "description": "Minimize the cost of purchasing food items to meet nutritional requirements.",
+    "source": "Mamo_complex_lp",
+    "description": "Determine the minimal cost to meet nutritional goals with a selection of food items.",
     "sense": "min",
     "version": 1
   },
@@ -16,7 +16,7 @@
         "Broccoli",
         "Fruit"
       ],
-      "description": "Different food items available for purchase."
+      "description": "Different food items available for selection."
     }
   ],
   "params": [
@@ -32,7 +32,7 @@
         "Broccoli": 19,
         "Fruit": 4
       },
-      "description": "Protein content per unit of each food item."
+      "description": "Protein content in grams for each food item."
     },
     {
       "name": "carbohydrates",
@@ -46,7 +46,7 @@
         "Broccoli": 7,
         "Fruit": 27
       },
-      "description": "Carbohydrate content per unit of each food item."
+      "description": "Carbohydrate content in grams for each food item."
     },
     {
       "name": "calories",
@@ -60,7 +60,7 @@
         "Broccoli": 84,
         "Fruit": 104
       },
-      "description": "Calorie content per unit of each food item."
+      "description": "Calorie content for each food item."
     },
     {
       "name": "cost",
@@ -74,7 +74,7 @@
         "Broccoli": 7,
         "Fruit": 9
       },
-      "description": "Cost per unit of each food item."
+      "description": "Cost in dollars for each food item."
     }
   ],
   "vars": [
@@ -86,7 +86,7 @@
       "vartype": "integer",
       "lb": 0.0,
       "ub": null,
-      "description": "Number of units to purchase for each food item."
+      "description": "Number of servings of each food item to purchase."
     }
   ],
   "objective": {

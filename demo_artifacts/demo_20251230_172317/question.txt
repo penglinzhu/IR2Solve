@@ -1,0 +1,11 @@
+A company has three types of products, I, II, and III. The contract orders for each quarter of the next year are shown in Table 1-23. At the beginning of the first quarter, there is no inventory, and it is required to have 150 units of each product in inventory at the end of the fourth quarter. It is known that the company has 15,000 hours of production time per quarter, and it takes 2 hours, 4 hours, and 3 hours to produce one unit of products I, II, and III, respectively. Due to the replacement of production equipment, product I cannot be produced in the second quarter. It is specified that if the products cannot be delivered on time, a compensation of $20 per unit per quarter is required for products I and II, and $10 for product III. If the produced products are not delivered in the same quarter, a storage fee of $5 per unit per quarter is incurred. How should the company arrange production to minimize the total compensation and storage fee?
+
+Table 1-23
+\begin{tabular}{c|c|c|c|c}
+\hline \multirow{2}{*}{Product} & \multicolumn{4}{|c}{Contract Orders for Each Quarter} \\
+\cline { 2 - 5 } & 1 & 2 & 3 & 4 \\
+\hline I & 1500 & 1000 & 2000 & 1200 \\
+II & 1500 & 1500 & 1200 & 1500 \\
+III & 1000 & 2000 & 1500 & 2500 \\
+\hline
+\end{tabular}

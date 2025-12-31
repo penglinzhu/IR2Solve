@@ -1,8 +1,8 @@
 {
   "meta": {
     "problem_id": "industryOR_2",
-    "source": null,
-    "description": "Optimize the number of cows, sheep, and chickens to maximize profit under constraints.",
+    "source": "IndustryOR",
+    "description": "Optimize the number of cows, sheep, and chickens to maximize profit given constraints on manure cleaning capacity, farm size, and minimum animal requirements.",
     "sense": "max",
     "version": 1
   },
@@ -75,36 +75,36 @@
   },
   "constraints": [
     {
-      "name": "manure_limit",
-      "expr_lhs": "10 * num_animals['cows'] + 5 * num_animals['sheep'] + 3 * num_animals['chickens']",
+      "name": "manure_capacity",
+      "expr_lhs": "sum(manure_production[a] * num_animals[a] for a in ['cows', 'sheep', 'chickens'])",
       "sense": "<=",
       "expr_rhs": "800",
-      "description": "Total manure production must not exceed cleaning capacity."
+      "description": "The total manure production must not exceed the cleaning capacity of 800 units per day."
     },
     {
-      "name": "chicken_limit",
+      "name": "max_chickens",
       "expr_lhs": "num_animals['chickens']",
       "sense": "<=",
       "expr_rhs": "50",
-      "description": "The number of chickens must not exceed 50."
+      "description": "The number of chickens must not exceed 50 due to farm size limitations."
     },
     {
       "name": "min_cows",
       "expr_lhs": "num_animals['cows']",
       "sense": ">=",
       "expr_rhs": "10",
-      "description": "At least 10 cows must be raised to meet customer demand."
+      "description": "The number of cows must be at least 10 to meet customer demand."
     },
     {
       "name": "min_sheep",
       "expr_lhs": "num_animals['sheep']",
       "sense": ">=",
       "expr_rhs": "20",
-      "description": "At least 20 sheep must be raised."
+      "description": "The number of sheep must be at least 20."
     },
     {
-      "name": "total_animals_limit",
-      "expr_lhs": "num_animals['cows'] + num_animals['sheep'] + num_animals['chickens']",
+      "name": "total_animals",
+      "expr_lhs": "sum(num_animals[a] for a in ['cows', 'sheep', 'chickens'])",
       "sense": "<=",
       "expr_rhs": "100",
       "description": "The total number of animals must not exceed 100."

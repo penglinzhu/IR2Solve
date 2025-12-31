@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "problem_id": "solar_oil_blending",
+    "source": null,
+    "description": "Maximize the profit from blending raw gasolines into regular and premium gasoline products.",
+    "sense": "max",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "RAW_GASOLINES",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Types of raw gasoline."
+    },
+    {
+      "name": "FINAL_PRODUCTS",
+      "elements": [
+        "regular",
+        "premium"
+      ],
+      "description": "Types of final gasoline products."
+    }
+  ],
+  "params": [
+    {
+      "name": "octane",
+      "indices": [
+        "RAW_GASOLINES"
+      ],
+      "values": {
+        "1": 86,
+        "2": 88,
+        "3": 92,
+        "4": 96
+      },
+      "description": "Octane rating of each raw gasoline."
+    },
+    {
+      "name": "availability",
+      "indices": [
+        "RAW_GASOLINES"
+      ],
+      "values": {
+        "1": 20000,
+        "2": 15000,
+        "3": 15000,
+        "4": 10000
+      },
+      "description": "Daily availability of each raw gasoline in barrels."
+    },
+    {
+      "name": "cost",
+      "indices": [
+        "RAW_GASOLINES"
+      ],
+      "values": {
+        "1": 17.0,
+        "2": 18.0,
+        "3": 20.5,
+        "4": 23.0
+      },
+      "description": "Cost per barrel of each raw gasoline."
+    },
+    {
+      "name": "min_octane",
+      "indices": [
+        "FINAL_PRODUCTS"
+      ],
+      "values": {
+        "regular": 89,
+        "premium": 93
+      },
+      "description": "Minimum octane requirement for each final product."
+    },
+    {
+      "name": "selling_price",
+      "indices": [
+        "FINAL_PRODUCTS"
+      ],
+      "values": {
+        "regular": 19.5,
+        "premium": 22.0
+      },
+      "description": "Selling price per barrel of each final product."
+    },
+    {
+      "name": "max_demand",
+      "indices": [
+        "FINAL_PRODUCTS"
+      ],
+      "values": {
+        "regular": 35000,
+        "premium": 23000
+      },
+      "description": "Maximum daily demand for each final product in barrels."
+    }
+  ],
+  "vars": [
+    {
+      "name": "blend",
+      "indices": [
+        "RAW_GASOLINES",
+        "FINAL_PRODUCTS"
+      ],
+      "vartype": "continuous",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Barrels of raw gasoline blended into each final product."
+    }
+  ],
+  "objective": {
+    "name": "max_total_profit",
+    "sense": "max",
+    "expr": "sum((selling_price[p] - sum(cost[r] * blend[r][p] for r in RAW_GASOLINES)) * sum(blend[r][p] for r in RAW_GASOLINES) for p in FINAL_PRODUCTS)",
+    "description": "Maximize the total profit from selling the final gasoline products."
+  },
+  "constraints": [
+    {
+      "name": "availability_raw_1",
+      "expr_lhs": "sum(blend['1'][p] for p in FINAL_PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "availability['1']",
+      "description": "Do not exceed availability of raw gasoline 1."
+    },
+    {
+      "name": "availability_raw_2",
+      "expr_lhs": "sum(blend['2'][p] for p in FINAL_PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "availability['2']",
+      "description": "Do not exceed availability of raw gasoline 2."
+    },
+    {
+      "name": "availability_raw_3",
+      "expr_lhs": "sum(blend['3'][p] for p in FINAL_PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "availability['3']",
+      "description": "Do not exceed availability of raw gasoline 3."
+    },
+    {
+      "name": "availability_raw_4",
+      "expr_lhs": "sum(blend['4'][p] for p in FINAL_PRODUCTS)",
+      "sense": "<=",
+      "expr_rhs": "availability['4']",
+      "description": "Do not exceed availability of raw gasoline 4."
+    },
+    {
+      "name": "demand_regular",
+      "expr_lhs": "sum(blend[r]['regular'] for r in RAW_GASOLINES)",
+      "sense": "<=",
+      "expr_rhs": "max_demand['regular']",
+      "description": "Do not exceed demand for regular gasoline."
+    },
+    {
+      "name": "demand_premium",
+      "expr_lhs": "sum(blend[r]['premium'] for r in RAW_GASOLINES)",
+      "sense": "<=",
+      "expr_rhs": "max_demand['premium']",
+      "description": "Do not exceed demand for premium gasoline."
+    },
+    {
+      "name": "octane_regular",
+      "expr_lhs": "sum(octane[r] * blend[r]['regular'] for r in RAW_GASOLINES)",
+      "sense": ">=",
+      "expr_rhs": "min_octane['regular'] * sum(blend[r]['regular'] for r in RAW_GASOLINES)",
+      "description": "Ensure minimum octane for regular gasoline."
+    },
+    {
+      "name": "octane_premium",
+      "expr_lhs": "sum(octane[r] * blend[r]['premium'] for r in RAW_GASOLINES)",
+      "sense": ">=",
+      "expr_rhs": "min_octane['premium'] * sum(blend[r]['premium'] for r in RAW_GASOLINES)",
+      "description": "Ensure minimum octane for premium gasoline."
+    }
+  ]
+}

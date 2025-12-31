@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "problem_id": "worker_task_assignment",
+    "source": null,
+    "description": "Determine 4 out of 5 workers to complete one of the four tasks, minimizing total working hours.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WORKERS",
+      "elements": [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V"
+      ],
+      "description": "Set of workers available for task assignment."
+    },
+    {
+      "name": "TASKS",
+      "elements": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "Set of tasks to be completed."
+    }
+  ],
+  "params": [
+    {
+      "name": "time",
+      "indices": [
+        "WORKERS",
+        "TASKS"
+      ],
+      "values": {
+        "I": {
+          "A": 9,
+          "B": 4,
+          "C": 3,
+          "D": 7
+        },
+        "II": {
+          "A": 4,
+          "B": 6,
+          "C": 5,
+          "D": 6
+        },
+        "III": {
+          "A": 5,
+          "B": 4,
+          "C": 7,
+          "D": 5
+        },
+        "IV": {
+          "A": 7,
+          "B": 5,
+          "C": 2,
+          "D": 3
+        },
+        "V": {
+          "A": 10,
+          "B": 6,
+          "C": 7,
+          "D": 4
+        }
+      },
+      "description": "Time required for each worker to complete each task."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "WORKERS",
+        "TASKS"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if a worker is assigned to a task."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(time[w][t] * x[w][t] for w in WORKERS for t in TASKS)",
+    "description": "Minimize the total working hours for task assignments."
+  },
+  "constraints": [
+    {
+      "name": "task_assignment",
+      "expr_lhs": "sum(x[w]['A'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Each task A must be assigned to exactly one worker."
+    },
+    {
+      "name": "task_assignment",
+      "expr_lhs": "sum(x[w]['B'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Each task B must be assigned to exactly one worker."
+    },
+    {
+      "name": "task_assignment",
+      "expr_lhs": "sum(x[w]['C'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Each task C must be assigned to exactly one worker."
+    },
+    {
+      "name": "task_assignment",
+      "expr_lhs": "sum(x[w]['D'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Each task D must be assigned to exactly one worker."
+    },
+    {
+      "name": "worker_limit",
+      "expr_lhs": "sum(x['I'][t] for t in TASKS)",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "Worker I can be assigned to at most one task."
+    },
+    {
+      "name": "worker_limit",
+      "expr_lhs": "sum(x['II'][t] for t in TASKS)",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "Worker II can be assigned to at most one task."
+    },
+    {
+      "name": "worker_limit",
+      "expr_lhs": "sum(x['III'][t] for t in TASKS)",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "Worker III can be assigned to at most one task."
+    },
+    {
+      "name": "worker_limit",
+      "expr_lhs": "sum(x['IV'][t] for t in TASKS)",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "Worker IV can be assigned to at most one task."
+    },
+    {
+      "name": "worker_limit",
+      "expr_lhs": "sum(x['V'][t] for t in TASKS)",
+      "sense": "<=",
+      "expr_rhs": "1",
+      "description": "Worker V can be assigned to at most one task."
+    },
+    {
+      "name": "select_four_workers",
+      "expr_lhs": "sum(x[w][t] for w in WORKERS for t in TASKS)",
+      "sense": "==",
+      "expr_rhs": "4",
+      "description": "Exactly four workers must be selected to complete the tasks."
+    }
+  ]
+}

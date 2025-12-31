@@ -1,0 +1,22 @@
+{
+  "builder": "build_graph_from_ir",
+  "version": 1,
+  "stats": {
+    "n_nodes": 39,
+    "n_edges": 69,
+    "n_set_nodes": 1,
+    "n_param_nodes": 1,
+    "n_var_nodes": 1,
+    "n_con_nodes": 35,
+    "n_obj_nodes": 1,
+    "max_degree": 37,
+    "avg_degree": 3.4358974358974357,
+    "n_connected_components": 1,
+    "component_sizes": [
+      39
+    ]
+  },
+  "checks": {
+    "issues": []
+  }
+}

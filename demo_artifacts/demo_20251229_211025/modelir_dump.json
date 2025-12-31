@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "problem_id": "hospital_supply_distribution",
+    "source": null,
+    "description": "Distribute medical supplies among hospitals to meet needs at minimum transfer cost.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "HOSPITALS",
+      "elements": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "Set of hospitals involved in the supply distribution."
+    }
+  ],
+  "params": [
+    {
+      "name": "initial_supplies",
+      "indices": [
+        "HOSPITALS"
+      ],
+      "values": {
+        "1": 480,
+        "2": 492,
+        "3": 74,
+        "4": 317
+      },
+      "description": "Initial supplies available at each hospital."
+    },
+    {
+      "name": "needed_supplies",
+      "indices": [
+        "HOSPITALS"
+      ],
+      "values": {
+        "1": 61,
+        "2": 313,
+        "3": 93,
+        "4": 199
+      },
+      "description": "Supplies needed at each hospital."
+    },
+    {
+      "name": "transfer_cost",
+      "indices": [
+        "HOSPITALS",
+        "HOSPITALS"
+      ],
+      "values": {
+        "1": {
+          "2": 8,
+          "3": 42,
+          "4": 27
+        },
+        "2": {
+          "1": 17,
+          "3": 13,
+          "4": 30
+        },
+        "3": {
+          "1": 4,
+          "2": 14,
+          "4": 16
+        },
+        "4": {
+          "1": 33,
+          "2": 9,
+          "3": 42
+        }
+      },
+      "description": "Cost of transferring supplies between hospitals."
+    }
+  ],
+  "vars": [
+    {
+      "name": "transfer",
+      "indices": [
+        "HOSPITALS",
+        "HOSPITALS"
+      ],
+      "vartype": "integer",
+      "lb": 0.0,
+      "ub": null,
+      "description": "Amount of supplies transferred from one hospital to another."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(transfer['1']['2'] * transfer_cost['1']['2'] + transfer['1']['3'] * transfer_cost['1']['3'] + transfer['1']['4'] * transfer_cost['1']['4'] + transfer['2']['1'] * transfer_cost['2']['1'] + transfer['2']['3'] * transfer_cost['2']['3'] + transfer['2']['4'] * transfer_cost['2']['4'] + transfer['3']['1'] * transfer_cost['3']['1'] + transfer['3']['2'] * transfer_cost['3']['2'] + transfer['3']['4'] * transfer_cost['3']['4'] + transfer['4']['1'] * transfer_cost['4']['1'] + transfer['4']['2'] * transfer_cost['4']['2'] + transfer['4']['3'] * transfer_cost['4']['3'])",
+    "description": "Minimize the total cost of transferring supplies between hospitals."
+  },
+  "constraints": [
+    {
+      "name": "supply_balance_1",
+      "expr_lhs": "initial_supplies['1'] - needed_supplies['1'] + transfer['2']['1'] + transfer['3']['1'] + transfer['4']['1'] - transfer['1']['2'] - transfer['1']['3'] - transfer['1']['4']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Ensure Hospital 1 has exactly the supplies it needs after transfers."
+    },
+    {
+      "name": "supply_balance_2",
+      "expr_lhs": "initial_supplies['2'] - needed_supplies['2'] + transfer['1']['2'] + transfer['3']['2'] + transfer['4']['2'] - transfer['2']['1'] - transfer['2']['3'] - transfer['2']['4']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Ensure Hospital 2 has exactly the supplies it needs after transfers."
+    },
+    {
+      "name": "supply_balance_3",
+      "expr_lhs": "initial_supplies['3'] - needed_supplies['3'] + transfer['1']['3'] + transfer['2']['3'] + transfer['4']['3'] - transfer['3']['1'] - transfer['3']['2'] - transfer['3']['4']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Ensure Hospital 3 has exactly the supplies it needs after transfers."
+    },
+    {
+      "name": "supply_balance_4",
+      "expr_lhs": "initial_supplies['4'] - needed_supplies['4'] + transfer['1']['4'] + transfer['2']['4'] + transfer['3']['4'] - transfer['4']['1'] - transfer['4']['2'] - transfer['4']['3']",
+      "sense": "==",
+      "expr_rhs": "0",
+      "description": "Ensure Hospital 4 has exactly the supplies it needs after transfers."
+    }
+  ]
+}

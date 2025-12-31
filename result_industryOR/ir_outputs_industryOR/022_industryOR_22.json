@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "industryOR_22",
-    "source": null,
+    "source": "IndustryOR",
     "description": "Determine 4 out of 5 workers to complete one of the four tasks, minimizing total working hours.",
     "sense": "min",
     "version": 1
@@ -16,7 +16,7 @@
         "IV",
         "V"
       ],
-      "description": "Set of workers available for tasks."
+      "description": "Set of workers available for assignment."
     },
     {
       "name": "TASKS",
@@ -85,81 +85,46 @@
     }
   ],
   "objective": {
-    "name": "min_total_time",
+    "name": "min_total_cost",
     "sense": "min",
     "expr": "sum(time[w][t] * x[w][t] for w in WORKERS for t in TASKS)",
-    "description": "Minimize the total working hours for assigned tasks."
+    "description": "Minimize the total working hours for task assignments."
   },
   "constraints": [
     {
       "name": "task_assignment_A",
-      "expr_lhs": "x['I']['A'] + x['II']['A'] + x['III']['A'] + x['IV']['A'] + x['V']['A']",
+      "expr_lhs": "sum(x[w]['A'] for w in WORKERS)",
       "sense": "==",
       "expr_rhs": "1",
       "description": "Exactly one worker must be assigned to task A."
     },
     {
       "name": "task_assignment_B",
-      "expr_lhs": "x['I']['B'] + x['II']['B'] + x['III']['B'] + x['IV']['B'] + x['V']['B']",
+      "expr_lhs": "sum(x[w]['B'] for w in WORKERS)",
       "sense": "==",
       "expr_rhs": "1",
       "description": "Exactly one worker must be assigned to task B."
     },
     {
       "name": "task_assignment_C",
-      "expr_lhs": "x['I']['C'] + x['II']['C'] + x['III']['C'] + x['IV']['C'] + x['V']['C']",
+      "expr_lhs": "sum(x[w]['C'] for w in WORKERS)",
       "sense": "==",
       "expr_rhs": "1",
       "description": "Exactly one worker must be assigned to task C."
     },
     {
       "name": "task_assignment_D",
-      "expr_lhs": "x['I']['D'] + x['II']['D'] + x['III']['D'] + x['IV']['D'] + x['V']['D']",
+      "expr_lhs": "sum(x[w]['D'] for w in WORKERS)",
       "sense": "==",
       "expr_rhs": "1",
       "description": "Exactly one worker must be assigned to task D."
     },
     {
-      "name": "worker_limit_I",
-      "expr_lhs": "x['I']['A'] + x['I']['B'] + x['I']['C'] + x['I']['D']",
-      "sense": "<=",
-      "expr_rhs": "1",
-      "description": "Worker I can be assigned to at most one task."
-    },
-    {
-      "name": "worker_limit_II",
-      "expr_lhs": "x['II']['A'] + x['II']['B'] + x['II']['C'] + x['II']['D']",
-      "sense": "<=",
-      "expr_rhs": "1",
-      "description": "Worker II can be assigned to at most one task."
-    },
-    {
-      "name": "worker_limit_III",
-      "expr_lhs": "x['III']['A'] + x['III']['B'] + x['III']['C'] + x['III']['D']",
-      "sense": "<=",
-      "expr_rhs": "1",
-      "description": "Worker III can be assigned to at most one task."
-    },
-    {
-      "name": "worker_limit_IV",
-      "expr_lhs": "x['IV']['A'] + x['IV']['B'] + x['IV']['C'] + x['IV']['D']",
-      "sense": "<=",
-      "expr_rhs": "1",
-      "description": "Worker IV can be assigned to at most one task."
-    },
-    {
-      "name": "worker_limit_V",
-      "expr_lhs": "x['V']['A'] + x['V']['B'] + x['V']['C'] + x['V']['D']",
-      "sense": "<=",
-      "expr_rhs": "1",
-      "description": "Worker V can be assigned to at most one task."
-    },
-    {
-      "name": "total_workers",
-      "expr_lhs": "x['I']['A'] + x['I']['B'] + x['I']['C'] + x['I']['D'] + x['II']['A'] + x['II']['B'] + x['II']['C'] + x['II']['D'] + x['III']['A'] + x['III']['B'] + x['III']['C'] + x['III']['D'] + x['IV']['A'] + x['IV']['B'] + x['IV']['C'] + x['IV']['D'] + x['V']['A'] + x['V']['B'] + x['V']['C'] + x['V']['D']",
+      "name": "worker_selection",
+      "expr_lhs": "sum(sum(x[w][t] for t in TASKS) for w in WORKERS)",
       "sense": "==",
       "expr_rhs": "4",
-      "description": "Exactly four workers must be assigned in total."
+      "description": "Exactly four workers must be selected for the tasks."
     }
   ],
   "graph": null

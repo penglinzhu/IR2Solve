@@ -1,7 +1,7 @@
 {
   "meta": {
     "problem_id": "industryOR_34",
-    "source": null,
+    "source": "IndustryOR",
     "description": "Optimize the ordering of tables from suppliers A, B, and C to minimize cost while satisfying constraints.",
     "sense": "min",
     "version": 1
@@ -50,7 +50,7 @@
         "SUPPLIERS"
       ],
       "vartype": "integer",
-      "lb": 0.0,
+      "lb": 0,
       "ub": null,
       "description": "Number of orders placed with each supplier."
     }
@@ -58,37 +58,44 @@
   "objective": {
     "name": "min_total_cost",
     "sense": "min",
-    "expr": "sum(orders[s] * cost[s] * tables_per_order[s] for s in SUPPLIERS)",
+    "expr": "sum(cost[s] * orders[s] for s in ['A', 'B', 'C'])",
     "description": "Minimize the total cost of ordering tables."
   },
   "constraints": [
     {
       "name": "min_tables",
-      "expr_lhs": "orders['A'] * tables_per_order['A'] + orders['B'] * tables_per_order['B'] + orders['C'] * tables_per_order['C']",
+      "expr_lhs": "sum(tables_per_order[s] * orders[s] for s in ['A', 'B', 'C'])",
       "sense": ">=",
       "expr_rhs": "150",
       "description": "The restaurant needs to order at least 150 tables."
     },
     {
       "name": "max_tables",
-      "expr_lhs": "orders['A'] * tables_per_order['A'] + orders['B'] * tables_per_order['B'] + orders['C'] * tables_per_order['C']",
+      "expr_lhs": "sum(tables_per_order[s] * orders[s] for s in ['A', 'B', 'C'])",
       "sense": "<=",
       "expr_rhs": "600",
       "description": "The restaurant can order a maximum of 600 tables."
     },
     {
-      "name": "supplier_A_B_dependency",
-      "expr_lhs": "orders['A']",
-      "sense": "<=",
-      "expr_rhs": "orders['B']",
-      "description": "If ordering from supplier A, must order at least 30 tables from supplier B."
+      "name": "order_B_if_A",
+      "expr_lhs": "orders['B']",
+      "sense": ">=",
+      "expr_rhs": "1",
+      "description": "If the restaurant orders from supplier A, it must also order from supplier B."
     },
     {
-      "name": "supplier_B_C_dependency",
-      "expr_lhs": "orders['B']",
-      "sense": "<=",
-      "expr_rhs": "orders['C']",
-      "description": "If ordering from supplier B, must order from supplier C."
+      "name": "min_30_tables_B_if_A",
+      "expr_lhs": "tables_per_order['B'] * orders['B']",
+      "sense": ">=",
+      "expr_rhs": "30",
+      "description": "If the restaurant orders from supplier A, it must order at least 30 tables from supplier B."
+    },
+    {
+      "name": "order_C_if_B",
+      "expr_lhs": "orders['C']",
+      "sense": ">=",
+      "expr_rhs": "1",
+      "description": "If the restaurant orders from supplier B, it must also order from supplier C."
     }
   ],
   "graph": null

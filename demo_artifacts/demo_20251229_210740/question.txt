@@ -1,0 +1,14 @@
+Imagine you are tasked with planning a nutritious and cost-effective meal plan for the day, ensuring that you meet specific nutritional targets. You have a selection of six different food items, each with unique nutritional values and costs. Your goal is to meet the daily dietary requirements for protein, carbohydrates, and calories without overspending.
+
+Here's a breakdown of the food items available:
+
+- Food_1: Costs $4, provides 17 grams of protein, 8 grams of carbohydrates, and 237 calories.
+- Food_2: Costs $2, provides 4 grams of protein, 24 grams of carbohydrates, and 213 calories.
+- Food_3: Costs $6, provides 7 grams of protein, 27 grams of carbohydrates, and 133 calories.
+- Food_4: Costs $2, provides 14 grams of protein, 16 grams of carbohydrates, and 118 calories.
+- Food_5: Costs $6, provides 13 grams of protein, 1 gram of carbohydrates, and 136 calories.
+- Food_6: Costs $8, provides 1 gram of protein, 13 grams of carbohydrates, and 225 calories.
+
+The dietary requirements you need to meet are at least 76 grams of protein, 173 grams of carbohydrates, and 1751 calories for the day.
+
+What is the minimum cost required to meet these nutritional needs using any combination of these food items?

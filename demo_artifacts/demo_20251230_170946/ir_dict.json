@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "problem_id": "worker_task_assignment",
+    "source": null,
+    "description": "Determine 4 out of 5 workers to complete one of the four tasks, minimizing total working hours.",
+    "sense": "min",
+    "version": 1
+  },
+  "sets": [
+    {
+      "name": "WORKERS",
+      "elements": [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V"
+      ],
+      "description": "Set of workers available for task assignment."
+    },
+    {
+      "name": "TASKS",
+      "elements": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "Set of tasks to be completed."
+    }
+  ],
+  "params": [
+    {
+      "name": "time",
+      "indices": [
+        "WORKERS",
+        "TASKS"
+      ],
+      "values": {
+        "I": {
+          "A": 9,
+          "B": 4,
+          "C": 3,
+          "D": 7
+        },
+        "II": {
+          "A": 4,
+          "B": 6,
+          "C": 5,
+          "D": 6
+        },
+        "III": {
+          "A": 5,
+          "B": 4,
+          "C": 7,
+          "D": 5
+        },
+        "IV": {
+          "A": 7,
+          "B": 5,
+          "C": 2,
+          "D": 3
+        },
+        "V": {
+          "A": 10,
+          "B": 6,
+          "C": 7,
+          "D": 4
+        }
+      },
+      "description": "Time required for each worker to complete each task."
+    }
+  ],
+  "vars": [
+    {
+      "name": "x",
+      "indices": [
+        "WORKERS",
+        "TASKS"
+      ],
+      "vartype": "binary",
+      "lb": 0.0,
+      "ub": 1.0,
+      "description": "Binary variable indicating if a worker is assigned to a task."
+    }
+  ],
+  "objective": {
+    "name": "min_total_cost",
+    "sense": "min",
+    "expr": "sum(time[w][t] * x[w][t] for w in WORKERS for t in TASKS)",
+    "description": "Minimize the total working hours for task assignments."
+  },
+  "constraints": [
+    {
+      "name": "task_assignment_A",
+      "expr_lhs": "sum(x[w]['A'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Exactly one worker must be assigned to task A."
+    },
+    {
+      "name": "task_assignment_B",
+      "expr_lhs": "sum(x[w]['B'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Exactly one worker must be assigned to task B."
+    },
+    {
+      "name": "task_assignment_C",
+      "expr_lhs": "sum(x[w]['C'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Exactly one worker must be assigned to task C."
+    },
+    {
+      "name": "task_assignment_D",
+      "expr_lhs": "sum(x[w]['D'] for w in WORKERS)",
+      "sense": "==",
+      "expr_rhs": "1",
+      "description": "Exactly one worker must be assigned to task D."
+    },
+    {
+      "name": "worker_limit",
+      "expr_lhs": "sum(x[w][t] for w in WORKERS for t in TASKS)",
+      "sense": "==",
+      "expr_rhs": "4",
+      "description": "Only 4 workers can be assigned to tasks."
+    }
+  ],
+  "graph": null
+}
